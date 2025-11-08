@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Photography Projects</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+
+    <h1>Photography Admin Panel</h1>
+
+    <h2>Create New Project</h2>
+    <input type="text" id="projectName" placeholder="Enter Project Name">
+    <button onclick="createProject()">Create Project</button>
+
+    <hr>
+
+    <h2>Manage Projects</h2>
+    <div id="projectList"></div>
+
+    <div id="uploadSection" style="display: none;">
+        <h3 id="currentProjectName"></h3>
+        <input type="file" id="imageUpload" multiple>
+        <br>
+        <input type="text" id="driveLink" placeholder="Enter Google Drive Link">
+        <br>
+        <button onclick="uploadFiles()">Upload Files and Save Link</button>
+        <p>Shareable Link: <a id="shareLink" href="" target="_blank"></a></p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="admin.js"></script>
+
+</body>
+</html>
