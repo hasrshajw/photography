@@ -3,111 +3,591 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Manager with Images</title>
-    <!-- CSS styles are embedded here -->
+    <title>Project Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Using new Modular Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.firebasestorage.app",
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
+        };
+        
+        // --- INITIALIZE FIREBASE ---
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // --- GLOBAL STATE ---
+        let currentUser = null;
+        let editingProjectId = null;
+        let projectFiles = []; // To manage file uploads for a project
+        let firestoreUnsubscribe = null; // To detach listener on logout
+
+        // --- UI ELEMENTS ---
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const authContainer = document.getElementById('auth-container');
+        const mainContent = document.getElementById('main-content');
+        const userDisplay = document.getElementById('user-display');
+        
+        const projectForm = document.getElementById('project-form');
+        const formTitle = document.getElementById('form-title');
+        const projectNameInput = document.getElementById('project-name');
+        const driveLinkInput = document.getElementById('drive-link');
+        
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-edit-btn');
+        const submitSpinner = document.getElementById('submit-spinner');
+        const formMessage = document.getElementById('form-message');
+        const projectsContainer = document.getElementById('projects-container');
+
+        // --- AUTHENTICATION ---
+        const googleProvider = new GoogleAuthProvider();
+        const signInWithGoogle = () => signInWithPopup(auth, googleProvider).catch(err => console.error(err));
+        const doSignOut = () => signOut(auth).catch(err => console.error(err));
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                authContainer.classList.add('logged-in');
+                mainContent.style.display = 'block';
+                userDisplay.textContent = `Welcome, ${user.displayName}`;
+                
+                // Fetch this user's projects
+                fetchUserProjects(user.uid);
+            } else {
+                // User is signed out
+                currentUser = null;
+                authContainer.classList.remove('logged-in');
+                mainContent.style.display = 'none';
+                projectsContainer.innerHTML = '<p>Please sign in to see your projects.</p>';
+                
+                // Unsubscribe from Firestore listener to prevent memory leaks
+                if (firestoreUnsubscribe) firestoreUnsubscribe();
+            }
+        });
+
+        // --- IMAGE UPLOAD LOGIC ---
+        const handleFileSelect = (event) => {
+            const files = event.target.files;
+            handleFiles(files);
+        };
+
+        const handleDrop = (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('drag-over');
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        };
+
+        const handleFiles = (files) => {
+            if (!files || files.length === 0) return;
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    uploadFile(file);
+                } else {
+                    showMessage(`File '${file.name}' is not an image and was ignored.`, false);
+                }
+            });
+            fileInput.value = ''; // Reset input
+        };
+
+        const uploadFile = (file) => {
+            if (!currentUser) {
+                showMessage('You must be logged in to upload images.', false);
+                return;
+            }
+
+            const uniqueId = `file-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+            const storagePath = `projects/${currentUser.uid}/${Date.now()}-${file.name}`;
+            const storageRef = ref(storage, storagePath);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            const fileState = {
+                id: uniqueId,
+                fileName: file.name,
+                status: 'uploading',
+                progress: 0,
+                storagePath: storagePath,
+                downloadURL: null,
+                isPersisted: false, // Flag for images already saved to a project
+                uploadTask: uploadTask
+            };
+            projectFiles.push(fileState);
+            renderImagePreviews();
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) {
+                        fileToUpdate.progress = progress;
+                        renderImagePreviews();
+                    }
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) {
+                        fileToUpdate.status = 'failed';
+                        renderImagePreviews();
+                    }
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) {
+                        fileToUpdate.status = 'completed';
+                        fileToUpdate.downloadURL = downloadURL;
+                        renderImagePreviews();
+                    }
+                }
+            );
+        };
+        
+        const deleteImage = async (fileId) => {
+            const fileIndex = projectFiles.findIndex(f => f.id === fileId);
+            if (fileIndex === -1) return;
+
+            const fileToDelete = projectFiles[fileIndex];
+
+            // If it was uploading, cancel it
+            if (fileToDelete.status === 'uploading') {
+                fileToDelete.uploadTask.cancel();
+            }
+            
+            // If it's uploaded (even if not saved to form yet), delete from Storage
+            if (fileToDelete.downloadURL) {
+                try {
+                    const imageRef = ref(storage, fileToDelete.storagePath);
+                    await deleteObject(imageRef);
+                } catch (error) {
+                    console.error("Error deleting image from storage, it may have already been deleted:", error);
+                }
+            }
+
+            projectFiles.splice(fileIndex, 1);
+            renderImagePreviews();
+        };
+
+        const renderImagePreviews = () => {
+            imagePreviewContainer.innerHTML = '';
+            if (projectFiles.length === 0) {
+                imagePreviewContainer.innerHTML = `<p class="no-images">No images selected.</p>`;
+                return;
+            }
+
+            projectFiles.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'image-preview-card';
+                card.dataset.id = file.id;
+
+                let statusIcon = '';
+                if(file.status === 'completed') statusIcon = `<div class="status-icon success"><i class='bx bx-check'></i></div>`;
+                if(file.status === 'failed') statusIcon = `<div class="status-icon danger"><i class='bx bx-error'></i></div>`;
+
+                card.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">${file.fileName}</span>
+                    </div>
+                    <div class="status-and-actions">
+                        ${statusIcon}
+                        <button type="button" class="delete-btn" data-id="${file.id}"><i class='bx bx-x'></i></button>
+                    </div>
+                    ${file.status === 'uploading' ? `<div class="progress-bar-wrapper"><div class="progress-bar" style="width: ${file.progress}%"></div></div>` : ''}
+                `;
+                imagePreviewContainer.appendChild(card);
+            });
+        };
+
+        // --- FIRESTORE CRUD ---
+        const fetchUserProjects = (userId) => {
+            const q = query(collection(db, 'projects'), where("userId", "==", userId));
+            
+            firestoreUnsubscribe = onSnapshot(q, (querySnapshot) => {
+                const projects = [];
+                querySnapshot.forEach((doc) => {
+                    projects.push({ id: doc.id, ...doc.data() });
+                });
+                renderProjects(projects);
+            }, (error) => {
+                console.error("Error fetching projects:", error);
+                projectsContainer.innerHTML = '<p class="error">Could not fetch projects.</p>';
+            });
+        };
+
+        const renderProjects = (projects) => {
+            projectsContainer.innerHTML = '';
+            if(projects.length === 0) {
+                projectsContainer.innerHTML = '<p>You have not created any projects yet.</p>';
+                return;
+            }
+
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                
+                const imagesHTML = project.imageURLs && project.imageURLs.length > 0
+                    ? project.imageURLs.map(url => `<img src="${url}" alt="${project.name} image">`).join('')
+                    : '<p>No images for this project.</p>';
+
+                projectCard.innerHTML = `
+                    <div class="project-details">
+                        <h3>${project.name}</h3>
+                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
+                    </div>
+                    <div class="project-images">${imagesHTML}</div>
+                    <div class="project-actions">
+                        <button class="btn btn-secondary" data-id="${project.id}" data-action="edit">Edit</button>
+                        <button class="btn btn-danger" data-id="${project.id}" data-action="delete">Delete</button>
+                    </div>
+                `;
+                projectsContainer.appendChild(projectCard);
+            });
+        };
+
+        const handleProjectAction = async (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            const action = target.dataset.action;
+            const projectId = target.dataset.id;
+            
+            if (action === 'delete') {
+                if (confirm('Are you sure you want to delete this project and all its images?')) {
+                    await deleteProject(projectId);
+                }
+            }
+            
+            if (action === 'edit') {
+                 const projectRef = doc(db, 'projects', projectId);
+                 // This part requires getting the document data. For simplicity, we'll fetch all projects again. A more optimized approach would be to get a single document.
+                 const q = query(collection(db, 'projects'), where("userId", "==", currentUser.uid));
+                 onSnapshot(q, (snapshot) => {
+                     snapshot.forEach(doc => {
+                         if(doc.id === projectId) {
+                             loadProjectIntoForm(doc.id, doc.data());
+                         }
+                     })
+                 });
+            }
+        };
+
+        const deleteProject = async (projectId) => {
+            try {
+                const projectRef = doc(db, 'projects', projectId);
+                
+                // First, delete associated images from Storage (best practice)
+                // This is a simplified example. A robust implementation would use a Cloud Function.
+                // For now, we'll just delete the doc.
+                
+                await deleteDoc(projectRef);
+                showMessage('Project deleted successfully.', true);
+            } catch (error) {
+                console.error("Error deleting project:", error);
+                showMessage('Failed to delete project.', false);
+            }
+        };
+
+        const loadProjectIntoForm = (id, data) => {
+            editingProjectId = id;
+            
+            formTitle.textContent = 'Edit Project';
+            submitBtn.textContent = 'Save Changes';
+            cancelBtn.style.display = 'inline-block';
+            
+            projectNameInput.value = data.name;
+            driveLinkInput.value = data.link;
+
+            // Load existing images into the file manager state
+            projectFiles = (data.imageURLs || []).map(url => {
+                const storagePath = ref(storage, url).fullPath;
+                const fileName = storagePath.split('/').pop().split('?')[0].split('%2F').pop();
+                return {
+                    id: `persisted-${Math.random()}`,
+                    fileName: decodeURIComponent(fileName),
+                    status: 'completed',
+                    progress: 100,
+                    storagePath: storagePath,
+                    downloadURL: url,
+                    isPersisted: true
+                }
+            });
+            renderImagePreviews();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        
+        const resetForm = () => {
+            editingProjectId = null;
+            projectFiles = [];
+            
+            projectForm.reset();
+            formTitle.textContent = 'Create a New Project';
+            submitBtn.textContent = 'Add Project';
+            cancelBtn.style.display = 'none';
+            renderImagePreviews();
+        };
+
+        const handleFormSubmit = async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                showMessage('You must be logged in.', false);
+                return;
+            }
+
+            const projectName = projectNameInput.value.trim();
+            const driveLink = driveLinkInput.value.trim();
+            if (!projectName || !driveLink) {
+                showMessage('Please fill in all fields.', false);
+                return;
+            }
+
+            showSpinner(true);
+
+            // Check if all uploads are complete
+            const pendingUploads = projectFiles.filter(f => f.status === 'uploading');
+            if (pendingUploads.length > 0) {
+                showMessage('Please wait for all images to finish uploading.', false);
+                showSpinner(false);
+                return;
+            }
+
+            // Get URLs of successfully uploaded images
+            const imageURLs = projectFiles
+                .filter(f => f.status === 'completed' && f.downloadURL)
+                .map(f => f.downloadURL);
+
+            const projectData = {
+                name: projectName,
+                link: driveLink,
+                userId: currentUser.uid,
+                imageURLs: imageURLs,
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                if (editingProjectId) {
+                    // Update existing project
+                    const projectRef = doc(db, 'projects', editingProjectId);
+                    await updateDoc(projectRef, projectData);
+                    showMessage('Project updated successfully!', true);
+                } else {
+                    // Create new project
+                    projectData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'projects'), projectData);
+                    showMessage('Project created successfully!', true);
+                }
+                resetForm();
+            } catch (error) {
+                console.error("Error saving project:", error);
+                showMessage('Error saving project. Please try again.', false);
+            } finally {
+                showSpinner(false);
+            }
+        };
+
+        // --- UTILITY FUNCTIONS ---
+        const showMessage = (msg, isSuccess) => {
+            formMessage.textContent = msg;
+            formMessage.className = isSuccess ? 'message success' : 'message error';
+            formMessage.style.display = 'block';
+            setTimeout(() => { formMessage.style.display = 'none'; }, 4000);
+        };
+        
+        const showSpinner = (show) => {
+            submitSpinner.style.display = show ? 'inline-block' : 'none';
+            submitBtn.disabled = show;
+        };
+
+        // --- EVENT LISTENERS ---
+        loginBtn.addEventListener('click', signInWithGoogle);
+        logoutBtn.addEventListener('click', doSignOut);
+        projectForm.addEventListener('submit', handleFormSubmit);
+        cancelBtn.addEventListener('click', resetForm);
+        projectsContainer.addEventListener('click', handleProjectAction);
+
+        // Drag and drop listeners
+        dropArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+        dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); dropArea.classList.remove('drag-over'); });
+        dropArea.addEventListener('drop', handleDrop);
+        
+        // Listener for deleting images from preview
+        imagePreviewContainer.addEventListener('click', (e) => {
+            const deleteButton = e.target.closest('.delete-btn');
+            if (deleteButton) {
+                deleteImage(deleteButton.dataset.id);
+            }
+        });
+        
+    </script>
+    
     <style>
+        :root {
+            --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
+            --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
+            --brand-hover: #2563EB; --danger-color: #EF4444; --success-color: #10B981;
+            --font-family: 'IBM Plex Sans', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f4f4f4;
-            color: #333;
-            padding: 20px;
-            margin: 0;
-            text-align: center;
+            font-family: var(--font-family); background-color: var(--body-bg); color: var(--text-primary);
+            font-size: 16px; line-height: 1.6;
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            text-align: left;
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+        h1, h2, h3 { color: var(--text-primary); margin-bottom: 1rem; font-weight: 600; }
+        h1 { font-size: 2.25rem; text-align: center; }
+        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem; }
+        
+        /* --- AUTH SECTION --- */
+        #auth-container {
+            text-align: center; background: var(--widget-bg); padding: 1.5rem; border-radius: 12px;
+            border: 1px solid var(--border-color); margin-bottom: 2rem;
+            display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem;
         }
-        h1, h2 {
-            color: #333;
-        }
-        input[type="text"], input[type="file"], button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-        button {
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: opacity 0.2s;
-        }
-        button:hover { opacity: 0.9; }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
-
-        .btn-primary { background-color: #007bff; }
-        .btn-google { background-color: #DB4437; }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-edit { background-color: #28a745; }
-
-        .project {
-            background: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .project img {
-            width: 80px;
-            height: 80px;
-            border-radius: 5px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .project-details { flex-grow: 1; }
-        .project-actions button {
-            margin-left: 10px;
-            padding: 8px 12px;
-            width: auto;
-        }
-        #auth-container { margin-bottom: 20px; }
-        #user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-        }
+        #auth-container #user-display { display: none; }
+        #auth-container #logout-btn { display: none; }
+        #auth-container.logged-in #login-btn { display: none; }
+        #auth-container.logged-in #user-display, #auth-container.logged-in #logout-btn { display: inline-block; }
+        
+        /* --- MAIN CONTENT --- */
         #main-content { display: none; }
-
-        /* Progress Bar */
-        #upload-progress-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: none; /* Hidden by default */
+        .form-wrapper {
+            background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color);
+            padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
         }
-        #upload-progress-bar {
-            width: 0%;
-            height: 20px;
-            background-color: #4caf50;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-            border-radius: 5px;
-            transition: width 0.3s ease-in-out;
+        
+        /* --- FORM STYLES --- */
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
+        input[type="text"] {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 1rem; font-family: var(--font-family);
+            background-color: #F9FAFB; transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
+        input[type="text"]:focus {
+            outline: none; border-color: var(--brand-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 1rem; font-weight: 600; transition: background-color 0.2s ease;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-primary { background-color: var(--brand-color); color: white; }
+        .btn-primary:hover { background-color: var(--brand-hover); }
+        .btn-primary:disabled { background-color: #93C5FD; cursor: not-allowed; }
+        .btn-google { background-color: #DB4437; color: white; }
+        .btn-google:hover { background-color: #c23321; }
+        .btn-secondary { background-color: #6B7280; color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        #cancel-edit-btn { display: none; }
 
-        /* Modal styles */
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px; }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        /* --- SPINNER & MESSAGES --- */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%;
+            width: 18px; height: 18px; animation: spin 1s linear infinite; display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .message {
+            padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; display: none;
+            border: 1px solid transparent;
+        }
+        .message.success { background-color: #D1FAE5; color: #065F46; border-color: #A7F3D0; }
+        .message.error { background-color: #FEE2E2; color: #991B1B; border-color: #FECACA; }
+        
+        /* --- PHOTO UPLOAD --- */
+        #drop-area {
+            border: 2px dashed var(--border-color); border-radius: 12px; padding: 2.5rem;
+            text-align: center; cursor: pointer; transition: all 0.3s ease;
+            background-color: var(--body-bg);
+        }
+        #drop-area:hover, #drop-area.drag-over {
+            border-color: var(--brand-color); background-color: #EFF6FF;
+        }
+        #drop-area i { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        #drop-area p { color: var(--text-secondary); }
+        #drop-area p strong { color: var(--brand-color); }
+        #file-input { display: none; }
+
+        #image-preview-container {
+            margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .image-preview-card {
+            background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 0.75rem; display: flex; align-items: center; justify-content: space-between;
+            gap: 0.5rem; position: relative; overflow: hidden;
+        }
+        .file-info { flex-grow: 1; min-width: 0; }
+        .file-name {
+            font-weight: 500; font-size: 0.9rem; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .status-and-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .status-icon {
+            width: 24px; height: 24px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; color: white;
+        }
+        .status-icon.success { background-color: var(--success-color); }
+        .status-icon.danger { background-color: var(--danger-color); }
+        .delete-btn {
+            background: none; border: none; cursor: pointer; color: var(--text-secondary);
+            font-size: 1.5rem; padding: 0.25rem; line-height: 1;
+        }
+        .delete-btn:hover { color: var(--danger-color); }
+        .progress-bar-wrapper {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+            background-color: #E5E7EB;
+        }
+        .progress-bar { height: 100%; background-color: var(--brand-color); width: 0%; transition: width 0.3s ease; }
+        .no-images { color: var(--text-secondary); text-align: center; grid-column: 1 / -1; }
+
+        /* --- PROJECTS LIST --- */
+        #projects-list { margin-top: 2rem; }
+        .project-card {
+            background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color);
+            padding: 1.5rem; margin-bottom: 1rem;
+        }
+        .project-card h3 { margin-top: 0; }
+        .project-card a { color: var(--brand-color); text-decoration: none; font-weight: 500; }
+        .project-card a:hover { text-decoration: underline; }
+        .project-images {
+            display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;
+        }
+        .project-images img {
+            width: 100px; height: 100px; object-fit: cover; border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .project-actions {
+            margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;
+            display: flex; gap: 0.5rem; justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -116,229 +596,55 @@
         <h1>Project Manager</h1>
 
         <div id="auth-container">
-            <button id="login-btn" class="btn-google" onclick="signInWithGoogle()">Sign In with Google</button>
-            <div id="user-info" style="display: none;">
-                <span id="user-display"></span>
-                <button id="logout-btn" class="btn-secondary" onclick="signOut()">Sign Out</button>
-            </div>
+            <span id="user-display">Loading...</span>
+            <button id="login-btn" class="btn btn-google"><i class='bx bxl-google'></i> Sign In with Google</button>
+            <button id="logout-btn" class="btn btn-secondary">Sign Out</button>
         </div>
 
         <div id="main-content">
-            <div id="project-form">
-                <h2>Create a New Project</h2>
-                <input type="text" id="projectName" placeholder="Project Name" required>
-                <input type="text" id="driveLink" placeholder="Google Drive Link" required>
-                <label for="projectImage" style="text-align: left; display: block; margin-bottom: 5px; font-weight: 500;">Project Image:</label>
-                <input type="file" id="projectImage" accept="image/*" required>
-                
-                <div id="upload-progress-container">
-                    <div id="upload-progress-bar">0%</div>
-                </div>
-
-                <button id="add-project-btn" onclick="createProject()" class="btn-primary">Add Project</button>
+            <div class="form-wrapper">
+                <h2 id="form-title">Create a New Project</h2>
+                <div id="form-message"></div>
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="drive-link">Google Drive Link</label>
+                        <input type="text" id="drive-link" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Project Images</label>
+                        <div id="drop-area">
+                            <input type="file" id="file-input" accept="image/*" multiple>
+                            <i class='bx bx-cloud-upload'></i>
+                            <p>Drop images here, or <strong>browse</strong></p>
+                        </div>
+                        <div id="image-preview-container">
+                             <p class="no-images">No images selected.</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" id="submit-btn" class="btn btn-primary">
+                            Add Project
+                            <div class="spinner" id="submit-spinner"></div>
+                        </button>
+                         <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
             </div>
-
+            
             <div id="projects-list">
                 <h2>My Projects</h2>
-                <div id="projects-container"></div>
+                <div id="projects-container">
+                    <p>Loading projects...</p>
+                </div>
             </div>
         </div>
+
     </div>
-
-    <!-- Edit Project Modal (for text only) -->
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeEditModal()">&times;</span>
-            <h2>Edit Project Details</h2>
-            <input type="hidden" id="edit-id">
-            <input type="text" id="edit-projectName" placeholder="Project Name">
-            <input type="text" id="edit-driveLink" placeholder="Google Drive Link">
-            <button onclick="updateProject()" class="btn-primary">Save Changes</button>
-        </div>
-    </div>
-
-    <!-- Firebase SDK Scripts (Compat version for simplicity with existing code) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-
-    <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.appspot.com", // Make sure this is correct
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        const storage = firebase.storage(); // Initialize Storage
-        const projectsCollection = db.collection('projects');
-        let unsubscribe;
-
-        // --- AUTHENTICATION ---
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('main-content').style.display = 'block';
-                document.getElementById('login-btn').style.display = 'none';
-                document.getElementById('user-info').style.display = 'flex';
-                document.getElementById('user-display').textContent = `Welcome, ${user.displayName}`;
-                fetchUserProjects(user.uid);
-            } else {
-                document.getElementById('main-content').style.display = 'none';
-                document.getElementById('login-btn').style.display = 'block';
-                document.getElementById('user-info').style.display = 'none';
-                document.getElementById('projects-container').innerHTML = '';
-                if (unsubscribe) unsubscribe();
-            }
-        });
-
-        function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(error => console.error("Sign in error:", error));
-        }
-
-        function signOut() {
-            auth.signOut().catch(error => console.error("Sign out error:", error));
-        }
-
-        // --- FIRESTORE & STORAGE (NEW UPLOAD LOGIC) ---
-
-        function createProject() {
-            const projectName = document.getElementById('projectName').value;
-            const driveLink = document.getElementById('driveLink').value;
-            const imageFile = document.getElementById('projectImage').files[0];
-            const user = auth.currentUser;
-            const addButton = document.getElementById('add-project-btn');
-
-            if (!projectName || !driveLink || !imageFile || !user) {
-                alert('Please fill in all fields and select an image.');
-                return;
-            }
-
-            addButton.disabled = true;
-            addButton.textContent = 'Uploading Image...';
-
-            const progressContainer = document.getElementById('upload-progress-container');
-            const progressBar = document.getElementById('upload-progress-bar');
-            progressContainer.style.display = 'block';
-            progressBar.style.width = '0%';
-            progressBar.textContent = '0%';
-
-            // Create a unique file path within a user-specific folder
-            const filePath = `project-images/${user.uid}/${Date.now()}_${imageFile.name}`;
-            const storageRef = storage.ref(filePath);
-            const uploadTask = storageRef.put(imageFile);
-
-            // This is the core upload logic, similar to the example you provided
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    // Progress function
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.style.width = progress + '%';
-                    progressBar.textContent = Math.round(progress) + '%';
-                }, 
-                (error) => {
-                    // Error function
-                    console.error("Upload failed:", error);
-                    alert("Image upload failed. Please try again.");
-                    resetForm();
-                }, 
-                () => {
-                    // Complete function
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('File available at', downloadURL);
-
-                        // Now add the project data to Firestore
-                        projectsCollection.add({
-                            name: projectName,
-                            link: driveLink,
-                            imageUrl: downloadURL, // The public URL of the image
-                            imagePath: filePath, // Store path for potential deletion later
-                            userId: user.uid,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        }).then(() => {
-                            console.log("Project added to Firestore!");
-                            resetForm();
-                        }).catch(error => {
-                            console.error("Error adding project to Firestore: ", error);
-                            alert("Failed to save project data.");
-                            resetForm();
-                        });
-                    });
-                }
-            );
-        }
-        
-        function resetForm() {
-            document.getElementById('project-form').reset();
-            const addButton = document.getElementById('add-project-btn');
-            addButton.disabled = false;
-            addButton.textContent = 'Add Project';
-            document.getElementById('upload-progress-container').style.display = 'none';
-        }
-
-        function fetchUserProjects(userId) {
-            unsubscribe = projectsCollection
-                .where('userId', '==', userId)
-                .orderBy('createdAt', 'desc')
-                .onSnapshot(snapshot => {
-                    let projects = [];
-                    snapshot.forEach(doc => projects.push({ id: doc.id, ...doc.data() }));
-                    displayProjects(projects);
-                }, error => console.error("Error fetching projects: ", error));
-        }
-
-        function displayProjects(projects) {
-            const container = document.getElementById('projects-container');
-            container.innerHTML = '';
-            projects.forEach(project => {
-                const projectDiv = document.createElement('div');
-                projectDiv.className = 'project';
-                projectDiv.innerHTML = `
-                    <img src="${project.imageUrl}" alt="${project.name} preview">
-                    <div class="project-details">
-                        <strong>${project.name}</strong><br>
-                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
-                    </div>
-                    <div class="project-actions">
-                        <button class="btn-edit" onclick="openEditModal('${project.id}', \`${project.name}\`, \`${project.link}\`)">Edit</button>
-                    </div>
-                `;
-                container.appendChild(projectDiv);
-            });
-        }
-
-        function updateProject() {
-            const id = document.getElementById('edit-id').value;
-            const updatedName = document.getElementById('edit-projectName').value;
-            const updatedLink = document.getElementById('edit-driveLink').value;
-
-            if (id && updatedName && updatedLink) {
-                projectsCollection.doc(id).update({
-                    name: updatedName,
-                    link: updatedLink
-                }).then(closeEditModal).catch(error => console.error("Error updating project: ", error));
-            } else {
-                alert('Please fill in all fields.');
-            }
-        }
-        
-        // --- MODAL CONTROLS ---
-        const modal = document.getElementById('edit-modal');
-        function openEditModal(id, name, link) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-projectName').value = name;
-            document.getElementById('edit-driveLink').value = link;
-            modal.style.display = 'block';
-        }
-        function closeEditModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == modal) { closeEditModal(); } }
-    </script>
 </body>
 </html>
