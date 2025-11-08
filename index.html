@@ -3,48 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Photography Projects</title>
+    <title>Your Photography Project</title>
     <style>
-        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #333; }
-        input[type="text"], input[type="file"], button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
-        button { background-color: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        #project-link-container { margin-top: 20px; padding: 10px; background: #e9ecef; border-radius: 5px; }
-        #project-link { word-break: break-all; }
-        .hidden { display: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: #fff; }
+        .header { background: #212529; color: white; padding: 1.5em; text-align: center; }
+        .header h1 { margin: 0; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1em; padding: 1em; }
+        .gallery img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .drive-link-container { text-align: center; padding: 2em; background-color: #f8f9fa; }
+        .drive-link-button { padding: 1em 2.5em; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.1em; transition: background-color 0.2s; }
+        .drive-link-button:hover { background-color: #0056b3; }
+        .info-text { text-align: center; padding: 2em; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Photography Project Admin</h1>
-
-        <div id="create-project-section">
-            <h2>Create New Project</h2>
-            <input type="text" id="project-name" placeholder="Enter Project Name">
-            <button onclick="createProject()">Create Project</button>
+    <div id="project-content">
+        <div class="header">
+            <h1 id="project-title">Loading Project...</h1>
         </div>
 
-        <div id="upload-section" class="hidden">
-            <h2 id="current-project-name"></h2>
-            <p>Upload images for this project:</p>
-            <input type="file" id="image-upload" multiple>
-            <p>Enter Google Drive link:</p>
-            <input type="text" id="drive-link" placeholder="https://drive.google.com/...">
-            <button onclick="saveProject()">Save and Generate Link</button>
+        <div class="gallery" id="image-gallery">
+            <!-- Images will be loaded here -->
         </div>
 
-        <div id="project-link-container" class="hidden">
-            <h3>Share this link with your customer:</h3>
-            <p id="project-link"></p>
+        <div class="drive-link-container">
+            <a id="drive-link" href="#" class="drive-link-button" target="_blank" style="display: none;">Access Google Drive Folder</a>
         </div>
     </div>
+    
+    <div id="error-content" class="info-text" style="display: none;">
+         <h1>Project Not Found</h1>
+         <p>The link may be incorrect or the project may have been removed.</p>
+    </div>
+
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -62,53 +57,50 @@
         }
 
         const db = firebase.firestore();
-        const storage = firebase.storage();
-        let currentProjectId = null;
 
-        function generateUniqueId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
 
-        function createProject() {
-            const projectName = document.getElementById('project-name').value;
-            if (!projectName.trim()) {
-                alert('Please enter a project name.');
-                return;
-            }
-            currentProjectId = generateUniqueId();
-            document.getElementById('current-project-name').innerText = `Project: ${projectName}`;
-            document.getElementById('create-project-section').classList.add('hidden');
-            document.getElementById('upload-section').classList.remove('hidden');
-        }
-
-        async function saveProject() {
-            const projectName = document.getElementById('project-name').value;
-            const driveLink = document.getElementById('drive-link').value;
-            const files = document.getElementById('image-upload').files;
-
-            if (files.length === 0) {
-                alert('Please upload at least one image.');
+            if (!projectId) {
+                showError();
                 return;
             }
 
-            const imageUrls = [];
-            for (const file of files) {
-                const storageRef = storage.ref(`${currentProjectId}/${file.name}`);
-                const uploadTask = await storageRef.put(file);
-                const url = await uploadTask.ref.getDownloadURL();
-                imageUrls.push(url);
-            }
+            db.collection('projects').doc(projectId).get().then((doc) => {
+                if (doc.exists) {
+                    const project = doc.data();
+                    document.getElementById('project-title').innerText = project.name;
+                    
+                    const driveLinkButton = document.getElementById('drive-link');
+                    if (project.driveLink) {
+                        driveLinkButton.href = project.driveLink;
+                        driveLinkButton.style.display = 'inline-block';
+                    }
 
-            await db.collection('projects').doc(currentProjectId).set({
-                name: projectName,
-                driveLink: driveLink,
-                images: imageUrls
+                    const gallery = document.getElementById('image-gallery');
+                    gallery.innerHTML = ''; // Clear any loading text
+                    if (project.images && project.images.length > 0) {
+                        project.images.forEach(imageUrl => {
+                            const img = document.createElement('img');
+                            img.src = imageUrl;
+                            gallery.appendChild(img);
+                        });
+                    } else {
+                        gallery.innerHTML = '<p class="info-text">No images have been uploaded for this project yet.</p>';
+                    }
+                } else {
+                    showError();
+                }
+            }).catch((error) => {
+                console.error("Error getting document:", error);
+                showError();
             });
+        };
 
-            const shareableLink = `${window.location.origin}/player.html?id=${currentProjectId}`;
-            document.getElementById('project-link').innerText = shareableLink;
-            document.getElementById('upload-section').classList.add('hidden');
-            document.getElementById('project-link-container').classList.remove('hidden');
+        function showError() {
+            document.getElementById('project-content').style.display = 'none';
+            document.getElementById('error-content').style.display = 'block';
         }
     </script>
 </body>
