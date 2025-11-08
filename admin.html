@@ -3,38 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Photography Projects</title>
+    <title>Photography Showcase</title>
     <style>
-        /* Add your CSS styles here */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        #app {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #444;
+        }
+        #admin-view, #customer-view, #project-creation-view {
+            display: none;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        #image-grid img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        #drive-link-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        #drive-link-container a {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+        #drive-link-container a:hover {
+            background-color: #218838;
+        }
+        #share-link-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+            text-align: center;
+        }
+        #share-link-container a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Photography Admin Panel</h1>
+    <div id="app">
+        <h1>Photography Showcase</h1>
 
-    <h2>Create New Project</h2>
-    <input type="text" id="projectName" placeholder="Enter Project Name">
-    <button onclick="createProject()">Create Project</button>
+        <!-- Admin View -->
+        <div id="admin-view">
+            <h2>Admin Panel</h2>
+            <button id="create-project-btn">Create New Project</button>
+            <div id="project-list"></div>
+        </div>
 
-    <hr>
+        <!-- Project Creation View -->
+        <div id="project-creation-view">
+            <h2>Create New Project</h2>
+            <input type="text" id="project-name" placeholder="Enter Project Name">
+            <button id="save-project-name-btn">Save and Proceed to Upload</button>
+        </div>
+        
+        <!-- Project Upload View -->
+        <div id="project-upload-view" style="display:none;">
+            <h2 id="upload-project-title"></h2>
+            <p>Upload images for your project:</p>
+            <input type="file" id="image-upload" multiple>
+            <p>Enter Google Drive link for high-resolution downloads:</p>
+            <input type="text" id="drive-link" placeholder="https://drive.google.com/...">
+            <button id="upload-btn">Upload Files and Generate Link</button>
+            <div id="upload-progress"></div>
+            <div id="share-link-container" style="display:none;">
+                <p>Share this link with your customer:</p>
+                <a href="" id="share-link" target="_blank"></a>
+            </div>
+        </div>
 
-    <h2>Manage Projects</h2>
-    <div id="projectList"></div>
 
-    <div id="uploadSection" style="display: none;">
-        <h3 id="currentProjectName"></h3>
-        <input type="file" id="imageUpload" multiple>
-        <br>
-        <input type="text" id="driveLink" placeholder="Enter Google Drive Link">
-        <br>
-        <button onclick="uploadFiles()">Upload Files and Save Link</button>
-        <p>Shareable Link: <a id="shareLink" href="" target="_blank"></a></p>
+        <!-- Customer View -->
+        <div id="customer-view">
+            <h2 id="project-title"></h2>
+            <div id="image-grid"></div>
+            <div id="drive-link-container"></div>
+        </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src="admin.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
 
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.firebasestorage.app",
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // UI Elements
+        const adminView = document.getElementById('admin-view');
+        const customerView = document.getElementById('customer-view');
+        const projectCreationView = document.getElementById('project-creation-view');
+        const projectUploadView = document.getElementById('project-upload-view');
+        
+        const createProjectBtn = document.getElementById('create-project-btn');
+        const saveProjectNameBtn = document.getElementById('save-project-name-btn');
+        const uploadBtn = document.getElementById('upload-btn');
+
+
+        // App Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                loadCustomerView(hash);
+            } else {
+                loadAdminView();
+            }
+        });
+        
+        function clearViews() {
+            adminView.style.display = 'none';
+            customerView.style.display = 'none';
+            projectCreationView.style.display = 'none';
+            projectUploadView.style.display = 'none';
+        }
+
+        function loadAdminView() {
+            clearViews();
+            adminView.style.display = 'block';
+        }
+        
+        createProjectBtn.addEventListener('click', () => {
+            clearViews();
+            projectCreationView.style.display = 'block';
+        });
+
+        let currentProjectId = null;
+
+        saveProjectNameBtn.addEventListener('click', () => {
+            const projectName = document.getElementById('project-name').value.trim();
+            if (!projectName) {
+                alert('Please enter a project name.');
+                return;
+            }
+            
+            const projectsRef = database.ref('projects');
+            const newProjectRef = projectsRef.push();
+            currentProjectId = newProjectRef.key;
+            
+            newProjectRef.set({
+                name: projectName,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            }).then(() => {
+                clearViews();
+                projectUploadView.style.display = 'block';
+                document.getElementById('upload-project-title').innerText = `Project: ${projectName}`;
+            }).catch(error => {
+                console.error("Error creating project: ", error);
+                alert("Could not create project. See console for details.");
+            });
+        });
+
+        uploadBtn.addEventListener('click', () => {
+            if (!currentProjectId) {
+                alert("No project selected.");
+                return;
+            }
+
+            const files = document.getElementById('image-upload').files;
+            const driveLink = document.getElementById('drive-link').value.trim();
+
+            if (files.length === 0) {
+                alert('Please select images to upload.');
+                return;
+            }
+
+            const uploadProgress = document.getElementById('upload-progress');
+            uploadProgress.innerHTML = '';
+            
+            const imageUrls = [];
+            let filesUploaded = 0;
+
+            Array.from(files).forEach(file => {
+                const uploadTask = storage.ref(`images/${currentProjectId}/${file.name}`).put(file);
+
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        uploadProgress.innerHTML = `Uploading ${filesUploaded + 1} of ${files.length}... ${Math.round(progress)}%`;
+                    }, 
+                    (error) => {
+                        console.error("Upload failed: ", error);
+                        alert("An error occurred during upload. Check the console.");
+                    }, 
+                    () => {
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            imageUrls.push(downloadURL);
+                            filesUploaded++;
+                            if (filesUploaded === files.length) {
+                                database.ref(`projects/${currentProjectId}`).update({
+                                    images: imageUrls,
+                                    driveLink: driveLink
+                                }).then(() => {
+                                    uploadProgress.innerHTML = 'Upload complete!';
+                                    generateShareLink(currentProjectId);
+                                });
+                            }
+                        });
+                    }
+                );
+            });
+        });
+
+        function generateShareLink(projectId) {
+            const shareLinkContainer = document.getElementById('share-link-container');
+            const shareLink = document.getElementById('share-link');
+            const url = `${window.location.origin}${window.location.pathname}#${projectId}`;
+            
+            shareLink.href = url;
+            shareLink.innerText = url;
+            shareLinkContainer.style.display = 'block';
+        }
+
+
+        function loadCustomerView(projectId) {
+            clearViews();
+            customerView.style.display = 'block';
+            
+            const projectRef = database.ref(`projects/${projectId}`);
+            projectRef.on('value', (snapshot) => {
+                const projectData = snapshot.val();
+                if (projectData) {
+                    document.getElementById('project-title').innerText = projectData.name;
+                    
+                    const imageGrid = document.getElementById('image-grid');
+                    imageGrid.innerHTML = '';
+                    if (projectData.images) {
+                        projectData.images.forEach(imageUrl => {
+                            const img = document.createElement('img');
+                            img.src = imageUrl;
+                            imageGrid.appendChild(img);
+                        });
+                    }
+
+                    const driveLinkContainer = document.getElementById('drive-link-container');
+                    driveLinkContainer.innerHTML = '';
+                    if (projectData.driveLink) {
+                        const link = document.createElement('a');
+                        link.href = projectData.driveLink;
+                        link.innerText = 'Download High-Res Images';
+                        link.target = '_blank';
+                        driveLinkContainer.appendChild(link);
+                    }
+                } else {
+                    document.getElementById('project-title').innerText = 'Project not found.';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
