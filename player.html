@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Photography Project</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f4f4f4; }
+        .header { background: #333; color: white; padding: 1em; text-align: center; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1em; padding: 1em; }
+        .gallery img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .drive-link-container { text-align: center; padding: 2em; }
+        .drive-link-button { padding: 1em 2em; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .drive-link-button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 id="project-title"></h1>
+    </div>
+
+    <div class="gallery" id="image-gallery">
+        <!-- Images will be loaded here -->
+    </div>
+
+    <div class="drive-link-container">
+        <a id="drive-link" href="#" class="drive-link-button" target="_blank">View on Google Drive</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const db = firebase.firestore();
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+
+            if (projectId) {
+                db.collection('projects').doc(projectId).get().then((doc) => {
+                    if (doc.exists) {
+                        const project = doc.data();
+                        document.getElementById('project-title').innerText = project.name;
+                        document.getElementById('drive-link').href = project.driveLink;
+
+                        const gallery = document.getElementById('image-gallery');
+                        project.images.forEach(imageUrl => {
+                            const img = document.createElement('img');
+                            img.src = imageUrl;
+                            gallery.appendChild(img);
+                        });
+                    } else {
+                        document.getElementById('project-title').innerText = "Project not found.";
+                    }
+                }).catch((error) => {
+                    console.error("Error getting document:", error);
+                    document.getElementById('project-title').innerText = "Error loading project.";
+                });
+            }
+        };
+    </script>
+</body>
+</html>
