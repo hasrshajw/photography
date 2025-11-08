@@ -219,7 +219,7 @@
                     console.error("Upload failed for file: ", file.name, error);
                     statusText.textContent = 'Upload Failed';
                     statusText.classList.add('error');
-                    totalFiles--; // Decrement total files to check completion correctly
+                    totalFiles--; 
                     checkAllUploadsComplete(); 
                 },
                 () => {
@@ -235,7 +235,7 @@
         }
         
         function checkAllUploadsComplete() {
-            if (successfulUploads === totalFiles) {
+            if (successfulUploads === totalFiles && totalFiles > 0) {
                 createProjectBtn.disabled = false;
                 createProjectBtn.textContent = 'Create Project';
             }
@@ -259,7 +259,6 @@
             createProjectBtn.textContent = 'Saving...';
 
             try {
-                console.log("Attempting to save to Firestore...");
                 const sortedUrls = uploadedImageUrls.sort((a, b) => a.index - b.index).map(item => item.url);
 
                 await db.collection('projects').add({
@@ -269,10 +268,8 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                console.log("Firestore save successful!");
                 alert('Project created successfully!');
                 
-                // Reset the form
                 document.getElementById('projectName').value = '';
                 document.getElementById('driveLink').value = '';
                 imageUpload.value = '';
@@ -282,12 +279,10 @@
                 successfulUploads = 0;
 
             } catch (error) {
-                // THIS IS THE MOST IMPORTANT PART FOR DEBUGGING YOUR ISSUE
                 console.error("FIRESTORE SAVE FAILED: ", error);
-                alert(`Error: Could not save the project to the database.\n\nREASON: ${error.message}\n\nPlease check your Firestore security rules and ensure you are authenticated.`);
+                alert(`Error: Could not save the project to the database.\n\nREASON: ${error.message}`);
             
             } finally {
-                // This block runs whether the try succeeded or failed
                 createProjectBtn.disabled = false;
                 createProjectBtn.textContent = 'Create Project';
             }
