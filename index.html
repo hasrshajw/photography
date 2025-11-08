@@ -3,29 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Create Project</title>
+    <title>Projects</title>
     <style>
         body { font-family: sans-serif; margin: 2em; }
-        .container { max-width: 600px; margin: auto; }
-        input, button { display: block; width: 100%; padding: 10px; margin-bottom: 10px; }
-        #image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-        img { max-width: 100px; max-height: 100px; }
+        .projects-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .project-card { border: 1px solid #ccc; border-radius: 8px; padding: 15px; }
+        .project-card h2 { margin-top: 0; }
+        .image-gallery { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .image-gallery img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; }
+        .drive-link a { text-decoration: none; background-color: #007bff; color: white; padding: 10px 15px; border-radius: 4px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Create a New Project</h1>
-        <input type="text" id="projectName" placeholder="Project Name">
-        <input type="file" id="imageUpload" multiple accept="image/*">
-        <div id="image-previews"></div>
-        <input type="text" id="driveLink" placeholder="Google Drive Link">
-        <button onclick="createProject()">Create Project</button>
-    </div>
+    <h1>Our Projects</h1>
+    <div id="projects-container" class="projects-container"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -41,62 +36,43 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         auth.signInAnonymously().catch(error => console.error(error));
 
-        const imageUpload = document.getElementById('imageUpload');
-        const imagePreviews = document.getElementById('image-previews');
+        const projectsContainer = document.getElementById('projects-container');
 
-        imageUpload.addEventListener('change', (e) => {
-            imagePreviews.innerHTML = '';
-            for (const file of e.target.files) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
+        db.collection('projects').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            projectsContainer.innerHTML = '';
+            snapshot.forEach(doc => {
+                const project = doc.data();
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+
+                const projectName = document.createElement('h2');
+                projectName.textContent = project.name;
+                projectCard.appendChild(projectName);
+
+                const imageGallery = document.createElement('div');
+                imageGallery.className = 'image-gallery';
+                project.images.forEach(imageUrl => {
                     const img = document.createElement('img');
-                    img.src = event.target.result;
-                    imagePreviews.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        async function createProject() {
-            const projectName = document.getElementById('projectName').value;
-            const driveLink = document.getElementById('driveLink').value;
-            const files = imageUpload.files;
-
-            if (!projectName || files.length === 0 || !driveLink) {
-                alert('Please fill out all fields.');
-                return;
-            }
-
-            try {
-                const imageUrls = [];
-                for (const file of files) {
-                    const storageRef = storage.ref(`images/${projectName}/${file.name}`);
-                    await storageRef.put(file);
-                    const url = await storageRef.getDownloadURL();
-                    imageUrls.push(url);
-                }
-
-                await db.collection('projects').add({
-                    name: projectName,
-                    images: imageUrls,
-                    driveLink: driveLink,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    img.src = imageUrl;
+                    imageGallery.appendChild(img);
                 });
+                projectCard.appendChild(imageGallery);
 
-                alert('Project created successfully!');
-                document.getElementById('projectName').value = '';
-                document.getElementById('driveLink').value = '';
-                imageUpload.value = '';
-                imagePreviews.innerHTML = '';
-            } catch (error) {
-                console.error("Error creating project: ", error);
-                alert('Error creating project. See console for details.');
-            }
-        }
+                const driveLinkContainer = document.createElement('div');
+                driveLinkContainer.className = 'drive-link';
+                const driveLink = document.createElement('a');
+                driveLink.href = project.driveLink;
+                driveLink.textContent = 'View on Google Drive';
+                driveLink.target = '_blank';
+                driveLinkContainer.appendChild(driveLink);
+                projectCard.appendChild(driveLinkContainer);
+
+                projectsContainer.appendChild(projectCard);
+            });
+        });
     </script>
 </body>
 </html>
