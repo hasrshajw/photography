@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Create Project</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .container { max-width: 600px; margin: auto; }
+        input, button { display: block; width: 100%; padding: 10px; margin-bottom: 10px; }
+        #image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        img { max-width: 100px; max-height: 100px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a New Project</h1>
+        <input type="text" id="projectName" placeholder="Project Name">
+        <input type="file" id="imageUpload" multiple accept="image/*">
+        <div id="image-previews"></div>
+        <input type="text" id="driveLink" placeholder="Google Drive Link">
+        <button onclick="createProject()">Create Project</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.firebasestorage.app",
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        auth.signInAnonymously().catch(error => console.error(error));
+
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreviews = document.getElementById('image-previews');
+
+        imageUpload.addEventListener('change', (e) => {
+            imagePreviews.innerHTML = '';
+            for (const file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    imagePreviews.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function createProject() {
+            const projectName = document.getElementById('projectName').value;
+            const driveLink = document.getElementById('driveLink').value;
+            const files = imageUpload.files;
+
+            if (!projectName || files.length === 0 || !driveLink) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const storageRef = storage.ref(`images/${projectName}/${file.name}`);
+                    await storageRef.put(file);
+                    const url = await storageRef.getDownloadURL();
+                    imageUrls.push(url);
+                }
+
+                await db.collection('projects').add({
+                    name: projectName,
+                    images: imageUrls,
+                    driveLink: driveLink,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                alert('Project created successfully!');
+                document.getElementById('projectName').value = '';
+                document.getElementById('driveLink').value = '';
+                imageUpload.value = '';
+                imagePreviews.innerHTML = '';
+            } catch (error) {
+                console.error("Error creating project: ", error);
+                alert('Error creating project. See console for details.');
+            }
+        }
+    </script>
+</body>
+</html>
