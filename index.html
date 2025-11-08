@@ -3,202 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Photography Projects</title>
+    <title>Admin - Create Project</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
-        .container { max-width: 960px; margin: 2em auto; padding: 2em; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1, h2 { color: #212529; }
-        #projects-list { list-style-type: none; padding: 0; }
-        #projects-list li { background: #e9ecef; padding: 15px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .project-actions button { margin-left: 10px; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; }
-        .edit-btn { background-color: #ffc107; }
-        .link-btn { background-color: #17a2b8; color: white; }
-        #project-form-container { background: #fdfdfe; border: 1px solid #ddd; padding: 2em; margin-top: 2em; border-radius: 8px; }
-        input[type="text"], input[type="file"], button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #ced4da; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        body { font-family: sans-serif; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 500px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #0056b3; }
-        #main-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2em; }
-        #current-images { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1em; }
-        #current-images img { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; }
-        .hidden { display: none; }
+        #projectLink { margin-top: 20px; word-break: break-all; }
+        #projectLink a { color: #007bff; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="main-actions">
-            <h1>Admin Panel</h1>
-            <button onclick="showCreateForm()">+ Create New Project</button>
-        </div>
-
-        <h2>All Projects</h2>
-        <ul id="projects-list"></ul>
-
-        <div id="project-form-container" class="hidden">
-            <h2 id="form-title">Create Project</h2>
-            <input type="text" id="project-name" placeholder="Enter Project Name">
-            <input type="text" id="drive-link" placeholder="Enter Google Drive Link">
-            <div>
-                <label for="image-upload">Upload New Images:</label>
-                <input type="file" id="image-upload" multiple>
-            </div>
-            <div id="current-images-container">
-                <h3>Current Images:</h3>
-                <div id="current-images"></div>
-            </div>
-            <button onclick="saveProject()">Save Project</button>
-            <button onclick="hideForm()" style="background-color: #6c757d; margin-top: 10px;">Cancel</button>
-        </div>
+        <h1>Create a New Project</h1>
+        <input type="text" id="projectName" placeholder="Enter Project Name">
+        <button onclick="createProject()">Create Project</button>
+        <div id="projectLink"></div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-            authDomain: "harsha-demo01.firebaseapp.com",
-            projectId: "harsha-demo01",
-            storageBucket: "harsha-demo01.firebasestorage.app",
-            messagingSenderId: "676891713475",
-            appId: "1:676891713475:web:a57e93657253e27a382776",
-            measurementId: "G-B211571YB4"
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.firebasestorage.app",
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage();
-        let currentProjectId = null;
 
-        const projectListEl = document.getElementById('projects-list');
-        const formContainerEl = document.getElementById('project-form-container');
-        const projectNameEl = document.getElementById('project-name');
-        const driveLinkEl = document.getElementById('drive-link');
-        const imageUploadEl = document.getElementById('image-upload');
-        const formTitleEl = document.getElementById('form-title');
-        const currentImagesContainerEl = document.getElementById('current-images-container');
-        const currentImagesEl = document.getElementById('current-images');
-
-        async function loadProjects() {
-            projectListEl.innerHTML = '<li>Loading projects...</li>';
-            const snapshot = await db.collection('projects').get();
-            projectListEl.innerHTML = '';
-            if (snapshot.empty) {
-                projectListEl.innerHTML = '<li>No projects found. Create one!</li>';
+        function createProject() {
+            const projectName = document.getElementById('projectName').value;
+            if (projectName.trim() === '') {
+                alert('Please enter a project name.');
                 return;
             }
-            snapshot.forEach(doc => {
-                const project = doc.data();
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${project.name}</span>
-                    <div class="project-actions">
-                        <button class="edit-btn" onclick="showEditForm('${doc.id}')">Edit</button>
-                        <button class="link-btn" onclick="getShareableLink('${doc.id}')">Get Link</button>
-                    </div>
+
+            const projectLinkDiv = document.getElementById('projectLink');
+            projectLinkDiv.innerHTML = 'Creating project...';
+
+            db.collection('projects').add({
+                name: projectName,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then((docRef) => {
+                const projectUrl = `${window.location.origin}/project.html?id=${docRef.id}`;
+                projectLinkDiv.innerHTML = `
+                    <p>Project Created!</p>
+                    <p>Share this link:</p>
+                    <a href="${projectUrl}" target="_blank">${projectUrl}</a>
                 `;
-                projectListEl.appendChild(li);
+            })
+            .catch((error) => {
+                console.error("Error adding document: ", error);
+                projectLinkDiv.innerHTML = 'Error creating project.';
             });
         }
-
-        function showCreateForm() {
-            currentProjectId = null;
-            formTitleEl.innerText = "Create New Project";
-            projectNameEl.value = '';
-            driveLinkEl.value = '';
-            imageUploadEl.value = '';
-            currentImagesEl.innerHTML = '';
-            currentImagesContainerEl.classList.add('hidden');
-            formContainerEl.classList.remove('hidden');
-        }
-
-        async function showEditForm(id) {
-            currentProjectId = id;
-            const doc = await db.collection('projects').doc(id).get();
-            if (!doc.exists) {
-                alert("Project not found!");
-                return;
-            }
-            const project = doc.data();
-            formTitleEl.innerText = "Edit Project";
-            projectNameEl.value = project.name;
-            driveLinkEl.value = project.driveLink || '';
-            imageUploadEl.value = '';
-            
-            currentImagesEl.innerHTML = '';
-            if (project.images && project.images.length > 0) {
-                 project.images.forEach(url => {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    currentImagesEl.appendChild(img);
-                });
-                currentImagesContainerEl.classList.remove('hidden');
-            } else {
-                 currentImagesContainerEl.classList.add('hidden');
-            }
-
-            formContainerEl.classList.remove('hidden');
-        }
-
-        function hideForm() {
-            formContainerEl.classList.add('hidden');
-        }
-
-        async function saveProject() {
-            const projectName = projectNameEl.value;
-            const driveLink = driveLinkEl.value;
-            const files = imageUploadEl.files;
-
-            if (!projectName.trim()) {
-                alert('Project name is required.');
-                return;
-            }
-
-            const isNewProject = currentProjectId === null;
-            const projectId = isNewProject ? db.collection('projects').doc().id : currentProjectId;
-
-            let newImageUrls = [];
-            if (files.length > 0) {
-                for (const file of files) {
-                    const storageRef = storage.ref(`${projectId}/${file.name}`);
-                    const uploadTask = await storageRef.put(file);
-                    const url = await uploadTask.ref.getDownloadURL();
-                    newImageUrls.push(url);
-                }
-            }
-            
-            if (isNewProject) {
-                await db.collection('projects').doc(projectId).set({
-                    name: projectName,
-                    driveLink: driveLink,
-                    images: newImageUrls,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } else {
-                const docRef = db.collection('projects').doc(projectId);
-                const doc = await docRef.get();
-                const existingImages = doc.data().images || [];
-                await docRef.update({
-                    name: projectName,
-                    driveLink: driveLink,
-                    images: [...existingImages, ...newImageUrls]
-                });
-            }
-            
-            hideForm();
-            loadProjects();
-        }
-
-        function getShareableLink(id) {
-            const link = `${window.location.origin}${window.location.pathname.replace('admin.html', '')}player.html?id=${id}`;
-            prompt("Copy this link to share with your customer:", link);
-        }
-
-        window.onload = loadProjects;
     </script>
+
 </body>
 </html>
