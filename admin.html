@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Manager</title>
+    <title>Project Manager with Images</title>
     <!-- CSS styles are embedded here -->
     <style>
         body {
@@ -35,11 +35,6 @@
             border: 1px solid #ddd;
             box-sizing: border-box;
         }
-        input[type="file"] {
-            border: 1px dashed #ddd;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
         button {
             color: white;
             border: none;
@@ -66,10 +61,11 @@
             gap: 15px;
         }
         .project img {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border-radius: 5px;
             object-fit: cover;
+            flex-shrink: 0;
         }
         .project-details { flex-grow: 1; }
         .project-actions button {
@@ -95,7 +91,7 @@
             background-color: #e0e0e0;
             border-radius: 5px;
             margin-bottom: 10px;
-            display: none;
+            display: none; /* Hidden by default */
         }
         #upload-progress-bar {
             width: 0%;
@@ -105,12 +101,13 @@
             line-height: 20px;
             color: white;
             border-radius: 5px;
+            transition: width 0.3s ease-in-out;
         }
+
         /* Modal styles */
         .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
         .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px; }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
-        .close-btn:hover, .close-btn:focus { color: black; text-decoration: none; cursor: pointer; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -131,7 +128,7 @@
                 <h2>Create a New Project</h2>
                 <input type="text" id="projectName" placeholder="Project Name" required>
                 <input type="text" id="driveLink" placeholder="Google Drive Link" required>
-                <label for="projectImage">Project Image:</label>
+                <label for="projectImage" style="text-align: left; display: block; margin-bottom: 5px; font-weight: 500;">Project Image:</label>
                 <input type="file" id="projectImage" accept="image/*" required>
                 
                 <div id="upload-progress-container">
@@ -160,7 +157,7 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Scripts -->
+    <!-- Firebase SDK Scripts (Compat version for simplicity with existing code) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -171,7 +168,7 @@
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
           projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.appspot.com", // Ensure this is correct
+          storageBucket: "harsha-demo01.appspot.com", // Make sure this is correct
           messagingSenderId: "676891713475",
           appId: "1:676891713475:web:a57e93657253e27a382776",
           measurementId: "G-B211571YB4"
@@ -180,7 +177,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage();
+        const storage = firebase.storage(); // Initialize Storage
         const projectsCollection = db.collection('projects');
         let unsubscribe;
 
@@ -210,7 +207,7 @@
             auth.signOut().catch(error => console.error("Sign out error:", error));
         }
 
-        // --- FIRESTORE & STORAGE ---
+        // --- FIRESTORE & STORAGE (NEW UPLOAD LOGIC) ---
 
         function createProject() {
             const projectName = document.getElementById('projectName').value;
@@ -225,7 +222,7 @@
             }
 
             addButton.disabled = true;
-            addButton.textContent = 'Uploading...';
+            addButton.textContent = 'Uploading Image...';
 
             const progressContainer = document.getElementById('upload-progress-container');
             const progressBar = document.getElementById('upload-progress-bar');
@@ -233,35 +230,44 @@
             progressBar.style.width = '0%';
             progressBar.textContent = '0%';
 
-            // Create a unique file path
+            // Create a unique file path within a user-specific folder
             const filePath = `project-images/${user.uid}/${Date.now()}_${imageFile.name}`;
             const storageRef = storage.ref(filePath);
             const uploadTask = storageRef.put(imageFile);
 
+            // This is the core upload logic, similar to the example you provided
             uploadTask.on('state_changed', 
                 (snapshot) => {
+                    // Progress function
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     progressBar.style.width = progress + '%';
                     progressBar.textContent = Math.round(progress) + '%';
                 }, 
                 (error) => {
+                    // Error function
                     console.error("Upload failed:", error);
                     alert("Image upload failed. Please try again.");
                     resetForm();
                 }, 
                 () => {
+                    // Complete function
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+
+                        // Now add the project data to Firestore
                         projectsCollection.add({
                             name: projectName,
                             link: driveLink,
-                            imageUrl: downloadURL,
+                            imageUrl: downloadURL, // The public URL of the image
                             imagePath: filePath, // Store path for potential deletion later
                             userId: user.uid,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         }).then(() => {
+                            console.log("Project added to Firestore!");
                             resetForm();
                         }).catch(error => {
                             console.error("Error adding project to Firestore: ", error);
+                            alert("Failed to save project data.");
                             resetForm();
                         });
                     });
@@ -292,19 +298,16 @@
             const container = document.getElementById('projects-container');
             container.innerHTML = '';
             projects.forEach(project => {
-                const safeName = project.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                const safeLink = project.link.replace(/"/g, "&quot;");
-
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'project';
                 projectDiv.innerHTML = `
-                    <img src="${project.imageUrl}" alt="${safeName} preview">
+                    <img src="${project.imageUrl}" alt="${project.name} preview">
                     <div class="project-details">
-                        <strong>${safeName}</strong><br>
-                        <a href="${safeLink}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
+                        <strong>${project.name}</strong><br>
+                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
                     </div>
                     <div class="project-actions">
-                        <button class="btn-edit" onclick="openEditModal('${project.id}', \`${safeName}\`, \`${safeLink}\`)">Edit</button>
+                        <button class="btn-edit" onclick="openEditModal('${project.id}', \`${project.name}\`, \`${project.link}\`)">Edit</button>
                     </div>
                 `;
                 container.appendChild(projectDiv);
