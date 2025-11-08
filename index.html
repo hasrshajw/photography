@@ -9,226 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
-    <style>
-        :root {
-            --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
-            --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
-            --brand-hover: #2563EB; --danger-color: #EF4444; --success-color: #10B981;
-            --font-family: 'IBM Plex Sans', sans-serif;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: var(--font-family); background-color: var(--body-bg); color: var(--text-primary);
-            font-size: 16px; line-height: 1.6;
-        }
-        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
-        h1, h2, h3 { color: var(--text-primary); margin-bottom: 1rem; font-weight: 600; }
-        h1 { font-size: 2.25rem; text-align: center; }
-        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem; }
-        
-        /* --- AUTH SECTION --- */
-        #auth-container {
-            text-align: center; background: var(--widget-bg); padding: 1.5rem; border-radius: 12px;
-            border: 1px solid var(--border-color); margin-bottom: 2rem;
-            display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem;
-        }
-        #auth-container #user-display { display: none; }
-        #auth-container #logout-btn { display: none; }
-        #auth-container.logged-in #login-btn { display: none; }
-        #auth-container.logged-in #user-display, #auth-container.logged-in #logout-btn { display: inline-block; }
-        
-        /* --- MAIN CONTENT --- */
-        #main-content { display: none; }
-        .form-wrapper {
-            background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color);
-            padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
-        }
-        
-        /* --- FORM STYLES --- */
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
-        input[type="text"] {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
-            border-radius: 8px; font-size: 1rem; font-family: var(--font-family);
-            background-color: #F9FAFB; transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        input[type="text"]:focus {
-            outline: none; border-color: var(--brand-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-        
-        /* --- BUTTONS --- */
-        .btn {
-            padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer;
-            font-size: 1rem; font-weight: 600; transition: background-color 0.2s ease;
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-        }
-        .btn-primary { background-color: var(--brand-color); color: white; }
-        .btn-primary:hover { background-color: var(--brand-hover); }
-        .btn-primary:disabled { background-color: #93C5FD; cursor: not-allowed; }
-        .btn-google { background-color: #DB4437; color: white; }
-        .btn-google:hover { background-color: #c23321; }
-        .btn-secondary { background-color: #6B7280; color: white; }
-        .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-success { background-color: var(--success-color); color: white; }
-        .btn-success:hover { background-color: #059669; }
-        #cancel-edit-btn { display: none; }
-
-        /* --- SPINNER & MESSAGES --- */
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%;
-            width: 18px; height: 18px; animation: spin 1s linear infinite; display: none;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* Local form message */
-        .message {
-            padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; display: none;
-            border: 1px solid transparent;
-        }
-        
-        /* Global notification message (for copy-paste) */
-        #global-message {
-            position: fixed; top: 20px; left: 50%;
-            transform: translateX(-50%); z-index: 1000;
-            padding: 1rem 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .message.success { background-color: #D1FAE5; color: #065F46; border-color: #A7F3D0; }
-        .message.error { background-color: #FEE2E2; color: #991B1B; border-color: #FECACA; }
-        
-        /* --- PHOTO UPLOAD --- */
-        #drop-area {
-            border: 2px dashed var(--border-color); border-radius: 12px; padding: 2.5rem;
-            text-align: center; cursor: pointer; transition: all 0.3s ease;
-            background-color: var(--body-bg);
-        }
-        #drop-area:hover, #drop-area.drag-over {
-            border-color: var(--brand-color); background-color: #EFF6FF;
-        }
-        #drop-area i { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; }
-        #drop-area p { color: var(--text-secondary); }
-        #drop-area p strong { color: var(--brand-color); }
-        #file-input { display: none; }
-
-        #image-preview-container {
-            margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        .image-preview-card {
-            background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 0.75rem; display: flex; align-items: center; justify-content: space-between;
-            gap: 0.5rem; position: relative; overflow: hidden;
-        }
-        .file-info { flex-grow: 1; min-width: 0; }
-        .file-name {
-            font-weight: 500; font-size: 0.9rem; white-space: nowrap;
-            overflow: hidden; text-overflow: ellipsis;
-        }
-        .status-and-actions { display: flex; align-items: center; gap: 0.5rem; }
-        .status-icon {
-            width: 24px; height: 24px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; color: white;
-        }
-        .status-icon.success { background-color: var(--success-color); }
-        .status-icon.danger { background-color: var(--danger-color); }
-        .delete-btn {
-            background: none; border: none; cursor: pointer; color: var(--text-secondary);
-            font-size: 1.5rem; padding: 0.25rem; line-height: 1;
-        }
-        .delete-btn:hover { color: var(--danger-color); }
-        .progress-bar-wrapper {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
-            background-color: #E5E7EB;
-        }
-        .progress-bar { height: 100%; background-color: var(--brand-color); width: 0%; transition: width 0.3s ease; }
-        .no-images { color: var(--text-secondary); text-align: center; grid-column: 1 / -1; }
-
-        /* --- PROJECTS LIST --- */
-        #projects-list { margin-top: 2rem; }
-        .project-card {
-            background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color);
-            padding: 1.5rem; margin-bottom: 1rem;
-        }
-        .project-card h3 { margin-top: 0; }
-        .project-card a { color: var(--brand-color); text-decoration: none; font-weight: 500; }
-        .project-card a:hover { text-decoration: underline; }
-        .project-images {
-            display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;
-        }
-        .project-images img {
-            width: 100px; height: 100px; object-fit: cover; border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        .project-actions {
-            margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;
-            display: flex; gap: 0.5rem; justify-content: flex-end;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="global-message" class="message" style="display: none;"></div>
-
-    <div class="container">
-        <h1>Project Manager</h1>
-
-        <div id="auth-container">
-            <span id="user-display">Loading...</span>
-            <button id="login-btn" class="btn btn-google"><i class='bx bxl-google'></i> Sign In with Google</button>
-            <button id="logout-btn" class="btn btn-secondary">Sign Out</button>
-        </div>
-
-        <div id="main-content">
-            <div class="form-wrapper">
-                <h2 id="form-title">Create a New Project</h2>
-                <div id="form-message" class="message" style="display: none;"></div>
-                <form id="project-form">
-                    <div class="form-group">
-                        <label for="project-name">Project Name</label>
-                        <input type="text" id="project-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="drive-link">Google Drive Link</label>
-                        <input type="text" id="drive-link" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Project Images</label>
-                        <div id="drop-area">
-                            <input type="file" id="file-input" accept="image/*" multiple>
-                            <i class='bx bx-cloud-upload'></i>
-                            <p>Drop images here, or <strong>browse</strong></p>
-                        </div>
-                        <div id="image-preview-container">
-                             <p class="no-images">No images selected.</p>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <button type="submit" id="submit-btn" class="btn btn-primary">
-                            Add Project
-                            <div class="spinner" id="submit-spinner"></div>
-                        </button>
-                         <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
-                    </div>
-                </form>
-            </div>
-            
-            <div id="projects-list">
-                <h2>My Projects</h2>
-                <div id="projects-container">
-                    <p>Loading projects...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
 
+        // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
@@ -239,34 +26,42 @@
           measurementId: "G-B211571YB4"
         };
         
+        // --- INITIALIZE FIREBASE ---
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // --- GLOBAL STATE ---
         let currentUser = null;
         let editingProjectId = null;
-        let projectFiles = [];
-        let firestoreUnsubscribe = null;
+        let projectFiles = []; // To manage file uploads for a project
+        let firestoreUnsubscribe = null; // To detach listener on logout
 
+        // --- UI ELEMENTS ---
         const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const authContainer = document.getElementById('auth-container');
         const mainContent = document.getElementById('main-content');
         const userDisplay = document.getElementById('user-display');
+        
         const projectForm = document.getElementById('project-form');
         const formTitle = document.getElementById('form-title');
         const projectNameInput = document.getElementById('project-name');
         const driveLinkInput = document.getElementById('drive-link');
+        
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('file-input');
         const imagePreviewContainer = document.getElementById('image-preview-container');
+        
         const submitBtn = document.getElementById('submit-btn');
         const cancelBtn = document.getElementById('cancel-edit-btn');
         const submitSpinner = document.getElementById('submit-spinner');
         const formMessage = document.getElementById('form-message');
         const projectsContainer = document.getElementById('projects-container');
+        const globalMessage = document.getElementById('global-message');
 
+        // --- AUTHENTICATION ---
         const googleProvider = new GoogleAuthProvider();
         const signInWithGoogle = () => signInWithPopup(auth, googleProvider).catch(err => console.error(err));
         const doSignOut = () => signOut(auth).catch(err => console.error(err));
@@ -287,6 +82,7 @@
             }
         });
 
+        // --- IMAGE UPLOAD LOGIC ---
         const handleFiles = (files) => {
             if (!files || files.length === 0) return;
             Array.from(files).forEach(file => {
@@ -296,7 +92,7 @@
                     showMessage(`File '${file.name}' is not an image and was ignored.`, false);
                 }
             });
-            fileInput.value = '';
+            fileInput.value = ''; // Reset input
         };
 
         const uploadFile = (file) => {
@@ -308,29 +104,34 @@
             const storagePath = `projects/${currentUser.uid}/${Date.now()}-${file.name}`;
             const storageRef = ref(storage, storagePath);
             const uploadTask = uploadBytesResumable(storageRef, file);
-            const fileState = { id: uniqueId, fileName: file.name, status: 'uploading', progress: 0, storagePath: storagePath, downloadURL: null, isPersisted: false, uploadTask: uploadTask };
+            const fileState = { id: uniqueId, fileName: file.name, status: 'uploading', progress: 0, storagePath, downloadURL: null, isPersisted: false, uploadTask };
             projectFiles.push(fileState);
             renderImagePreviews();
-            uploadTask.on('state_changed', (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
-                if (fileToUpdate) { fileToUpdate.progress = progress; renderImagePreviews(); }
-            }, (error) => {
-                console.error("Upload error:", error);
-                const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
-                if (fileToUpdate) { fileToUpdate.status = 'failed'; renderImagePreviews(); }
-            }, async () => {
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
-                if (fileToUpdate) { fileToUpdate.status = 'completed'; fileToUpdate.downloadURL = downloadURL; renderImagePreviews(); }
-            });
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) { fileToUpdate.progress = progress; renderImagePreviews(); }
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) { fileToUpdate.status = 'failed'; renderImagePreviews(); }
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    const fileToUpdate = projectFiles.find(f => f.id === uniqueId);
+                    if (fileToUpdate) { fileToUpdate.status = 'completed'; fileToUpdate.downloadURL = downloadURL; renderImagePreviews(); }
+                }
+            );
         };
         
         const deleteImage = async (fileId) => {
             const fileIndex = projectFiles.findIndex(f => f.id === fileId);
             if (fileIndex === -1) return;
             const fileToDelete = projectFiles[fileIndex];
-            if (fileToDelete.status === 'uploading') { fileToDelete.uploadTask.cancel(); }
+            if (fileToDelete.status === 'uploading') fileToDelete.uploadTask.cancel();
             if (fileToDelete.downloadURL) {
                 try { await deleteObject(ref(storage, fileToDelete.storagePath)); } catch (error) { console.error("Error deleting image from storage:", error); }
             }
@@ -340,65 +141,78 @@
 
         const renderImagePreviews = () => {
             imagePreviewContainer.innerHTML = projectFiles.length === 0 ? `<p class="no-images">No images selected.</p>` : '';
-            if (projectFiles.length > 0) {
-                projectFiles.forEach(file => {
-                    const card = document.createElement('div');
-                    card.className = 'image-preview-card';
-                    card.dataset.id = file.id;
-                    let statusIcon = '';
-                    if(file.status === 'completed') statusIcon = `<div class="status-icon success"><i class='bx bx-check'></i></div>`;
-                    if(file.status === 'failed') statusIcon = `<div class="status-icon danger"><i class='bx bx-error'></i></div>`;
-                    card.innerHTML = `<div class="file-info"><span class="file-name">${file.fileName}</span></div><div class="status-and-actions">${statusIcon}<button type="button" class="delete-btn" data-id="${file.id}"><i class='bx bx-x'></i></button></div>${file.status === 'uploading' ? `<div class="progress-bar-wrapper"><div class="progress-bar" style="width: ${file.progress}%"></div></div>` : ''}`;
-                    imagePreviewContainer.appendChild(card);
-                });
-            }
+            if (projectFiles.length === 0) return;
+
+            projectFiles.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'image-preview-card';
+                let statusIcon = '';
+                if(file.status === 'completed') statusIcon = `<div class="status-icon success"><i class='bx bx-check'></i></div>`;
+                if(file.status === 'failed') statusIcon = `<div class="status-icon danger"><i class='bx bx-error'></i></div>`;
+
+                card.innerHTML = `
+                    <div class="file-info"><span class="file-name">${file.fileName}</span></div>
+                    <div class="status-and-actions">${statusIcon}<button type="button" class="delete-btn" data-id="${file.id}"><i class='bx bx-x'></i></button></div>
+                    ${file.status === 'uploading' ? `<div class="progress-bar-wrapper"><div class="progress-bar" style="width: ${file.progress}%"></div></div>` : ''}
+                `;
+                imagePreviewContainer.appendChild(card);
+            });
         };
 
+        // --- FIRESTORE CRUD ---
         const fetchUserProjects = (userId) => {
             const q = query(collection(db, 'projects'), where("userId", "==", userId));
             firestoreUnsubscribe = onSnapshot(q, (querySnapshot) => {
-                const projects = [];
-                querySnapshot.forEach((doc) => projects.push({ id: doc.id, ...doc.data() }));
+                const projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProjects(projects);
-            }, (error) => { console.error("Error fetching projects:", error); projectsContainer.innerHTML = '<p class="error">Could not fetch projects.</p>'; });
+            }, (error) => {
+                console.error("Error fetching projects:", error);
+                projectsContainer.innerHTML = '<p class="error">Could not fetch projects.</p>';
+            });
         };
 
         const renderProjects = (projects) => {
             projectsContainer.innerHTML = projects.length === 0 ? '<p>You have not created any projects yet.</p>' : '';
-            if(projects.length > 0) {
-                projects.forEach(project => {
-                    const projectCard = document.createElement('div');
-                    projectCard.className = 'project-card';
-                    const imagesHTML = project.imageURLs && project.imageURLs.length > 0 ? project.imageURLs.map(url => `<img src="${url}" alt="${project.name} image">`).join('') : '<p>No images for this project.</p>';
-                    projectCard.innerHTML = `
-                        <div class="project-details"><h3>${project.name}</h3><a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a></div>
-                        <div class="project-images">${imagesHTML}</div>
-                        <div class="project-actions">
-                            <button class="btn btn-secondary" data-id="${project.id}" data-action="edit">Edit</button>
-                            <button class="btn btn-success" data-id="${project.id}" data-action="share">Share</button>
-                            <button class="btn btn-danger" data-id="${project.id}" data-action="delete">Delete</button>
-                        </div>`;
-                    projectsContainer.appendChild(projectCard);
-                });
-            }
+            projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                const imagesHTML = project.imageURLs?.length > 0
+                    ? project.imageURLs.map(url => `<img src="${url}" alt="${project.name} image">`).join('')
+                    : '<p>No images for this project.</p>';
+
+                projectCard.innerHTML = `
+                    <div class="project-details">
+                        <h3>${project.name}</h3>
+                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
+                    </div>
+                    <div class="project-images">${imagesHTML}</div>
+                    <div class="project-actions">
+                        <button class="btn btn-secondary" data-id="${project.id}" data-action="edit"><i class='bx bxs-edit'></i> Edit</button>
+                        <button class="btn btn-success" data-id="${project.id}" data-action="share"><i class='bx bxs-share-alt'></i> Share</button>
+                        <button class="btn btn-danger" data-id="${project.id}" data-action="delete"><i class='bx bxs-trash'></i> Delete</button>
+                    </div>
+                `;
+                projectsContainer.appendChild(projectCard);
+            });
         };
 
         const handleProjectAction = async (e) => {
             const target = e.target.closest('button');
             if (!target) return;
-            const action = target.dataset.action;
-            const projectId = target.dataset.id;
+            const { action, id } = target.dataset;
             
-            if (action === 'delete') { if (confirm('Are you sure you want to delete this project?')) { await deleteProject(projectId); } }
-            
-            if (action === 'edit') {
-                 const projectDoc = await getDoc(doc(db, 'projects', projectId));
-                 if (projectDoc.exists()) { loadProjectIntoForm(projectDoc.id, projectDoc.data()); }
+            if (action === 'delete') {
+                if (confirm('Are you sure you want to delete this project?')) await deleteProject(id);
             }
             
+            if (action === 'edit') {
+                 const projectDoc = await getDoc(doc(db, 'projects', id));
+                 if (projectDoc.exists()) loadProjectIntoForm(projectDoc.id, projectDoc.data());
+            }
+
             if (action === 'share') {
                 const playerPath = window.location.pathname.replace(/[^/]*$/, 'player.html');
-                const projectLink = `${window.location.origin}${playerPath}?id=${projectId}`;
+                const projectLink = `${window.location.origin}${playerPath}?id=${id}`;
                 try {
                     await navigator.clipboard.writeText(projectLink);
                     showMessage('Shareable link copied to clipboard!', true, true);
@@ -411,10 +225,14 @@
 
         const deleteProject = async (projectId) => {
             try {
-                // For a robust app, use a Cloud Function to delete associated Storage files.
+                // For a robust solution, deleting images from storage would be done via a Cloud Function.
+                // This client-side delete only removes the database record.
                 await deleteDoc(doc(db, 'projects', projectId));
                 showMessage('Project deleted successfully.', true, true);
-            } catch (error) { console.error("Error deleting project:", error); showMessage('Failed to delete project.', false); }
+            } catch (error) {
+                console.error("Error deleting project:", error);
+                showMessage('Failed to delete project.', false, true);
+            }
         };
 
         const loadProjectIntoForm = (id, data) => {
@@ -424,24 +242,22 @@
             cancelBtn.style.display = 'inline-block';
             projectNameInput.value = data.name;
             driveLinkInput.value = data.link;
+
             projectFiles = (data.imageURLs || []).map(url => {
                 const storagePath = ref(storage, url).fullPath;
-                const fileName = decodeURIComponent(storagePath.split('/').pop().split('?')[0]);
-                return { id: `persisted-${Math.random()}`, fileName: fileName, status: 'completed', progress: 100, storagePath: storagePath, downloadURL: url, isPersisted: true };
+                return {
+                    id: `persisted-${Math.random()}`, fileName: 'Existing Image', status: 'completed',
+                    progress: 100, storagePath, downloadURL: url, isPersisted: true
+                };
             });
             renderImagePreviews();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
         
         const resetForm = () => {
-            editingProjectId = null;
-            projectFiles.forEach(file => { if(!file.isPersisted) deleteImage(file.id) });
-            projectFiles = [];
-            projectForm.reset();
-            formTitle.textContent = 'Create a New Project';
-            submitBtn.textContent = 'Add Project';
-            cancelBtn.style.display = 'none';
-            renderImagePreviews();
+            editingProjectId = null; projectFiles = []; projectForm.reset();
+            formTitle.textContent = 'Create a New Project'; submitBtn.textContent = 'Add Project';
+            cancelBtn.style.display = 'none'; renderImagePreviews();
         };
 
         const handleFormSubmit = async (e) => {
@@ -450,10 +266,11 @@
             const projectName = projectNameInput.value.trim();
             const driveLink = driveLinkInput.value.trim();
             if (!projectName || !driveLink) return showMessage('Please fill in all fields.', false);
+            if (projectFiles.some(f => f.status === 'uploading')) return showMessage('Please wait for images to finish uploading.', false);
+            
             showSpinner(true);
-            if (projectFiles.some(f => f.status === 'uploading')) { showSpinner(false); return showMessage('Please wait for all images to finish uploading.', false); }
-            const imageURLs = projectFiles.filter(f => f.status === 'completed' && f.downloadURL).map(f => f.downloadURL);
-            const projectData = { name: projectName, link: driveLink, userId: currentUser.uid, imageURLs: imageURLs, updatedAt: serverTimestamp() };
+            const imageURLs = projectFiles.filter(f => f.status === 'completed').map(f => f.downloadURL);
+            const projectData = { name: projectName, link: driveLink, userId: currentUser.uid, imageURLs, updatedAt: serverTimestamp() };
 
             try {
                 if (editingProjectId) {
@@ -465,14 +282,19 @@
                     showMessage('Project created successfully!', true);
                 }
                 resetForm();
-            } catch (error) { console.error("Error saving project:", error); showMessage('Error saving project.', false);
-            } finally { showSpinner(false); }
+            } catch (error) {
+                console.error("Error saving project:", error);
+                showMessage('Error saving project.', false);
+            } finally {
+                showSpinner(false);
+            }
         };
 
+        // --- UTILITY FUNCTIONS ---
         const showMessage = (msg, isSuccess, isGlobal = false) => {
-            const target = isGlobal ? document.getElementById('global-message') : formMessage;
+            const target = isGlobal ? globalMessage : formMessage;
             target.textContent = msg;
-            target.className = `message ${isSuccess ? 'success' : 'error'}`;
+            target.className = isSuccess ? 'message success' : 'message error';
             target.style.display = 'block';
             setTimeout(() => { target.style.display = 'none'; }, 3000);
         };
@@ -482,17 +304,157 @@
             submitBtn.disabled = show;
         };
 
+        // --- EVENT LISTENERS ---
         loginBtn.addEventListener('click', signInWithGoogle);
         logoutBtn.addEventListener('click', doSignOut);
         projectForm.addEventListener('submit', handleFormSubmit);
         cancelBtn.addEventListener('click', resetForm);
         projectsContainer.addEventListener('click', handleProjectAction);
+
+        // Drag and drop listeners
         dropArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
         dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.classList.add('drag-over'); });
         dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); dropArea.classList.remove('drag-over'); });
         dropArea.addEventListener('drop', (e) => { e.preventDefault(); dropArea.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
-        imagePreviewContainer.addEventListener('click', (e) => { const btn = e.target.closest('.delete-btn'); if (btn) { deleteImage(btn.dataset.id); } });
+        imagePreviewContainer.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-btn')) deleteImage(e.target.closest('.delete-btn').dataset.id);
+        });
+        
     </script>
+    
+    <style>
+        :root {
+            --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
+            --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
+            --brand-hover: #2563EB; --danger-color: #EF4444; --success-color: #10B981;
+            --font-family: 'IBM Plex Sans', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family); background-color: var(--body-bg); color: var(--text-primary);
+            font-size: 16px; line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+        h1, h2, h3 { color: var(--text-primary); margin-bottom: 1rem; font-weight: 600; }
+        h1 { font-size: 2.25rem; text-align: center; }
+        h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 2.5rem; }
+        
+        #auth-container { text-align: center; background: var(--widget-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 2rem; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        #auth-container #user-display, #auth-container #logout-btn { display: none; }
+        #auth-container.logged-in #login-btn { display: none; }
+        #auth-container.logged-in #user-display, #auth-container.logged-in #logout-btn { display: inline-block; }
+        
+        #main-content { display: none; }
+        .form-wrapper { background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03); }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
+        input[type="text"] { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: var(--font-family); background-color: #F9FAFB; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        input[type="text"]:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        
+        .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: background-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-primary { background-color: var(--brand-color); color: white; }
+        .btn-primary:hover { background-color: var(--brand-hover); }
+        .btn-primary:disabled { background-color: #93C5FD; cursor: not-allowed; }
+        .btn-google { background-color: #DB4437; color: white; }
+        .btn-google:hover { background-color: #c23321; }
+        .btn-secondary { background-color: #6B7280; color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover { background-color: #059669; }
+        #cancel-edit-btn { display: none; }
+
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; display: none; border: 1px solid transparent; }
+        .message.success { background-color: #D1FAE5; color: #065F46; border-color: #A7F3D0; }
+        .message.error { background-color: #FEE2E2; color: #991B1B; border-color: #FECACA; }
+        #global-message { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        #drop-area { border: 2px dashed var(--border-color); border-radius: 12px; padding: 2.5rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background-color: var(--body-bg); }
+        #drop-area:hover, #drop-area.drag-over { border-color: var(--brand-color); background-color: #EFF6FF; }
+        #drop-area i { font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        #drop-area p { color: var(--text-secondary); }
+        #drop-area p strong { color: var(--brand-color); }
+        #file-input { display: none; }
+
+        #image-preview-container { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+        .image-preview-card { background: var(--body-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; position: relative; overflow: hidden; }
+        .file-info { flex-grow: 1; min-width: 0; }
+        .file-name { font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .status-and-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .status-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .status-icon.success { background-color: var(--success-color); }
+        .status-icon.danger { background-color: var(--danger-color); }
+        .delete-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 1.5rem; padding: 0.25rem; line-height: 1; }
+        .delete-btn:hover { color: var(--danger-color); }
+        .progress-bar-wrapper { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background-color: #E5E7EB; }
+        .progress-bar { height: 100%; background-color: var(--brand-color); width: 0%; transition: width 0.3s ease; }
+        .no-images { color: var(--text-secondary); text-align: center; grid-column: 1 / -1; }
+
+        #projects-list { margin-top: 2rem; }
+        .project-card { background-color: var(--widget-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-bottom: 1rem; }
+        .project-card h3 { margin-top: 0; }
+        .project-card a { color: var(--brand-color); text-decoration: none; font-weight: 500; }
+        .project-card a:hover { text-decoration: underline; }
+        .project-images { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+        .project-images img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
+        .project-actions { margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
+    </style>
+</head>
+<body>
+    <div id="global-message" class="message" style="display:none;"></div>
+
+    <div class="container">
+        <h1>Project Manager</h1>
+
+        <div id="auth-container">
+            <span id="user-display">Loading...</span>
+            <button id="login-btn" class="btn btn-google"><i class='bx bxl-google'></i> Sign In with Google</button>
+            <button id="logout-btn" class="btn btn-secondary">Sign Out</button>
+        </div>
+
+        <div id="main-content">
+            <div class="form-wrapper">
+                <h2 id="form-title">Create a New Project</h2>
+                <div id="form-message" class="message" style="display:none;"></div>
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="drive-link">Google Drive Link</label>
+                        <input type="text" id="drive-link" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Project Images</label>
+                        <div id="drop-area">
+                            <input type="file" id="file-input" accept="image/*" multiple>
+                            <i class='bx bx-cloud-upload'></i>
+                            <p>Drop images here, or <strong>browse</strong></p>
+                        </div>
+                        <div id="image-preview-container">
+                             <p class="no-images">No images selected.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" id="submit-btn" class="btn btn-primary">
+                            Add Project
+                            <div class="spinner" id="submit-spinner"></div>
+                        </button>
+                         <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="projects-list">
+                <h2>My Projects</h2>
+                <div id="projects-container">
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
