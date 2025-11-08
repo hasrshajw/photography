@@ -39,7 +39,6 @@
             border: 1px solid #ddd;
             box-sizing: border-box;
         }
-        /* Custom File Input Button */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -155,7 +154,6 @@
             measurementId: "G-B211571YB4"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -169,21 +167,17 @@
         let totalFiles = 0;
         let successfulUploads = 0;
 
-        // --- Authentication ---
-        // Anonymous sign-in is required for the storage rules to work.
         auth.signInAnonymously().catch(error => {
             console.error("Anonymous sign-in failed: ", error);
             alert(`Authentication Failed: ${error.message}`);
         });
 
-        // --- Event Listener for File Selection ---
         imageUpload.addEventListener('change', handleImageSelection);
 
         function handleImageSelection(e) {
             const files = e.target.files;
             if (files.length === 0) return;
 
-            // Reset state for new batch of uploads
             imagePreviews.innerHTML = '';
             uploadedImageUrls = [];
             totalFiles = files.length;
@@ -191,13 +185,10 @@
             createProjectBtn.disabled = true;
             createProjectBtn.textContent = 'Waiting for uploads to finish...';
 
-            [...files].forEach((file, index) => {
-                uploadFile(file, index);
-            });
+            [...files].forEach((file, index) => uploadFile(file, index));
         }
 
         function uploadFile(file, index) {
-            // Create a preview card for each file
             const previewId = `preview-${index}`;
             const cardHTML = `
                 <div class="upload-card" id="${previewId}">
@@ -208,42 +199,35 @@
                     </div>
                 </div>
             `;
-            imagePreviews.innerHTML += cardHTML;
+            imagePreviews.insertAdjacentHTML('beforeend', cardHTML);
 
             const card = document.getElementById(previewId);
             const progressBar = card.querySelector('.progress-bar');
             const statusText = card.querySelector('.status-text');
 
-            // --- Firebase Storage Upload Task ---
             const uniqueFileName = `${Date.now()}-${file.name}`;
             const storageRef = storage.ref(`images/${uniqueFileName}`);
             const uploadTask = storageRef.put(file);
 
             uploadTask.on('state_changed',
                 (snapshot) => {
-                    // Progress function
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     progressBar.style.width = progress + '%';
                     statusText.textContent = `Uploading... ${Math.round(progress)}%`;
                 },
                 (error) => {
-                    // Error function
                     console.error("Upload failed for file: ", file.name, error);
                     statusText.textContent = 'Upload Failed';
                     statusText.classList.add('error');
-                    // We still need to check if all other files finished
+                    totalFiles--; // Decrement total files to check completion correctly
                     checkAllUploadsComplete(); 
                 },
                 () => {
-                    // Complete function
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        console.log('File available at', downloadURL);
-                        statusText.textContent = 'Complete!';
-                        statusText.classList.add('success');
-                        
-                        // Store the URL with an index to maintain order if needed
                         uploadedImageUrls.push({ index, url: downloadURL }); 
                         successfulUploads++;
+                        statusText.textContent = 'Complete!';
+                        statusText.classList.add('success');
                         checkAllUploadsComplete();
                     });
                 }
@@ -251,19 +235,11 @@
         }
         
         function checkAllUploadsComplete() {
-            // This function checks if every file has either succeeded or failed.
             if (successfulUploads === totalFiles) {
                 createProjectBtn.disabled = false;
                 createProjectBtn.textContent = 'Create Project';
-            } else if (uploadedImageUrls.length + (totalFiles - successfulUploads) === totalFiles && uploadedImageUrls.length > 0) {
-                 // Case where some failed, but some succeeded
-                 createProjectBtn.disabled = false;
-                 createProjectBtn.textContent = `Create Project with ${successfulUploads} Images`;
-            } else if (successfulUploads === 0 && totalFiles > 0) {
-                createProjectBtn.textContent = 'All uploads failed';
             }
         }
-
 
         async function createProject() {
             const projectName = document.getElementById('projectName').value.trim();
@@ -274,8 +250,8 @@
                 return;
             }
 
-            if (uploadedImageUrls.length === 0) {
-                alert('Please upload at least one image successfully.');
+            if (uploadedImageUrls.length === 0 || successfulUploads < totalFiles) {
+                alert('Please wait for all images to upload successfully before saving.');
                 return;
             }
 
@@ -283,7 +259,7 @@
             createProjectBtn.textContent = 'Saving...';
 
             try {
-                // Sort URLs by original index to maintain the order of selection
+                console.log("Attempting to save to Firestore...");
                 const sortedUrls = uploadedImageUrls.sort((a, b) => a.index - b.index).map(item => item.url);
 
                 await db.collection('projects').add({
@@ -293,22 +269,29 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                console.log("Firestore save successful!");
                 alert('Project created successfully!');
-                // Reset the form completely
+                
+                // Reset the form
                 document.getElementById('projectName').value = '';
                 document.getElementById('driveLink').value = '';
                 imageUpload.value = '';
                 imagePreviews.innerHTML = '';
                 uploadedImageUrls = [];
-                createProjectBtn.textContent = 'Create Project';
+                totalFiles = 0;
+                successfulUploads = 0;
 
             } catch (error) {
-                console.error("Error creating project document: ", error);
-                alert(`Error saving project: ${error.message}`);
+                // THIS IS THE MOST IMPORTANT PART FOR DEBUGGING YOUR ISSUE
+                console.error("FIRESTORE SAVE FAILED: ", error);
+                alert(`Error: Could not save the project to the database.\n\nREASON: ${error.message}\n\nPlease check your Firestore security rules and ensure you are authenticated.`);
+            
+            } finally {
+                // This block runs whether the try succeeded or failed
                 createProjectBtn.disabled = false;
                 createProjectBtn.textContent = 'Create Project';
             }
         }
     </script>
 </body>
-</html>```
+</html>
