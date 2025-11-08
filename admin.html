@@ -24,9 +24,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: left;
         }
-        h1, h2 {
-            color: #333;
-        }
+        h1, h2 { color: #333; }
         input[type="text"], input[type="file"], button {
             width: 100%;
             padding: 12px;
@@ -35,27 +33,18 @@
             border: 1px solid #ddd;
             box-sizing: border-box;
         }
-        input[type="file"] {
-            padding: 8px;
-        }
         button {
             color: white;
             border: none;
             cursor: pointer;
             font-size: 16px;
         }
-        button:hover {
-            opacity: 0.9;
-        }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+        button:hover { opacity: 0.9; }
         .btn-primary { background-color: #007bff; }
         .btn-google { background-color: #DB4437; }
         .btn-secondary { background-color: #6c757d; }
         .btn-edit { background-color: #28a745; }
-        .btn-delete { background-color: #dc3545; font-size: 12px; padding: 5px 8px; width: auto; }
+        .btn-delete { background-color: #dc3545; }
 
         .project {
             background: #f9f9f9;
@@ -64,39 +53,16 @@
             border-radius: 5px;
             border: 1px solid #eee;
         }
-        .project-header {
+        .project-details { margin-bottom: 10px; }
+        .project-actions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            width: auto;
+        }
+        .project-actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .project-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
+            justify-content: flex-end;
             margin-top: 10px;
-        }
-        .img-container {
-            position: relative;
-        }
-        .project-images img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .img-container .btn-delete {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-        #upload-status {
-            margin-top: 10px;
-            font-style: italic;
-        }
-        progress {
-            width: 100%;
-            margin-top: 5px;
         }
 
         #auth-container { margin-bottom: 20px; }
@@ -109,15 +75,57 @@
             background: #e9ecef;
             border-radius: 5px;
         }
+
         #main-content { display: none; }
+
+        /* Image Gallery Styles */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .image-container {
+            position: relative;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .image-container .delete-img-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 2px 6px;
+            font-size: 12px;
+            line-height: 1.2;
+            border-radius: 50%;
+        }
+
+        /* Upload Progress Styles */
+        #upload-progress-container { margin-top: 10px; }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #4caf50;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>My Projects</h1>
-
-        <!-- Authentication Section -->
         <div id="auth-container">
             <button id="login-btn" class="btn-google" onclick="signInWithGoogle()">Sign In with Google</button>
             <div id="user-info" style="display: none;">
@@ -126,19 +134,16 @@
             </div>
         </div>
 
-        <!-- Main Content (hidden by default) -->
         <div id="main-content">
-            <!-- Form to Add a New Project -->
             <div id="project-form">
                 <h2>Create a New Project</h2>
                 <input type="text" id="projectName" placeholder="Project Name" required>
                 <input type="text" id="driveLink" placeholder="Google Drive Link" required>
                 <input type="file" id="projectImages" multiple accept="image/*">
-                <button id="add-project-btn" onclick="createProject()" class="btn-primary">Add Project</button>
-                <div id="upload-status"></div>
+                <button onclick="createProject()" class="btn-primary">Add Project</button>
+                <div id="upload-progress-container"></div>
             </div>
 
-            <!-- List of Projects -->
             <div id="projects-list">
                 <h2>All Projects</h2>
                 <div id="projects-container"></div>
@@ -154,16 +159,15 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-            authDomain: "harsha-demo01.firebaseapp.com",
-            projectId: "harsha-demo01",
-            storageBucket: "harsha-demo01.appspot.com", // Make sure this is correct
-            messagingSenderId: "676891713475",
-            appId: "1:676891713475:web:a57e93657253e27a382776",
-            measurementId: "G-B211571YB4"
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.appspot.com", // Corrected to use the standard format
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
@@ -171,7 +175,6 @@
         const projectsCollection = db.collection('projects');
         let unsubscribe;
 
-        // --- AUTHENTICATION ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('main-content').style.display = 'block';
@@ -197,10 +200,19 @@
             auth.signOut().catch(error => console.error("Sign out error:", error));
         }
 
-        // --- CORE PROJECT & IMAGE LOGIC ---
+        function fetchUserProjects(userId) {
+            unsubscribe = projectsCollection
+                .where('userId', '==', userId)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    displayProjects(projects);
+                }, error => console.error("Error fetching projects: ", error));
+        }
+
         function createProject() {
-            const projectName = document.getElementById('projectName').value.trim();
-            const driveLink = document.getElementById('driveLink').value.trim();
+            const projectName = document.getElementById('projectName').value;
+            const driveLink = document.getElementById('driveLink').value;
             const files = document.getElementById('projectImages').files;
             const user = auth.currentUser;
 
@@ -209,168 +221,139 @@
                 return;
             }
 
-            const addProjectBtn = document.getElementById('add-project-btn');
-            addProjectBtn.disabled = true;
-            addProjectBtn.textContent = 'Creating...';
-
-            if (files.length > 0) {
-                uploadFilesAndCreateProject(files, projectName, driveLink, user.uid);
-            } else {
-                saveProjectToFirestore(projectName, driveLink, user.uid, []);
-            }
-        }
-
-        function uploadFilesAndCreateProject(files, projectName, driveLink, userId) {
-            const uploadStatusDiv = document.getElementById('upload-status');
-            const fileUploadPromises = [];
-
-            Array.from(files).forEach((file, index) => {
-                const filePath = `images/${userId}/${Date.now()}_${file.name}`;
-                const storageRef = storage.ref(filePath);
-                const uploadTask = storageRef.put(file);
-
-                // Create a status element for each file
-                const fileStatusId = `file-status-${index}`;
-                uploadStatusDiv.innerHTML += `<div id="${fileStatusId}">Uploading ${file.name}... <progress value="0" max="100"></progress></div>`;
-
-                const promise = new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed',
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            const progressBar = document.querySelector(`#${fileStatusId} progress`);
-                            if(progressBar) progressBar.value = progress;
-                        },
-                        (error) => {
-                            console.error("Upload failed: ", error);
-                            document.querySelector(`#${fileStatusId}`).textContent = `Upload failed for ${file.name}.`;
-                            reject(error);
-                        },
-                        () => {
-                            uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-                                document.querySelector(`#${fileStatusId}`).textContent = `${file.name} uploaded successfully!`;
-                                resolve({ url: downloadURL, path: filePath });
-                            }).catch(reject);
-                        }
-                    );
-                });
-                fileUploadPromises.push(promise);
-            });
-
-            Promise.all(fileUploadPromises)
-                .then(imagesData => {
-                    saveProjectToFirestore(projectName, driveLink, userId, imagesData);
-                })
-                .catch(error => {
-                    console.error("Error uploading files: ", error);
-                    alert("Could not upload all files. Project not created.");
-                    resetCreateForm();
-                });
-        }
-
-        function saveProjectToFirestore(name, link, userId, images) {
+            // 1. Create Firestore document first to get a project ID
             projectsCollection.add({
-                name: name,
-                link: link,
-                userId: userId,
-                images: images, // Array of {url, path} objects
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                console.log("Project created!");
-                resetCreateForm();
-            })
-            .catch(error => {
-                console.error("Error creating project document: ", error);
-                alert("Failed to save project details.");
-                resetCreateForm();
-            });
+                name: projectName,
+                link: driveLink,
+                userId: user.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                images: [] // Initialize with an empty array
+            }).then(docRef => {
+                if (files.length === 0) {
+                    // If no files, we're done
+                    document.getElementById('project-form').reset();
+                    return;
+                }
+
+                // 2. Upload files to Storage
+                const uploadPromises = Array.from(files).map(file => {
+                    const progressContainer = document.getElementById('upload-progress-container');
+                    const progressBarId = `progress-${Date.now()}-${file.name}`;
+                    progressContainer.innerHTML += `<div id="${progressBarId}">${file.name}: <div class="progress-bar"><div class="progress-bar-fill" style="width: 0%;">0%</div></div></div>`;
+
+                    const filePath = `projects/${user.uid}/${docRef.id}/${file.name}`;
+                    const storageRef = storage.ref(filePath);
+                    const uploadTask = storageRef.put(file);
+
+                    return new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                const progressBarFill = document.querySelector(`#${progressBarId} .progress-bar-fill`);
+                                if (progressBarFill) {
+                                    progressBarFill.style.width = `${progress}%`;
+                                    progressBarFill.textContent = `${Math.round(progress)}%`;
+                                }
+                            },
+                            (error) => reject(error),
+                            () => {
+                                // On successful upload, get download URL
+                                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                                    resolve({ url: downloadURL, path: filePath });
+                                });
+                            }
+                        );
+                    });
+                });
+
+                // 3. Once all uploads are complete, update the Firestore document with image URLs
+                Promise.all(uploadPromises).then(images => {
+                    docRef.update({ images: images });
+                    document.getElementById('project-form').reset();
+                    document.getElementById('upload-progress-container').innerHTML = ''; // Clear progress bars
+                }).catch(error => console.error("Error uploading files: ", error));
+
+            }).catch(error => console.error("Error creating project: ", error));
         }
         
-        function resetCreateForm() {
-            document.getElementById('project-form').reset();
-            document.getElementById('upload-status').innerHTML = '';
-            const addProjectBtn = document.getElementById('add-project-btn');
-            addProjectBtn.disabled = false;
-            addProjectBtn.textContent = 'Add Project';
-        }
-
-
-        function fetchUserProjects(userId) {
-            unsubscribe = projectsCollection
-                .where('userId', '==', userId)
-                .orderBy('createdAt', 'desc')
-                .onSnapshot(snapshot => {
-                    let projects = [];
-                    snapshot.forEach(doc => {
-                        projects.push({ id: doc.id, ...doc.data() });
-                    });
-                    displayProjects(projects);
-                }, error => {
-                    console.error("Error fetching projects: ", error);
-                });
-        }
-
         function displayProjects(projects) {
-            const projectsContainer = document.getElementById('projects-container');
-            projectsContainer.innerHTML = '';
+            const container = document.getElementById('projects-container');
+            container.innerHTML = '';
             projects.forEach(project => {
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'project';
 
-                let imagesHTML = '';
+                // Create image gallery HTML
+                let galleryHTML = '<div class="image-gallery">';
                 if (project.images && project.images.length > 0) {
                     project.images.forEach(image => {
-                        imagesHTML += `
-                            <div class="img-container">
+                        const imageObjectString = JSON.stringify(image).replace(/"/g, '&quot;');
+                        galleryHTML += `
+                            <div class="image-container">
                                 <img src="${image.url}" alt="Project Image">
-                                <button class="btn-delete" onclick="deleteImage('${project.id}', '${image.path}')">&times;</button>
+                                <button class="btn-delete delete-img-btn" onclick="deleteImage('${project.id}', ${imageObjectString})">&times;</button>
                             </div>
                         `;
                     });
                 }
+                galleryHTML += '</div>';
 
                 projectDiv.innerHTML = `
-                    <div class="project-header">
-                        <div>
-                            <strong>${project.name}</strong><br>
-                            <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
-                        </div>
+                    <div class="project-details">
+                        <strong>${project.name}</strong><br>
+                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
                     </div>
-                    <div class="project-images">${imagesHTML}</div>
+                    ${galleryHTML}
+                    <div class="project-actions">
+                        <button class="btn-delete" onclick="deleteProject('${project.id}')">Delete Project</button>
+                    </div>
                 `;
-                projectsContainer.appendChild(projectDiv);
+                container.appendChild(projectDiv);
             });
         }
-
-        function deleteImage(projectId, imagePath) {
-            if (!confirm("Are you sure you want to delete this image?")) return;
+        
+        function deleteImage(projectId, imageObject) {
+            if (!confirm('Are you sure you want to delete this image?')) return;
 
             // 1. Delete from Firebase Storage
-            const storageRef = storage.ref(imagePath);
-            storageRef.delete()
+            storage.ref(imageObject.path).delete()
                 .then(() => {
-                    // 2. Find the image object to remove from Firestore
-                    const projectRef = projectsCollection.doc(projectId);
-                    return db.runTransaction(async (transaction) => {
-                        const doc = await transaction.get(projectRef);
-                        if (!doc.exists) {
-                            throw "Document does not exist!";
-                        }
-                        const images = doc.data().images;
-                        const imageToRemove = images.find(img => img.path === imagePath);
-                        
-                        // 3. Update the Firestore document
-                        if (imageToRemove) {
-                            transaction.update(projectRef, {
-                                images: firebase.firestore.FieldValue.arrayRemove(imageToRemove)
-                            });
-                        }
+                    // 2. Remove from Firestore array
+                    projectsCollection.doc(projectId).update({
+                        images: firebase.firestore.FieldValue.arrayRemove(imageObject)
                     });
                 })
-                .then(() => console.log("Image deleted successfully from Storage and Firestore."))
-                .catch(error => console.error("Error deleting image: ", error));
+                .catch(error => console.error("Error deleting image:", error));
         }
 
+        async function deleteProject(projectId) {
+            if (!confirm('Are you sure you want to delete this entire project and all its images? This cannot be undone.')) return;
+
+            const docRef = projectsCollection.doc(projectId);
+            
+            try {
+                const doc = await docRef.get();
+                if (!doc.exists) {
+                    console.error("Project not found!");
+                    return;
+                }
+
+                const projectData = doc.data();
+
+                // 1. Delete all associated images from Storage
+                if (projectData.images && projectData.images.length > 0) {
+                    const deletePromises = projectData.images.map(image => storage.ref(image.path).delete());
+                    await Promise.all(deletePromises);
+                }
+
+                // 2. Delete the Firestore document
+                await docRef.delete();
+
+            } catch (error) {
+                console.error("Error deleting project:", error);
+                alert("Could not delete the project. See console for details.");
+            }
+        }
     </script>
 </body>
 </html>
