@@ -24,7 +24,9 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: left;
         }
-        h1, h2 { color: #333; }
+        h1, h2 {
+            color: #333;
+        }
         input[type="text"], input[type="file"], button {
             width: 100%;
             padding: 12px;
@@ -33,7 +35,14 @@
             border: 1px solid #ddd;
             box-sizing: border-box;
         }
-        input[type="file"] { background-color: #f9f9f9; }
+        input[type="file"] {
+            padding: 8px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
         button {
             color: white;
             border: none;
@@ -42,12 +51,11 @@
         }
         button:hover { opacity: 0.9; }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
-        
+
         .btn-primary { background-color: #007bff; }
         .btn-google { background-color: #DB4437; }
         .btn-secondary { background-color: #6c757d; }
         .btn-edit { background-color: #28a745; }
-        .btn-delete { background-color: #dc3545; }
 
         .project {
             background: #f9f9f9;
@@ -55,35 +63,62 @@
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
-        .project img {
+        .project-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .project-details { flex-grow: 1; }
+        .project-actions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            width: auto;
+        }
+        .project-images {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .project-images img {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 5px;
-        }
-        .project-details { flex-grow: 1; }
-        .project-actions { display: flex; flex-direction: column; gap: 5px; }
-        .project-actions button {
-            padding: 8px 12px;
-            width: auto;
+            border: 1px solid #ddd;
         }
 
         #auth-container { margin-bottom: 20px; }
-        #user-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        #user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
         #main-content { display: none; }
-        
-        /* Upload Status */
-        #upload-status { font-size: 0.9em; color: #555; margin-bottom: 10px; }
-        progress { width: 100%; margin-bottom: 10px; }
+        #upload-status {
+            margin-top: 10px;
+            color: #007bff;
+        }
 
-        /* Modal styles */
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px; }
-        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .modal {
+            display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%;
+            height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 15% auto; padding: 20px;
+            border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px;
+        }
+        .close-btn {
+            color: #aaa; float: right; font-size: 28px; font-weight: bold;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: black; text-decoration: none; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -102,22 +137,16 @@
 
         <!-- Main Content (hidden by default) -->
         <div id="main-content">
-            <!-- Form to Add a New Project -->
             <div id="project-form">
                 <h2>Create a New Project</h2>
                 <input type="text" id="projectName" placeholder="Project Name" required>
                 <input type="text" id="driveLink" placeholder="Google Drive Link" required>
-                <input type="file" id="projectImage" accept="image/*" onchange="handleImageUpload(event)">
-                
-                <div id="upload-progress-container" style="display: none;">
-                    <progress id="upload-progress" value="0" max="100"></progress>
-                    <div id="upload-status"></div>
-                </div>
-
+                <label for="projectImages">Add Images (Optional)</label>
+                <input type="file" id="projectImages" multiple accept="image/*">
                 <button id="add-project-btn" onclick="createProject()" class="btn-primary">Add Project</button>
+                <div id="upload-status"></div>
             </div>
 
-            <!-- List of Projects -->
             <div id="projects-list">
                 <h2>All Projects</h2>
                 <div id="projects-container"></div>
@@ -130,6 +159,7 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeEditModal()">&times;</span>
             <h2>Edit Project</h2>
+            <p><em>Note: Image editing is not supported. You can only update the name and link.</em></p>
             <input type="hidden" id="edit-id">
             <input type="text" id="edit-projectName" placeholder="Project Name">
             <input type="text" id="edit-driveLink" placeholder="Google Drive Link">
@@ -144,7 +174,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <script>
-        // Firebase Configuration
+        // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
@@ -159,10 +189,9 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage();
+        const storage = firebase.storage(); // Initialize Storage
         const projectsCollection = db.collection('projects');
-        let unsubscribe; 
-        let uploadedImageData = null; // To store { url, path } of uploaded image
+        let unsubscribe;
 
         // --- AUTHENTICATION ---
         auth.onAuthStateChanged(user => {
@@ -190,51 +219,63 @@
             auth.signOut().catch(error => console.error("Sign out error:", error));
         }
 
-        // --- IMAGE HANDLING ---
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // --- FIRESTORE AND STORAGE ---
 
+        async function createProject() {
+            const projectName = document.getElementById('projectName').value;
+            const driveLink = document.getElementById('driveLink').value;
+            const imageFiles = document.getElementById('projectImages').files;
             const user = auth.currentUser;
-            if (!user) {
-                alert("You must be logged in to upload an image.");
+            const statusDiv = document.getElementById('upload-status');
+            const addButton = document.getElementById('add-project-btn');
+
+            if (!projectName || !driveLink || !user) {
+                alert('Please fill in the project name and drive link.');
                 return;
             }
-            
-            const addProjectBtn = document.getElementById('add-project-btn');
-            const progressContainer = document.getElementById('upload-progress-container');
-            const progressBar = document.getElementById('upload-progress');
-            const statusDiv = document.getElementById('upload-status');
-            
-            const filePath = `project-images/${user.uid}/${Date.now()}-${file.name}`;
-            const storageRef = storage.ref(filePath);
-            const uploadTask = storageRef.put(file);
 
-            addProjectBtn.disabled = true;
-            progressContainer.style.display = 'block';
-
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressBar.value = progress;
-                    statusDiv.textContent = `Uploading... ${Math.round(progress)}%`;
-                }, 
-                (error) => {
-                    console.error("Upload error:", error);
-                    statusDiv.textContent = "Upload failed. Please try again.";
-                    addProjectBtn.disabled = false;
-                }, 
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        statusDiv.textContent = "Image uploaded successfully!";
-                        uploadedImageData = { url: downloadURL, path: filePath };
-                        addProjectBtn.disabled = false;
+            addButton.disabled = true;
+            statusDiv.textContent = 'Starting upload...';
+            
+            try {
+                // 1. Upload images and get their URLs
+                const imageUrls = [];
+                if (imageFiles.length > 0) {
+                    statusDiv.textContent = `Uploading ${imageFiles.length} image(s)...`;
+                    const uploadPromises = Array.from(imageFiles).map(file => {
+                        const filePath = `project-images/${user.uid}/${Date.now()}-${file.name}`;
+                        const storageRef = storage.ref(filePath);
+                        return storageRef.put(file).then(snapshot => snapshot.ref.getDownloadURL());
                     });
+                    const resolvedUrls = await Promise.all(uploadPromises);
+                    imageUrls.push(...resolvedUrls);
                 }
-            );
+
+                // 2. Save project data to Firestore
+                statusDiv.textContent = 'Saving project details...';
+                await projectsCollection.add({
+                    name: projectName,
+                    link: driveLink,
+                    userId: user.uid,
+                    imageUrls: imageUrls, // Store the array of image URLs
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // 3. Reset form
+                document.getElementById('projectName').value = '';
+                document.getElementById('driveLink').value = '';
+                document.getElementById('projectImages').value = '';
+                statusDiv.textContent = 'Project created successfully!';
+
+            } catch (error) {
+                console.error("Error creating project: ", error);
+                statusDiv.textContent = `Error: ${error.message}`;
+            } finally {
+                addButton.disabled = false;
+                setTimeout(() => { statusDiv.textContent = ''; }, 4000);
+            }
         }
 
-        // --- FIRESTORE CRUD ---
         function fetchUserProjects(userId) {
             unsubscribe = projectsCollection
                 .where('userId', '==', userId)
@@ -242,83 +283,42 @@
                 .onSnapshot(snapshot => {
                     const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     displayProjects(projects);
-                }, error => console.error("Error fetching projects: ", error));
-        }
-
-        function createProject() {
-            const projectName = document.getElementById('projectName').value;
-            const driveLink = document.getElementById('driveLink').value;
-            const user = auth.currentUser;
-
-            if (!projectName || !driveLink || !user) {
-                alert('Please fill in the project name and link.');
-                return;
-            }
-            if (!uploadedImageData) {
-                alert('Please select and upload an image.');
-                return;
-            }
-
-            projectsCollection.add({
-                name: projectName,
-                link: driveLink,
-                userId: user.uid,
-                imageUrl: uploadedImageData.url,
-                storagePath: uploadedImageData.path,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                // Reset form
-                document.getElementById('project-form').reset();
-                document.getElementById('upload-progress-container').style.display = 'none';
-                uploadedImageData = null;
-            })
-            .catch(error => console.error("Error adding project: ", error));
+                }, error => {
+                    console.error("Error fetching projects: ", error);
+                });
         }
 
         function displayProjects(projects) {
             const container = document.getElementById('projects-container');
             container.innerHTML = '';
             projects.forEach(project => {
-                const div = document.createElement('div');
-                div.className = 'project';
-                const safeName = project.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const projectDiv = document.createElement('div');
+                projectDiv.className = 'project';
 
-                div.innerHTML = `
-                    <img src="${project.imageUrl}" alt="${safeName} preview">
-                    <div class="project-details">
-                        <strong>${safeName}</strong><br>
-                        <a href="${project.link}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
+                // Create image gallery HTML
+                let imagesHTML = '';
+                if (project.imageUrls && project.imageUrls.length > 0) {
+                    imagesHTML = '<div class="project-images">';
+                    project.imageUrls.forEach(url => {
+                        imagesHTML += `<a href="${url}" target="_blank"><img src="${url}" alt="Project Image"></a>`;
+                    });
+                    imagesHTML += '</div>';
+                }
+
+                projectDiv.innerHTML = `
+                    <div class="project-content">
+                        <div class="project-details">
+                            <strong>${escapeHTML(project.name)}</strong><br>
+                            <a href="${escapeHTML(project.link)}" target="_blank" rel="noopener noreferrer">Google Drive Link</a>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn-edit" onclick="openEditModal('${project.id}', \`${escapeHTML(project.name)}\`, \`${escapeHTML(project.link)}\`)">Edit</button>
+                        </div>
                     </div>
-                    <div class="project-actions">
-                        <button class="btn-edit" onclick="openEditModal('${project.id}', \`${safeName}\`, '${project.link}')">Edit</button>
-                        <button class="btn-delete" onclick="deleteProject('${project.id}', '${project.storagePath}')">Delete</button>
-                    </div>
+                    ${imagesHTML}
                 `;
-                container.appendChild(div);
+                container.appendChild(projectDiv);
             });
-        }
-        
-        function deleteProject(id, storagePath) {
-            if (!confirm("Are you sure you want to delete this project and its image?")) {
-                return;
-            }
-
-            // 1. Delete image from Storage
-            const imageRef = storage.ref(storagePath);
-            imageRef.delete()
-                .then(() => {
-                    // 2. Delete document from Firestore
-                    projectsCollection.doc(id).delete()
-                        .catch(error => console.error("Error deleting Firestore document: ", error));
-                })
-                .catch(error => {
-                    console.error("Error deleting image from Storage: ", error);
-                    // If image deletion fails, you might reconsider deleting the Firestore entry
-                    // or handle cases where the image doesn't exist.
-                    // For this app, we'll proceed to delete the firestore entry anyway.
-                     projectsCollection.doc(id).delete();
-                });
         }
 
         function updateProject() {
@@ -327,12 +327,23 @@
             const updatedLink = document.getElementById('edit-driveLink').value;
 
             if (id && updatedName && updatedLink) {
-                projectsCollection.doc(id).update({ name: updatedName, link: updatedLink })
-                    .then(() => closeEditModal())
-                    .catch(error => console.error("Error updating project: ", error));
+                projectsCollection.doc(id).update({
+                    name: updatedName,
+                    link: updatedLink
+                })
+                .then(closeEditModal)
+                .catch(error => console.error("Error updating project: ", error));
             } else {
                 alert('Please fill in all fields.');
             }
+        }
+        
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function(match) {
+                return {
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+                }[match];
+            });
         }
 
         // --- MODAL CONTROLS ---
@@ -345,7 +356,10 @@
         }
 
         function closeEditModal() { modal.style.display = 'none'; }
-        window.onclick = (event) => { if (event.target == modal) closeEditModal(); }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) closeEditModal();
+        }
     </script>
 </body>
 </html>
