@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Create Project</title>
+    <title>Admin - Create Project (Debug)</title>
     <style>
         body { font-family: sans-serif; background-color: #f4f4f4; color: #333; }
         .container { max-width: 500px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -13,6 +13,7 @@
         button:hover { background-color: #0056b3; }
         #projectLink { margin-top: 20px; word-break: break-all; }
         #projectLink a { color: #007bff; text-decoration: none; }
+        #debugLog { margin-top: 20px; font-family: monospace; background-color: #eee; padding: 10px; border-radius: 4px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -22,6 +23,7 @@
         <input type="text" id="projectName" placeholder="Enter Project Name">
         <button onclick="createProject()">Create Project</button>
         <div id="projectLink"></div>
+        <div id="debugLog"><strong>Debug Log:</strong><br></div>
     </div>
 
     <!-- Firebase SDK -->
@@ -29,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Your web app's Firebase configuration
+        // IMPORTANT: Replace with your web app's Firebase configuration from your project settings
         const firebaseConfig = {
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
@@ -40,35 +42,67 @@
           measurementId: "G-B211571YB4"
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const debugLog = document.getElementById('debugLog');
+        function log(message) {
+            console.log(message);
+            debugLog.innerHTML += message + '<br>';
+        }
+
+        let db; // Make db globally accessible in this script
+
+        try {
+            log('Initializing Firebase...');
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore(); // Initialize db here
+            log('Firebase initialized successfully.');
+        } catch (e) {
+            log('FATAL ERROR initializing Firebase: ' + e.message);
+            // If this fails, nothing else will work.
+        }
 
         function createProject() {
+            const projectLinkDiv = document.getElementById('projectLink');
             const projectName = document.getElementById('projectName').value;
-            if (projectName.trim() === '') {
+
+            log('---');
+            log('"Create Project" button clicked.');
+
+            if (!projectName || projectName.trim() === '') {
                 alert('Please enter a project name.');
+                log('Project name is empty. Aborting.');
+                return;
+            }
+            log(`Project name entered: "${projectName}"`);
+
+            projectLinkDiv.innerHTML = 'Creating project...';
+            log('Status set to "Creating project..."');
+
+            if (typeof db === 'undefined') {
+                log('ERROR: Firestore database (db) is not defined. Check initialization logs.');
+                projectLinkDiv.innerHTML = 'Error: Firebase not initialized correctly.';
                 return;
             }
 
-            const projectLinkDiv = document.getElementById('projectLink');
-            projectLinkDiv.innerHTML = 'Creating project...';
-
+            log('Attempting to add document to Firestore collection "projects"...');
             db.collection('projects').add({
                 name: projectName,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then((docRef) => {
+                log(`✅ Success! Document created with ID: ${docRef.id}`);
                 const projectUrl = `${window.location.origin}/project.html?id=${docRef.id}`;
                 projectLinkDiv.innerHTML = `
                     <p>Project Created!</p>
                     <p>Share this link:</p>
                     <a href="${projectUrl}" target="_blank">${projectUrl}</a>
                 `;
+                log('--- Finished ---');
             })
             .catch((error) => {
-                console.error("Error adding document: ", error);
-                projectLinkDiv.innerHTML = 'Error creating project.';
+                log(`❌ ERROR adding document: ${error.code} - ${error.message}`);
+                console.error("Full error object:", error);
+                projectLinkDiv.innerHTML = `Error creating project. Check the debug log and console (F12) for details. <br><strong>Message: ${error.message}</strong>`;
+                log('--- Failed ---');
             });
         }
     </script>
