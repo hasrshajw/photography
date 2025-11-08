@@ -8,85 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-        :root {
-            --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
-            --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
-            --brand-hover: #2563EB; --font-family: 'IBM Plex Sans', sans-serif;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: var(--font-family); background-color: var(--body-bg);
-            color: var(--text-primary); display: flex;
-            justify-content: center; align-items: flex-start; min-height: 100vh;
-            padding: 2rem;
-        }
-        .container { max-width: 1000px; width: 100%; text-align: center; }
-        .project-header { margin-bottom: 2rem; }
-        h1 { font-size: 2.5rem; font-weight: 700; color: var(--text-primary); }
-        
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2.5rem;
-            background-color: var(--widget-bg);
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-        .image-gallery img {
-            width: 100%; height: 250px; object-fit: cover;
-            border-radius: 8px; border: 1px solid var(--border-color);
-            cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .image-gallery img:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .download-section {
-            padding: 2rem; background-color: var(--widget-bg);
-            border-radius: 12px; border: 1px solid var(--border-color);
-        }
-        .download-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            gap: 0.75rem; background-color: var(--brand-color); color: white;
-            text-decoration: none; font-size: 1.25rem; font-weight: 600;
-            padding: 1rem 2.5rem; border-radius: 8px; transition: background-color 0.2s ease;
-        }
-        .download-btn:hover { background-color: var(--brand-hover); }
-        .message { font-size: 1.2rem; color: var(--text-secondary); }
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div id="loader" class="message">Loading Project...</div>
-        
-        <div id="project-content" class="hidden">
-            <header class="project-header">
-                <h1 id="project-name"></h1>
-            </header>
-            
-            <main>
-                <div id="image-gallery" class="image-gallery"></div>
-                <div class="download-section">
-                     <a href="#" id="download-link" class="download-btn" target="_blank" rel="noopener noreferrer">
-                        <i class='bx bx-cloud-download'></i> Download from Drive
-                    </a>
-                </div>
-            </main>
-        </div>
-        
-        <div id="error-message" class="message hidden"></div>
-    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
-        // IMPORTANT: Use the exact same Firebase config as your index.html
+        // IMPORTANT: Use the exact same Firebase config as in your index.html
         const firebaseConfig = {
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
@@ -97,71 +24,157 @@
           measurementId: "G-B211571YB4"
         };
         
+        // --- INITIALIZE FIREBASE ---
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // UI Elements
-        const loader = document.getElementById('loader');
-        const projectContent = document.getElementById('project-content');
-        const errorMessage = document.getElementById('error-message');
-        const projectNameEl = document.getElementById('project-name');
+        // --- UI ELEMENTS ---
+        const projectNameTitle = document.getElementById('project-name');
         const imageGallery = document.getElementById('image-gallery');
-        const downloadLink = document.getElementById('download-link');
+        const downloadButtonContainer = document.getElementById('download-button-container');
+        const statusMessage = document.getElementById('status-message');
+        const mainContent = document.getElementById('main-content');
 
-        async function fetchProject() {
-            // Get project ID from the URL
+        // --- PAGE LOGIC ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Get Project ID from URL
             const params = new URLSearchParams(window.location.search);
             const projectId = params.get('id');
 
             if (!projectId) {
-                showError("No project specified. The link may be invalid.");
+                statusMessage.textContent = 'Error: No project ID provided. The link is invalid.';
+                statusMessage.className = 'status error';
+                mainContent.style.display = 'none';
                 return;
             }
 
             try {
+                // 2. Fetch the specific project document from Firestore
                 const projectRef = doc(db, 'projects', projectId);
-                const projectDoc = await getDoc(projectRef);
+                const docSnap = await getDoc(projectRef);
 
-                if (projectDoc.exists()) {
-                    const projectData = projectDoc.data();
-                    renderProject(projectData);
+                if (docSnap.exists()) {
+                    const projectData = docSnap.data();
+                    
+                    // 3. Populate the page with data
+                    projectNameTitle.textContent = projectData.name;
+                    document.title = projectData.name; // Update page title as well
+
+                    // Populate images
+                    if (projectData.imageURLs && projectData.imageURLs.length > 0) {
+                        projectData.imageURLs.forEach(url => {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.alt = projectData.name;
+                            imageGallery.appendChild(img);
+                        });
+                    } else {
+                        imageGallery.innerHTML = '<p class="status">This project has no images.</p>';
+                    }
+
+                    // Set up download button
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = projectData.link;
+                    downloadLink.target = '_blank'; // Open in a new tab
+                    downloadLink.rel = 'noopener noreferrer';
+                    downloadLink.className = 'btn-download';
+                    downloadLink.innerHTML = `<i class='bx bx-cloud-download'></i> Access Drive Link`;
+                    downloadButtonContainer.appendChild(downloadLink);
+
+                    // 4. Show the content
+                    statusMessage.style.display = 'none';
+                    mainContent.style.display = 'block';
+
                 } else {
-                    showError("Project not found. It may have been deleted.");
+                    statusMessage.textContent = 'Error: Project not found. It may have been deleted.';
+                    statusMessage.className = 'status error';
+                    mainContent.style.display = 'none';
                 }
-
             } catch (error) {
                 console.error("Error fetching project:", error);
-                showError("An error occurred while loading the project.");
+                statusMessage.textContent = 'An error occurred while loading the project.';
+                statusMessage.className = 'status error';
+                mainContent.style.display = 'none';
             }
-        }
-
-        function renderProject(data) {
-            projectNameEl.textContent = data.name;
-            downloadLink.href = data.link;
-
-            if (data.imageURLs && data.imageURLs.length > 0) {
-                data.imageURLs.forEach(url => {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = `${data.name} image`;
-                    imageGallery.appendChild(img);
-                });
-            } else {
-                imageGallery.innerHTML = '<p class="message">This project has no images to display.</p>';
-            }
-
-            loader.classList.add('hidden');
-            projectContent.classList.remove('hidden');
-        }
-
-        function showError(message) {
-            loader.classList.add('hidden');
-            errorMessage.textContent = message;
-            errorMessage.classList.remove('hidden');
-        }
-
-        // Fetch the project data when the page loads
-        document.addEventListener('DOMContentLoaded', fetchProject);
+        });
     </script>
+
+    <style>
+        :root {
+            --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
+            --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
+            --font-family: 'IBM Plex Sans', sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-family); background-color: var(--body-bg); color: var(--text-primary); }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        #main-content { display: none; }
+        
+        h1 {
+            font-size: 2.5rem; text-align: center; margin-bottom: 2rem;
+            padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);
+        }
+        
+        #image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        #image-gallery img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        #image-gallery img:hover {
+            transform: scale(1.03);
+        }
+        
+        #download-button-container {
+            text-align: center;
+        }
+        .btn-download {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background-color 0.2s ease;
+        }
+        .btn-download i { font-size: 1.8rem; }
+        .btn-download:hover { background-color: #2563EB; }
+
+        .status {
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            border-radius: 12px;
+        }
+        .status.loading { color: var(--text-secondary); }
+        .status.error { background-color: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p id="status-message" class="status loading">Loading Project...</p>
+
+        <div id="main-content">
+            <h1 id="project-name"></h1>
+            <div id="image-gallery"></div>
+            <div id="download-button-container"></div>
+        </div>
+    </div>
 </body>
 </html>
