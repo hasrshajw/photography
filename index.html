@@ -5,92 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Create Project</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; color: #333; }
-        .container { max-width: 500px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #333; }
-        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        #projectLink { margin-top: 20px; word-break: break-all; }
-        #projectLink a { color: #007bff; text-decoration: none; }
-        .error { color: red; font-weight: bold; }
+        body { font-family: sans-serif; margin: 2em; }
+        .container { max-width: 600px; margin: auto; }
+        input, button { display: block; width: 100%; padding: 10px; margin-bottom: 10px; }
+        #image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        img { max-width: 100px; max-height: 100px; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Create a New Project</h1>
-        <input type="text" id="projectName" placeholder="Enter Project Name">
+        <input type="text" id="projectName" placeholder="Project Name">
+        <input type="file" id="imageUpload" multiple accept="image/*">
+        <div id="image-previews"></div>
+        <input type="text" id="driveLink" placeholder="Google Drive Link">
         <button onclick="createProject()">Create Project</button>
-        <div id="projectLink"></div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 
     <script>
-        // Your web app's Firebase configuration
         const firebaseConfig = {
           apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
           authDomain: "harsha-demo01.firebaseapp.com",
           projectId: "harsha-demo01",
           storageBucket: "harsha-demo01.firebasestorage.app",
           messagingSenderId: "676891713475",
-          appId: "1:6891713475:web:a57e93657253e27a382776",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
           measurementId: "G-B211571YB4"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
+        const storage = firebase.storage();
 
-        function createProject() {
+        auth.signInAnonymously().catch(error => console.error(error));
+
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreviews = document.getElementById('image-previews');
+
+        imageUpload.addEventListener('change', (e) => {
+            imagePreviews.innerHTML = '';
+            for (const file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    imagePreviews.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function createProject() {
             const projectName = document.getElementById('projectName').value;
-            const projectLinkDiv = document.getElementById('projectLink');
+            const driveLink = document.getElementById('driveLink').value;
+            const files = imageUpload.files;
 
-            if (projectName.trim() === '') {
-                alert('Please enter a project name.');
+            if (!projectName || files.length === 0 || !driveLink) {
+                alert('Please fill out all fields.');
                 return;
             }
 
-            projectLinkDiv.innerHTML = 'Creating project...';
+            try {
+                const imageUrls = [];
+                for (const file of files) {
+                    const storageRef = storage.ref(`images/${projectName}/${file.name}`);
+                    await storageRef.put(file);
+                    const url = await storageRef.getDownloadURL();
+                    imageUrls.push(url);
+                }
 
-            // --- NEW: Timeout Feature ---
-            let requestTimedOut = false;
-            const timeout = setTimeout(() => {
-                requestTimedOut = true;
-                projectLinkDiv.innerHTML = `
-                    <p class="error">Error: The request to Firebase timed out.</p>
-                    <p>This is often caused by a browser extension (like an ad blocker) or a network firewall blocking the connection. Try opening this page in an Incognito Window.</p>
-                `;
-            }, 10000); // 10 seconds
+                await db.collection('projects').add({
+                    name: projectName,
+                    images: imageUrls,
+                    driveLink: driveLink,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
 
-            // --- Firestore Operation ---
-            db.collection('projects').add({
-                name: projectName,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then((docRef) => {
-                clearTimeout(timeout); // Cancel the timeout since we got a response
-                if (requestTimedOut) return; // Do nothing if the timeout message is already shown
-
-                const projectUrl = `${window.location.origin}/project.html?id=${docRef.id}`;
-                projectLinkDiv.innerHTML = `
-                    <p>Project Created!</p>
-                    <p>Share this link:</p>
-                    <a href="${projectUrl}" target="_blank">${projectUrl}</a>
-                `;
-            })
-            .catch((error) => {
-                clearTimeout(timeout); // Cancel the timeout
-                if (requestTimedOut) return;
-
-                console.error("Error adding document: ", error);
-                projectLinkDiv.innerHTML = `<p class="error">Error creating project: ${error.message}</p>`;
-            });
+                alert('Project created successfully!');
+                document.getElementById('projectName').value = '';
+                document.getElementById('driveLink').value = '';
+                imageUpload.value = '';
+                imagePreviews.innerHTML = '';
+            } catch (error) {
+                console.error("Error creating project: ", error);
+                alert('Error creating project. See console for details.');
+            }
         }
     </script>
-
 </body>
 </html>
