@@ -5,61 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Photography Projects</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            text-align: center;
-        }
-        input[type="text"], input[type="file"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #projectCreation, #projectDetails {
-            margin-bottom: 20px;
-        }
-        #projectDetails {
-            display: none;
-        }
-        #shareableLink {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9e9e9;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            word-wrap: break-word;
-        }
-        #uploadProgress {
-            margin-top: 10px;
-        }
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        input[type="text"], input[type="file"], button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #project-link-container { margin-top: 20px; padding: 10px; background: #e9ecef; border-radius: 5px; }
+        #project-link { word-break: break-all; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
@@ -67,126 +21,95 @@
     <div class="container">
         <h1>Photography Project Admin</h1>
 
-        <div id="projectCreation">
-            <h2>Create a New Project</h2>
-            <input type="text" id="projectName" placeholder="Enter Project Name">
+        <div id="create-project-section">
+            <h2>Create New Project</h2>
+            <input type="text" id="project-name" placeholder="Enter Project Name">
             <button onclick="createProject()">Create Project</button>
         </div>
 
-        <div id="projectDetails">
-            <h2 id="projectTitle"></h2>
-            <p>Upload images for the project:</p>
-            <input type="file" id="imageUpload" multiple>
+        <div id="upload-section" class="hidden">
+            <h2 id="current-project-name"></h2>
+            <p>Upload images for this project:</p>
+            <input type="file" id="image-upload" multiple>
             <p>Enter Google Drive link:</p>
-            <input type="text" id="driveLink" placeholder="https://drive.google.com/...">
+            <input type="text" id="drive-link" placeholder="https://drive.google.com/...">
             <button onclick="saveProject()">Save and Generate Link</button>
-            <div id="uploadProgress"></div>
-            <div id="shareableLink"></div>
+        </div>
+
+        <div id="project-link-container" class="hidden">
+            <h3>Share this link with your customer:</h3>
+            <p id="project-link"></p>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.firebasestorage.app",
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const storage = firebase.storage();
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
 
+        const db = firebase.firestore();
+        const storage = firebase.storage();
         let currentProjectId = null;
 
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
         function createProject() {
-            const projectName = document.getElementById('projectName').value;
-            if (!projectName) {
+            const projectName = document.getElementById('project-name').value;
+            if (!projectName.trim()) {
                 alert('Please enter a project name.');
                 return;
             }
-
-            // Generate a unique key for the project
-            currentProjectId = database.ref('projects').push().key;
-
-            document.getElementById('projectCreation').style.display = 'none';
-            document.getElementById('projectDetails').style.display = 'block';
-            document.getElementById('projectTitle').innerText = `Project: ${projectName}`;
-
-            // Store the project name
-            database.ref('projects/' + currentProjectId).set({
-                name: projectName,
-                driveLink: '',
-                images: []
-            });
+            currentProjectId = generateUniqueId();
+            document.getElementById('current-project-name').innerText = `Project: ${projectName}`;
+            document.getElementById('create-project-section').classList.add('hidden');
+            document.getElementById('upload-section').classList.remove('hidden');
         }
 
-        function saveProject() {
-            const files = document.getElementById('imageUpload').files;
-            const driveLink = document.getElementById('driveLink').value;
-            const uploadProgress = document.getElementById('uploadProgress');
+        async function saveProject() {
+            const projectName = document.getElementById('project-name').value;
+            const driveLink = document.getElementById('drive-link').value;
+            const files = document.getElementById('image-upload').files;
 
             if (files.length === 0) {
-                alert('Please select images to upload.');
-                return;
-            }
-            if (!driveLink) {
-                alert('Please enter a Google Drive link.');
+                alert('Please upload at least one image.');
                 return;
             }
 
-            // Update the Drive link in the database
-            database.ref('projects/' + currentProjectId).update({
-                driveLink: driveLink
+            const imageUrls = [];
+            for (const file of files) {
+                const storageRef = storage.ref(`${currentProjectId}/${file.name}`);
+                const uploadTask = await storageRef.put(file);
+                const url = await uploadTask.ref.getDownloadURL();
+                imageUrls.push(url);
+            }
+
+            await db.collection('projects').doc(currentProjectId).set({
+                name: projectName,
+                driveLink: driveLink,
+                images: imageUrls
             });
 
-            const uploadTasks = [];
-            uploadProgress.innerHTML = 'Starting uploads...<br>';
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const storageRef = storage.ref(`images/${currentProjectId}/${file.name}`);
-                const task = storageRef.put(file);
-
-                task.on('state_changed',
-                    function progress(snapshot) {
-                        const percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        uploadProgress.innerHTML = `Uploading ${file.name}: ${Math.round(percentage)}%<br>`;
-                    },
-                    function error(err) {
-                        console.error(err);
-                        uploadProgress.innerHTML += `<span style="color:red;">Failed to upload ${file.name}</span><br>`;
-                    },
-                    function complete() {
-                        task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-                            database.ref('projects/' + currentProjectId + '/images').push(downloadURL);
-                        });
-                        if (i === files.length -1) {
-                            uploadProgress.innerHTML = 'All images uploaded successfully!';
-                        }
-                    }
-                );
-            }
-            
-            generateShareableLink();
+            const shareableLink = `${window.location.origin}/player.html?id=${currentProjectId}`;
+            document.getElementById('project-link').innerText = shareableLink;
+            document.getElementById('upload-section').classList.add('hidden');
+            document.getElementById('project-link-container').classList.remove('hidden');
         }
-
-        function generateShareableLink() {
-            const shareableLinkDiv = document.getElementById('shareableLink');
-            const url = `${window.location.origin}/customer.html?id=${currentProjectId}`;
-            shareableLinkDiv.innerHTML = `<h3>Share this link with your customer:</h3><a href="${url}" target="_blank">${url}</a>`;
-        }
-
     </script>
-
 </body>
 </html>
