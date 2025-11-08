@@ -5,26 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Create Project</title>
     <style>
-        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
-        .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; }
-        input, button { display: block; width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 4px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        #image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; min-height: 50px; border: 1px dashed #ddd; padding: 10px; border-radius: 4px; }
-        img { max-width: 100px; max-height: 100px; border-radius: 4px; }
-        .status { text-align: center; margin-bottom: 15px; font-style: italic; color: #555; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 2em;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        /* Custom File Input Button */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            padding: 12px 0;
+            margin-bottom: 15px;
+            border: 2px dashed #007bff;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            color: #007bff;
+            font-weight: 600;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .main-button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border-radius: 4px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .main-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #image-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .upload-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .upload-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        .upload-status {
+            padding: 8px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 4px;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+        .status-text {
+            font-weight: 500;
+        }
+        .status-text.success { color: #28a745; }
+        .status-text.error { color: #dc3545; }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Create a New Project</h1>
-        <div id="status" class="status">Connecting to Firebase...</div>
-        <input type="text" id="projectName" placeholder="Project Name">
-        <input type="file" id="imageUpload" multiple accept="image/*">
+        <div class="form-group">
+            <label for="projectName">Project Name</label>
+            <input type="text" id="projectName" placeholder="Enter the project's name">
+        </div>
+        <div class="form-group">
+            <label>Upload Images</label>
+            <div class="file-input-wrapper">
+                <span>Click to Select Images</span>
+                <input type="file" id="imageUpload" multiple accept="image/*">
+            </div>
+        </div>
         <div id="image-previews"></div>
-        <input type="text" id="driveLink" placeholder="Google Drive Link">
-        <button id="createProjectBtn" onclick="createProject()" disabled>Create Project</button>
+        <div class="form-group">
+            <label for="driveLink">Google Drive Link</label>
+            <input type="text" id="driveLink" placeholder="https://drive.google.com/...">
+        </div>
+        <button id="createProjectBtn" class="main-button" onclick="createProject()">Create Project</button>
     </div>
 
     <!-- Use the latest compatible Firebase SDKs -->
@@ -35,13 +146,13 @@
 
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.firebasestorage.app",
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
         };
 
         // Initialize Firebase
@@ -50,93 +161,154 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        const createProjectBtn = document.getElementById('createProjectBtn');
-        const statusDiv = document.getElementById('status');
         const imageUpload = document.getElementById('imageUpload');
         const imagePreviews = document.getElementById('image-previews');
+        const createProjectBtn = document.getElementById('createProjectBtn');
 
-        // --- Authentication Handling ---
-        // Sign in anonymously as soon as the page loads.
-        auth.signInAnonymously()
-            .then(() => {
-                console.log("Signed in anonymously successfully.");
-                statusDiv.textContent = 'Ready to create projects.';
-                createProjectBtn.disabled = false; // Enable the button after successful sign-in
-            })
-            .catch((error) => {
-                console.error("Anonymous sign-in failed: ", error);
-                // **THIS IS THE ERROR YOU WERE SEEING**
-                // It will be fixed by enabling Anonymous Auth in the Firebase Console.
-                statusDiv.textContent = 'Error: Could not connect. Please check console.';
-                alert(`Authentication Failed: ${error.message}\n\nPlease ensure Anonymous sign-in is enabled in your Firebase project settings.`);
-            });
+        let uploadedImageUrls = [];
+        let totalFiles = 0;
+        let successfulUploads = 0;
 
-        // --- UI Handling ---
-        imageUpload.addEventListener('change', (e) => {
-            imagePreviews.innerHTML = ''; // Clear previous previews
-            if (e.target.files.length > 0) {
-                for (const file of e.target.files) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const img = document.createElement('img');
-                        img.src = event.target.result;
-                        imagePreviews.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
+        // --- Authentication ---
+        // Anonymous sign-in is required for the storage rules to work.
+        auth.signInAnonymously().catch(error => {
+            console.error("Anonymous sign-in failed: ", error);
+            alert(`Authentication Failed: ${error.message}`);
         });
 
-        // --- Main Function to Create Project ---
+        // --- Event Listener for File Selection ---
+        imageUpload.addEventListener('change', handleImageSelection);
+
+        function handleImageSelection(e) {
+            const files = e.target.files;
+            if (files.length === 0) return;
+
+            // Reset state for new batch of uploads
+            imagePreviews.innerHTML = '';
+            uploadedImageUrls = [];
+            totalFiles = files.length;
+            successfulUploads = 0;
+            createProjectBtn.disabled = true;
+            createProjectBtn.textContent = 'Waiting for uploads to finish...';
+
+            [...files].forEach((file, index) => {
+                uploadFile(file, index);
+            });
+        }
+
+        function uploadFile(file, index) {
+            // Create a preview card for each file
+            const previewId = `preview-${index}`;
+            const cardHTML = `
+                <div class="upload-card" id="${previewId}">
+                    <img src="${URL.createObjectURL(file)}" alt="Image preview">
+                    <div class="upload-status">
+                        <div class="status-text">Uploading... 0%</div>
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            `;
+            imagePreviews.innerHTML += cardHTML;
+
+            const card = document.getElementById(previewId);
+            const progressBar = card.querySelector('.progress-bar');
+            const statusText = card.querySelector('.status-text');
+
+            // --- Firebase Storage Upload Task ---
+            const uniqueFileName = `${Date.now()}-${file.name}`;
+            const storageRef = storage.ref(`images/${uniqueFileName}`);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Progress function
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBar.style.width = progress + '%';
+                    statusText.textContent = `Uploading... ${Math.round(progress)}%`;
+                },
+                (error) => {
+                    // Error function
+                    console.error("Upload failed for file: ", file.name, error);
+                    statusText.textContent = 'Upload Failed';
+                    statusText.classList.add('error');
+                    // We still need to check if all other files finished
+                    checkAllUploadsComplete(); 
+                },
+                () => {
+                    // Complete function
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        statusText.textContent = 'Complete!';
+                        statusText.classList.add('success');
+                        
+                        // Store the URL with an index to maintain order if needed
+                        uploadedImageUrls.push({ index, url: downloadURL }); 
+                        successfulUploads++;
+                        checkAllUploadsComplete();
+                    });
+                }
+            );
+        }
+        
+        function checkAllUploadsComplete() {
+            // This function checks if every file has either succeeded or failed.
+            if (successfulUploads === totalFiles) {
+                createProjectBtn.disabled = false;
+                createProjectBtn.textContent = 'Create Project';
+            } else if (uploadedImageUrls.length + (totalFiles - successfulUploads) === totalFiles && uploadedImageUrls.length > 0) {
+                 // Case where some failed, but some succeeded
+                 createProjectBtn.disabled = false;
+                 createProjectBtn.textContent = `Create Project with ${successfulUploads} Images`;
+            } else if (successfulUploads === 0 && totalFiles > 0) {
+                createProjectBtn.textContent = 'All uploads failed';
+            }
+        }
+
+
         async function createProject() {
             const projectName = document.getElementById('projectName').value.trim();
             const driveLink = document.getElementById('driveLink').value.trim();
-            const files = imageUpload.files;
 
-            if (!projectName || files.length === 0 || !driveLink) {
-                alert('Please provide a project name, at least one image, and a Drive link.');
+            if (!projectName || !driveLink) {
+                alert('Please provide a project name and a Drive link.');
                 return;
             }
 
-            // Disable button to prevent multiple submissions
+            if (uploadedImageUrls.length === 0) {
+                alert('Please upload at least one image successfully.');
+                return;
+            }
+
             createProjectBtn.disabled = true;
-            createProjectBtn.textContent = 'Uploading...';
+            createProjectBtn.textContent = 'Saving...';
 
             try {
-                const imageUrls = [];
-                // Use Promise.all to upload all files in parallel for better performance
-                await Promise.all([...files].map(async (file) => {
-                    const uniqueFileName = `${Date.now()}-${file.name}`;
-                    const storageRef = storage.ref(`images/${projectName}/${uniqueFileName}`);
-                    await storageRef.put(file);
-                    const url = await storageRef.getDownloadURL();
-                    imageUrls.push(url);
-                }));
+                // Sort URLs by original index to maintain the order of selection
+                const sortedUrls = uploadedImageUrls.sort((a, b) => a.index - b.index).map(item => item.url);
 
-                // Add the project data to Firestore
                 await db.collection('projects').add({
                     name: projectName,
-                    images: imageUrls,
+                    images: sortedUrls,
                     driveLink: driveLink,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
                 alert('Project created successfully!');
-                // Reset the form
+                // Reset the form completely
                 document.getElementById('projectName').value = '';
                 document.getElementById('driveLink').value = '';
                 imageUpload.value = '';
                 imagePreviews.innerHTML = '';
+                uploadedImageUrls = [];
+                createProjectBtn.textContent = 'Create Project';
 
             } catch (error) {
-                console.error("Error creating project: ", error);
-                alert(`Error creating project: ${error.message}\n\nSee the console for more details.`);
-            } finally {
-                // Re-enable the button whether it succeeded or failed
+                console.error("Error creating project document: ", error);
+                alert(`Error saving project: ${error.message}`);
                 createProjectBtn.disabled = false;
                 createProjectBtn.textContent = 'Create Project';
             }
         }
     </script>
 </body>
-</html>
+</html>```
