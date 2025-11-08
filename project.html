@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 600px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #status { margin-top: 20px; }
+        #image-previews { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="projectName">Loading Project...</h1>
+        <p>Upload Images:</p>
+        <input type="file" id="imageUpload" multiple>
+        <div id="image-previews"></div>
+        <p>Google Drive Link:</p>
+        <input type="text" id="driveLink" placeholder="Enter Google Drive link">
+        <button onclick="saveProjectDetails()">Save Details</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+          authDomain: "harsha-demo01.firebaseapp.com",
+          projectId: "harsha-demo01",
+          storageBucket: "harsha-demo01.firebasestorage.app",
+          messagingSenderId: "676891713475",
+          appId: "1:676891713475:web:a57e93657253e27a382776",
+          measurementId: "G-B211571YB4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+        const projectNameEl = document.getElementById('projectName');
+        const statusEl = document.getElementById('status');
+        const imageUploadEl = document.getElementById('imageUpload');
+        const previewsEl = document.getElementById('image-previews');
+
+        if (projectId) {
+            db.collection('projects').doc(projectId).get().then((doc) => {
+                if (doc.exists) {
+                    projectNameEl.textContent = `Project: ${doc.data().name}`;
+                } else {
+                    projectNameEl.textContent = 'Project not found.';
+                }
+            }).catch((error) => {
+                console.error("Error getting document:", error);
+                projectNameEl.textContent = 'Error loading project.';
+            });
+        } else {
+            projectNameEl.textContent = 'No project ID provided.';
+        }
+
+        imageUploadEl.addEventListener('change', (e) => {
+            previewsEl.innerHTML = '';
+            for (const file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.classList.add('preview-img');
+                    previewsEl.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function saveProjectDetails() {
+            if (!projectId) {
+                statusEl.textContent = 'No project ID found.';
+                return;
+            }
+
+            const files = imageUploadEl.files;
+            const driveLink = document.getElementById('driveLink').value;
+
+            if (files.length === 0 && driveLink.trim() === '') {
+                alert('Please upload at least one image or provide a Drive link.');
+                return;
+            }
+
+            statusEl.textContent = 'Uploading images...';
+
+            const imageUrls = [];
+            for (const file of files) {
+                const storageRef = storage.ref(`${projectId}/${file.name}`);
+                try {
+                    const snapshot = await storageRef.put(file);
+                    const url = await snapshot.ref.getDownloadURL();
+                    imageUrls.push(url);
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    statusEl.textContent = 'Error uploading images.';
+                    return;
+                }
+            }
+
+            statusEl.textContent = 'Saving details...';
+
+            db.collection('projects').doc(projectId).set({
+                driveLink: driveLink,
+                images: imageUrls
+            }, { merge: true }) // Using merge to not overwrite the project name
+            .then(() => {
+                statusEl.textContent = 'Project details saved successfully!';
+            })
+            .catch((error) => {
+                console.error("Error writing document: ", error);
+                statusEl.textContent = 'Error saving details.';
+            });
+        }
+    </script>
+
+</body>
+</html>
