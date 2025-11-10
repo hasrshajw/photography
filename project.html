@@ -3,135 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Details</title>
+    <title>Streamline Your Team</title>
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; color: #333; }
-        .container { max-width: 600px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { color: #333; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #218838; }
-        #status { margin-top: 20px; }
-        #image-previews { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
-        .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; }
+        /* --- Google Font Import (Approximation of original) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;1,400&family=Satoshi:wght@400;500;700&display=swap');
+
+        /* --- General Styling --- */
+        body {
+            background-color: #FFF8ED;
+            /* Using Satoshi as the primary font, falling back to sans-serif */
+            font-family: 'Satoshi', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 100px 0; /* Add padding for top/bottom content */
+            overflow-x: hidden;
+            color: #1E2024;
+        }
+
+        /* --- Main Wrapper for All Content --- */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px; /* Space between header, carousel, and footer */
+            width: 100%;
+            max-width: 1200px; /* Controls the width of header/footer content */
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- Header Content Styling --- */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+            max-width: 800px;
+        }
+
+        header h1 {
+            font-size: 60px;
+            font-weight: 500;
+            line-height: 1.1;
+            margin: 0;
+            color: #131517;
+        }
+
+        /* Styling for the serif part of the headline */
+        header h1 .serif {
+            font-family: 'Merriweather', serif;
+            font-weight: 400;
+        }
+
+        header .subheading {
+            font-size: 20px;
+            line-height: 1.6;
+            opacity: 0.6;
+            margin: 0;
+            max-width: 450px;
+        }
+
+        header .cta-button {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        header .cta-button:hover {
+            background-color: #333;
+        }
+
+
+        /* --- Carousel Container (UNCHANGED) --- */
+        .carousel-container {
+            width: 1600px;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 800px;
+            mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+        }
+
+        .carousel {
+            position: relative;
+            width: 1px;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotateAnimation 60s linear infinite;
+        }
+
+        @keyframes rotateAnimation {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .image-container {
+            position: absolute;
+            top: 50px; left: 0;
+            width: 1600px; height: 400px;
+            transform-style: preserve-3d;
+            transform-origin: center;
+            transform: translateX(-50%);
+        }
+        
+        /* Positioning each image pair in a circle */
+        .image-container:nth-child(1) { transform: translateX(-50%) rotateY(30deg); }
+        .image-container:nth-child(2) { transform: translateX(-50%) rotateY(60deg); }
+        .image-container:nth-child(3) { transform: translateX(-50%) rotateY(90deg); }
+        .image-container:nth-child(4) { transform: translateX(-50%) rotateY(120deg); }
+        .image-container:nth-child(5) { transform: translateX(-50%) rotateY(150deg); }
+        .image-container:nth-child(6) { transform: translateX(-50%) rotateY(180deg); }
+
+        .image-container img {
+            position: absolute;
+            width: 280px; height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .image-container .img-front { transform: rotateY(90deg); left: 0; }
+        .image-container .img-back { transform: rotateY(-90deg); right: 0; }
+
+
+        /* --- Footer Content Styling --- */
+        footer {
+            width: 100%;
+            padding: 40px 0;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Three columns on desktop */
+            gap: 40px;
+            width: 100%;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        /* Add borders to the middle card */
+        .card.middle {
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card h6 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .card p {
+            font-size: 14px; /* Adjusted from 12px for better readability */
+            line-height: 1.6;
+            opacity: 0.6;
+            margin: 0;
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 1600px) {
+            .carousel-container {
+                width: 98vw;
+            }
+        }
+        
+        @media (max-width: 992px) { /* Tablet */
+            .main-wrapper {
+                gap: 20px;
+            }
+            .content-grid {
+                gap: 20px;
+            }
+            .card {
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 768px) { /* Mobile */
+            body {
+                padding: 40px 0;
+            }
+            header h1 {
+                font-size: 40px;
+            }
+            header .subheading {
+                font-size: 16px;
+            }
+            
+            .carousel-container {
+                height: 400px;
+                perspective: 400px;
+            }
+            .image-container {
+                width: 1000px;
+                height: 300px;
+                top: 50px;
+            }
+            .image-container img {
+                width: 200px;
+                height: 300px;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr; /* Stack cards vertically */
+                gap: 40px;
+            }
+            .card.middle {
+                /* Change borders for stacked layout */
+                border-left: none;
+                border-right: none;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                padding: 20px;
+            }
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 id="projectName">Loading Project...</h1>
-        <p>Upload Images:</p>
-        <input type="file" id="imageUpload" multiple>
-        <div id="image-previews"></div>
-        <p>Google Drive Link:</p>
-        <input type="text" id="driveLink" placeholder="Enter Google Drive link">
-        <button onclick="saveProjectDetails()">Save Details</button>
-        <div id="status"></div>
+    <div class="main-wrapper">
+
+        <header>
+            <h1>
+                <span class="serif">Streamline Your Team,</span><br>
+                Supercharge Your Workflow
+            </h1>
+            <p class="subheading">
+                All-in-one platform to plan, collaborate,
+                and deliver — faster and smarter.
+            </p>
+            <a href="#" class="cta-button">Get started for Free</a>
+        </header>
+
+        <div class="carousel-container">
+            <div class="carousel">
+                <!-- Image Pair 1 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/G6siuhhNQSB2gaFkH6aMateuzc.jpeg" alt="Serene Skincare Product Display" class="img-front">
+                    <img src="https://framerusercontent.com/images/Dg5s46HOSjEmmegZTSjQWyHpP8.jpeg" alt="Skincare Close-Up" class="img-back">
+                </div>
+                <!-- Image Pair 2 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/VYYcAtDRIswXBd4zTCcu6rEzIg.jpeg" alt="Serene Minimalist Interior" class="img-front">
+                    <img src="https://framerusercontent.com/images/ss6OW8LWSmhlaaINuDE7e3bukmE.jpeg" alt="Elegant Glass Dropper Bottles" class="img-back">
+                </div>
+                <!-- Image Pair 3 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/rox4QKJhhbkPtiKSD36oL2Dhrj8.jpeg" alt="Modern Minimalist Kitchen" class="img-front">
+                    <img src="https://framerusercontent.com/images/iiL0z78FdG5EeSqFkapc1nPKM.jpeg" alt="Contemplative Man in Hat" class="img-back">
+                </div>
+                <!-- Image Pair 4 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/0Y5dLXOw24YXzYFZU4E7VLVb1pw.jpeg" alt="Minimalist Fashion Look" class="img-front">
+                    <img src="https://framerusercontent.com/images/EdXMPSaxTDaDCUY5OYJ5EmcdqbM.jpeg" alt="Minimalist Interior with Staircase" class="img-back">
+                </div>
+                <!-- Image Pair 5 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/AlCSDEz5Qo20KzcbCw2WCooWC4.jpeg" alt="Minimalist Perfume Scene" class="img-front">
+                    <img src="https://framerusercontent.com/images/FvLq9vcRfOUVoCC7txtWbWvHty4.jpeg" alt="Minimalist Skincare Arrangement" class="img-back">
+                </div>
+                <!-- Image Pair 6 -->
+                <div class="image-container">
+                    <img src="https://framerusercontent.com/images/tj3ikl2RgG7ScvnfpWMAXcULc.jpeg" alt="Woman Running Outdoors" class="img-front">
+                    <img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" alt="Stylish Sunglasses Display" class="img-back">
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="content-grid">
+                <div class="card">
+                    <h6>Real-Time Collaboration</h6>
+                    <p>Communicate seamlessly and keep everyone in sync with built-in messaging, file sharing, and live updates.</p>
+                </div>
+                <div class="card middle">
+                    <h6>Task & Project Tracking</h6>
+                    <p>Assign tasks, set deadlines, and visualize progress with boards, lists, and timelines tailored to your team's style.</p>
+                </div>
+                <div class="card">
+                    <h6>Performance Insights</h6>
+                    <p>Make smarter decisions with analytics that show productivity trends, bottlenecks, and team workload balance.</p>
+                </div>
+            </div>
+        </footer>
+
     </div>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.firebasestorage.app",
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const projectId = urlParams.get('id');
-        const projectNameEl = document.getElementById('projectName');
-        const statusEl = document.getElementById('status');
-        const imageUploadEl = document.getElementById('imageUpload');
-        const previewsEl = document.getElementById('image-previews');
-
-        if (projectId) {
-            db.collection('projects').doc(projectId).get().then((doc) => {
-                if (doc.exists) {
-                    projectNameEl.textContent = `Project: ${doc.data().name}`;
-                } else {
-                    projectNameEl.textContent = 'Project not found.';
-                }
-            }).catch((error) => {
-                console.error("Error getting document:", error);
-                projectNameEl.textContent = 'Error loading project.';
-            });
-        } else {
-            projectNameEl.textContent = 'No project ID provided.';
-        }
-
-        imageUploadEl.addEventListener('change', (e) => {
-            previewsEl.innerHTML = '';
-            for (const file of e.target.files) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.classList.add('preview-img');
-                    previewsEl.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        async function saveProjectDetails() {
-            if (!projectId) {
-                statusEl.textContent = 'No project ID found.';
-                return;
-            }
-
-            const files = imageUploadEl.files;
-            const driveLink = document.getElementById('driveLink').value;
-
-            if (files.length === 0 && driveLink.trim() === '') {
-                alert('Please upload at least one image or provide a Drive link.');
-                return;
-            }
-
-            statusEl.textContent = 'Uploading images...';
-
-            const imageUrls = [];
-            for (const file of files) {
-                const storageRef = storage.ref(`${projectId}/${file.name}`);
-                try {
-                    const snapshot = await storageRef.put(file);
-                    const url = await snapshot.ref.getDownloadURL();
-                    imageUrls.push(url);
-                } catch (error) {
-                    console.error("Error uploading file:", error);
-                    statusEl.textContent = 'Error uploading images.';
-                    return;
-                }
-            }
-
-            statusEl.textContent = 'Saving details...';
-
-            db.collection('projects').doc(projectId).set({
-                driveLink: driveLink,
-                images: imageUrls
-            }, { merge: true }) // Using merge to not overwrite the project name
-            .then(() => {
-                statusEl.textContent = 'Project details saved successfully!';
-            })
-            .catch((error) => {
-                console.error("Error writing document: ", error);
-                statusEl.textContent = 'Error saving details.';
-            });
-        }
-    </script>
 
 </body>
 </html>
