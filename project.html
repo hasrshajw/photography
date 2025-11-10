@@ -3,315 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Streamline Your Team</title>
+    <title>HV PHOTOGRAPHY</title>
     <style>
-        /* --- Google Font Import (Approximation of original) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;1,400&family=Satoshi:wght@400;500;700&display=swap');
+        /* --- Google Font Import --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+        /* --- Variables (Consolidated & Cleaned) --- */
+        :root {
+            --primary-bg: #fefefe;
+            --accent-color: #1a1a1a;
+            --accent-hover: #333;
+            --text-primary: #121212;
+            --text-secondary: #666666;
+            --text-light: #888888;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --nav-link-hover-bg: #f0f0f0;
+        }
 
         /* --- General Styling --- */
-        body {
-            background-color: #FFF8ED;
-            font-family: 'Satoshi', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
-            padding: 100px 0; /* Desktop vertical padding */
-            overflow-x: hidden;
-            color: #1E2024;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        /* --- Main Wrapper for All Content --- */
+        body {
+            background-color: var(--primary-bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px; /* Space for fixed header */
+            overflow-x: hidden;
+        }
+        
+        /* --- Navigation Bar Styles --- */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background-color: var(--primary-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header-container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .nav {
+            padding: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            font-size: 22px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: none;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: background-color 0.2s ease, color 0.2s ease;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: var(--nav-link-hover-bg);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .menu-button {
+            display: flex;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            background-color: transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .menu-button:hover {
+            background-color: var(--nav-link-hover-bg);
+        }
+
+        #mobileMenu {
+            position: fixed; top: 0; right: 0; bottom: 0;
+            width: 75vw; max-width: 320px;
+            background: var(--primary-bg);
+            padding: 24px 16px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex; flex-direction: column;
+        }
+        #mobileMenu.active { transform: translateX(0); }
+
+        #menuOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 999; display: none;
+        }
+        #menuOverlay.active { display: block; }
+
+        .mobile-menu-close {
+            align-self: flex-end; margin-bottom: 24px; cursor: pointer;
+            border: none; background: transparent; padding: 8px;
+        }
+        .mobile-menu-close svg { width: 24px; height: 24px; color: var(--text-secondary); }
+
+        .mobile-menu-content a {
+            text-decoration: none; color: var(--text-primary); display: block;
+            font-size: 1.1rem; font-weight: 500; padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+        }
+        .mobile-menu-content a:hover { background-color: var(--nav-link-hover-bg); }
+        
+        .nav-button {
+            padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 500;
+            border: 1px solid var(--accent-color);
+            border-radius: 30px; color: var(--primary-bg);
+            background-color: var(--accent-color);
+            transition: var(--transition);
+            text-decoration: none;
+            display: none;
+        }
+        .nav-button:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
+
+
+        /* --- Main Wrapper for Page Content --- */
         .main-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
+            gap: 20px; /* FIX: Stable gap for consistent spacing */
             width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            box-sizing: border-box;
+            max-width: 1400px;
+            padding: 40px 30px;
+            margin: 0 auto;
         }
 
-        /* --- Header Content Styling --- */
-        header {
+        /* --- Hero Content Section --- */
+        .hero-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 20px;
+            gap: 24px;
             max-width: 800px;
         }
 
-        header h1 {
-            font-size: 60px;
-            font-weight: 500;
-            line-height: 1.1;
-            margin: 0;
-            color: #131517;
+        .hero-content h1 {
+            font-size: 72px; font-weight: 600; line-height: 1.05; margin: 0;
+            color: var(--text-primary); letter-spacing: -1px;
+        }
+        .hero-content h1 .serif {
+            font-family: 'Playfair Display', serif; font-weight: 500; font-style: italic;
+        }
+        .hero-content .subheading {
+            font-size: 20px; line-height: 1.6; color: var(--text-secondary);
+            margin: 0; max-width: 600px; font-weight: 400;
+        }
+        .cta-container { display: flex; gap: 16px; margin-top: 10px; }
+        .hero-content .cta-button {
+            background-color: var(--accent-color); color: #fff;
+            padding: 16px 32px; border-radius: 30px; text-decoration: none;
+            font-size: 16px; font-weight: 500; transition: var(--transition);
+            display: inline-flex; align-items: center; justify-content: center;
+            white-space: nowrap;
+        }
+        .hero-content .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .secondary-button {
+            background-color: transparent; color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .secondary-button:hover {
+            transform: translateY(-2px);
+            background-color: rgba(0, 0, 0, 0.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        header h1 .serif {
-            font-family: 'Merriweather', serif;
-            font-weight: 400;
+        /* --- Carousel Section --- */
+        .carousel-section {
+            position: relative; width: 100%;
+            display: flex; justify-content: center;
         }
-
-        header .subheading {
-            font-size: 20px;
-            line-height: 1.6;
-            opacity: 0.6;
-            margin: 0;
-            max-width: 450px;
-        }
-
-        header .cta-button {
-            background-color: #000;
-            color: #fff;
-            padding: 15px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        header .cta-button:hover {
-            background-color: #333;
-        }
-
-
-        /* --- Carousel Container (Desktop) --- */
         .carousel-container {
-            width: 1600px;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 1600px; height: 420px; /* Reduced height for tighter fit */
+            display: flex; justify-content: center; align-items: center;
             perspective: 800px;
             mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
             -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
         }
-
         .carousel {
-            position: relative;
-            width: 1px;
-            height: 100%;
+            position: relative; width: 1px; height: 100%;
             transform-style: preserve-3d;
             animation: rotateAnimation 60s linear infinite;
         }
-
-        @keyframes rotateAnimation {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-
+        @keyframes rotateAnimation { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
         .image-container {
-            position: absolute;
-            top: 50px; left: 0;
+            position: absolute; top: 10px; left: 0; /* Centered in 420px container */
             width: 1600px; height: 400px;
             transform-style: preserve-3d;
             transform-origin: center;
             transform: translateX(-50%);
         }
-
-        .image-container:nth-child(1) { transform: translateX(-50%) rotateY(30deg); }
-        .image-container:nth-child(2) { transform: translateX(-50%) rotateY(60deg); }
-        .image-container:nth-child(3) { transform: translateX(-50%) rotateY(90deg); }
-        .image-container:nth-child(4) { transform: translateX(-50%) rotateY(120deg); }
-        .image-container:nth-child(5) { transform: translateX(-50%) rotateY(150deg); }
-        .image-container:nth-child(6) { transform: translateX(-50%) rotateY(180deg); }
-
+        .image-container:nth-child(1){transform:translateX(-50%) rotateY(30deg);} .image-container:nth-child(2){transform:translateX(-50%) rotateY(60deg);} .image-container:nth-child(3){transform:translateX(-50%) rotateY(90deg);} .image-container:nth-child(4){transform:translateX(-50%) rotateY(120deg);} .image-container:nth-child(5){transform:translateX(-50%) rotateY(150deg);} .image-container:nth-child(6){transform:translateX(-50%) rotateY(180deg);}
         .image-container img {
-            position: absolute;
-            width: 280px; height: 400px;
-            object-fit: cover;
-            border-radius: 20px;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
+            position: absolute; width: 280px; height: 400px;
+            object-fit: cover; border-radius: 16px;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            box-shadow: var(--shadow);
         }
-
         .image-container .img-front { transform: rotateY(90deg); left: 0; }
         .image-container .img-back { transform: rotateY(-90deg); right: 0; }
 
-
-        /* --- Footer Content Styling --- */
-        footer {
-            width: 100%;
-            padding: 40px 0;
+        /* --- Stats Section --- */
+        .stats-container {
+            display: flex; justify-content: center; gap: 60px;
+            padding: 40px 0; width: 100%; max-width: 800px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            width: 100%;
+        .stat-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .stat-number {
+            font-size: 42px; font-weight: 600; color: var(--text-primary);
+            line-height: 1; margin-bottom: 8px;
         }
-
-        .card {
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            gap: 10px;
-            padding: 0 20px;
+        .stat-label {
+            font-size: 14px; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 1px;
         }
-
-        .card.middle {
-            border-left: 1px solid rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .card h6 { font-size: 20px; font-weight: 500; margin: 0; }
-        .card p { font-size: 14px; line-height: 1.6; opacity: 0.6; margin: 0; }
-
 
         /* --- Responsive Adjustments --- */
-        @media (max-width: 1600px) {
-            .carousel-container {
-                width: 98vw;
-            }
+        @media (min-width: 768px) {
+            .nav-links { display: flex; }
+            .menu-button { display: none; }
+            .nav-button { display: inline-flex; }
         }
         
-        @media (max-width: 992px) { /* Tablet */
-            .main-wrapper {
-                gap: 20px;
-            }
-            .content-grid {
-                gap: 20px;
-            }
-            .card {
-                padding: 0 15px;
-            }
+        @media (max-width: 1200px) {
+            .hero-content h1 { font-size: 60px; }
+            .stats-container { gap: 40px; }
+            .stat-number { font-size: 36px; }
         }
-
-        @media (max-width: 768px) { /* Mobile */
-            body {
-                /* Reduce overall vertical padding on mobile */
-                padding: 40px 0;
-            }
-            .main-wrapper {
-                /* Remove gap to use margin for precise control */
-                gap: 0;
-            }
-            header {
-                /* Create space below the header */
-                margin-bottom: 30px;
-            }
-            header h1 {
-                font-size: 40px;
-            }
-            header .subheading {
-                font-size: 16px;
-            }
+        @media (max-width: 992px) {
+            .hero-content h1 { font-size: 52px; }
+            .stats-container { gap: 30px; }
+        }
+        @media (max-width: 768px) {
+            body { padding-top: 74px; }
+            .main-wrapper { padding: 20px; gap: 15px; }
+            .hero-content h1 { font-size: 42px; }
+            .hero-content .subheading { font-size: 18px; }
             
-            .carousel-container {
-                /* MODIFIED: Reduce height to tightly fit the 300px tall images */
-                height: 310px;
-                perspective: 400px;
-                 /* Create space below the carousel */
-                margin-bottom: 30px;
-            }
-            .image-container {
-                width: 1000px;
-                height: 300px; /* Image height */
-                /* MODIFIED: Recalculate top for the new container height: (310 - 300) / 2 = 5px */
-                top: 5px;
-            }
-            .image-container img {
-                width: 200px;
-                height: 300px;
-            }
-
-            footer {
-                /* Remove top padding, margin from carousel now handles the space */
-                padding-top: 0;
-            }
-            .content-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            .card.middle {
-                border-left: none;
-                border-right: none;
-                border-top: 1px solid rgba(0, 0, 0, 0.1);
-                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-                padding: 20px;
-            }
+            .cta-container { flex-direction: row; justify-content: center; width: 100%; }
+            .hero-content .cta-button { font-size: 14px; padding: 12px 20px; }
+            
+            .carousel-container { height: 380px; }
+            .image-container { width: 1400px; height: 360px; top: 10px; }
+            .image-container img { width: 250px; height: 360px; }
+            
+            .stats-container { flex-direction: column; gap: 30px; padding: 30px 20px; }
+            .stat-item { flex-direction: row; justify-content: space-between; align-items: center; text-align: left; }
+            .stat-number { margin-bottom: 0; font-size: 32px; }
+        }
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 36px; }
+            .hero-content .cta-button { font-size: 13px; padding: 12px 16px; }
         }
 
     </style>
 </head>
 <body>
 
+    <header class="header">
+        <div class="header-container">
+            <nav class="nav">
+                <div class="nav-left">
+                    <a href="/" class="nav-logo">HV PHOTOGRAPHY</a>
+                    <div class="nav-links">
+                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="#">Services</a>
+                        <a class="nav-link" href="#">Gallery</a>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <a class="nav-button" href="#">Book Us</a>
+                    <button class="menu-button" id="mobileMenuButton">
+                        <svg width="24" height="24" viewBox="0 0 24" fill="none"><path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <div id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="mobile-menu-content">
+             <a href="#">Home</a>
+             <a href="#">About</a>
+             <a href="#">Services</a>
+             <a href="#">Gallery</a>
+             <a href="#">Book Us</a>
+        </div>
+    </div>
+    <div id="menuOverlay"></div>
+
+
     <div class="main-wrapper">
 
-        <header>
+        <section class="hero-content">
             <h1>
-                <span class="serif">Streamline Your Team,</span><br>
-                Supercharge Your Workflow
+                Capturing Your <span class="serif">Timeless</span> Moments
             </h1>
             <p class="subheading">
-                All-in-one platform to plan, collaborate,
-                and deliver — faster and smarter.
+                Professional photography services for weddings, portraits, and commercial projects. 
+                Creating stunning visual stories that last a lifetime.
             </p>
-            <a href="#" class="cta-button">Get started for Free</a>
-        </header>
+            <div class="cta-container">
+                <a href="#" class="cta-button">BOOK A SESSION</a>
+                <a href="#" class="cta-button secondary-button">VIEW PORTFOLIO</a>
+            </div>
+        </section>
 
-        <div class="carousel-container">
-            <div class="carousel">
-                <!-- Image Pair 1 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/G6siuhhNQSB2gaFkH6aMateuzc.jpeg" alt="Serene Skincare Product Display" class="img-front">
-                    <img src="https://framerusercontent.com/images/Dg5s46HOSjEmmegZTSjQWyHpP8.jpeg" alt="Skincare Close-Up" class="img-back">
-                </div>
-                <!-- Image Pair 2 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/VYYcAtDRIswXBd4zTCcu6rEzIg.jpeg" alt="Serene Minimalist Interior" class="img-front">
-                    <img src="https://framerusercontent.com/images/ss6OW8LWSmhlaaINuDE7e3bukmE.jpeg" alt="Elegant Glass Dropper Bottles" class="img-back">
-                </div>
-                <!-- Image Pair 3 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/rox4QKJhhbkPtiKSD36oL2Dhrj8.jpeg" alt="Modern Minimalist Kitchen" class="img-front">
-                    <img src="https://framerusercontent.com/images/iiL0z78FdG5EeSqFkapc1nPKM.jpeg" alt="Contemplative Man in Hat" class="img-back">
-                </div>
-                <!-- Image Pair 4 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/0Y5dLXOw24YXzYFZU4E7VLVb1pw.jpeg" alt="Minimalist Fashion Look" class="img-front">
-                    <img src="https://framerusercontent.com/images/EdXMPSaxTDaDCUY5OYJ5EmcdqbM.jpeg" alt="Minimalist Interior with Staircase" class="img-back">
-                </div>
-                <!-- Image Pair 5 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/AlCSDEz5Qo20KzcbCw2WCooWC4.jpeg" alt="Minimalist Perfume Scene" class="img-front">
-                    <img src="https://framerusercontent.com/images/FvLq9vcRfOUVoCC7txtWbWvHty4.jpeg" alt="Minimalist Skincare Arrangement" class="img-back">
-                </div>
-                <!-- Image Pair 6 -->
-                <div class="image-container">
-                    <img src="https://framerusercontent.com/images/tj3ikl2RgG7ScvnfpWMAXcULc.jpeg" alt="Woman Running Outdoors" class="img-front">
-                    <img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" alt="Stylish Sunglasses Display" class="img-back">
+        <div class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel">
+                    <!-- Image Pairs -->
+                    <div class="image-container"><img src="https://framerusercontent.com/images/G6siuhhNQSB2gaFkH6aMateuzc.jpeg" class="img-front"><img src="https://framerusercontent.com/images/Dg5s46HOSjEmmegZTSjQWyHpP8.jpeg" class="img-back"></div>
+                    <div class="image-container"><img src="https://framerusercontent.com/images/VYYcAtDRIswXBd4zTCcu6rEzIg.jpeg" class="img-front"><img src="https://framerusercontent.com/images/ss6OW8LWSmhlaaINuDE7e3bukmE.jpeg" class="img-back"></div>
+                    <div class="image-container"><img src="https://framerusercontent.com/images/rox4QKJhhbkPtiKSD36oL2Dhrj8.jpeg" class="img-front"><img src="https://framerusercontent.com/images/iiL0z78FdG5EeSqFkapc1nPKM.jpeg" class="img-back"></div>
+                    <div class="image-container"><img src="https://framerusercontent.com/images/0Y5dLXOw24YXzYFZU4E7VLVb1pw.jpeg" class="img-front"><img src="https://framerusercontent.com/images/EdXMPSaxTDaDCUY5OYJ5EmcdqbM.jpeg" class="img-back"></div>
+                    <div class="image-container"><img src="https://framerusercontent.com/images/AlCSDEz5Qo20KzcbCw2WCooWC4.jpeg" class="img-front"><img src="https://framerusercontent.com/images/FvLq9vcRfOUVoCC7txtWbWvHty4.jpeg" class="img-back"></div>
+                    <div class="image-container"><img src="https://framerusercontent.com/images/tj3ikl2RgG7ScvnfpWMAXcULc.jpeg" class="img-front"><img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" class="img-back"></div>
                 </div>
             </div>
         </div>
-        
-        <footer>
-            <div class="content-grid">
-                <div class="card">
-                    <h6>Real-Time Collaboration</h6>
-                    <p>Communicate seamlessly and keep everyone in sync with built-in messaging, file sharing, and live updates.</p>
-                </div>
-                <div class="card middle">
-                    <h6>Task & Project Tracking</h6>
-                    <p>Assign tasks, set deadlines, and visualize progress with boards, lists, and timelines tailored to your team's style.</p>
-                </div>
-                <div class="card">
-                    <h6>Performance Insights</h6>
-                    <p>Make smarter decisions with analytics that show productivity trends, bottlenecks, and team workload balance.</p>
-                </div>
-            </div>
-        </footer>
 
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+        
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const menuOverlay = document.getElementById('menuOverlay');
+
+            const openMenu = () => {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
+            };
+
+            const closeMenu = () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            };
+
+            if (mobileMenuButton) { mobileMenuButton.addEventListener('click', openMenu); }
+            if (mobileMenuClose) { mobileMenuClose.addEventListener('click', closeMenu); }
+            if (menuOverlay) { menuOverlay.addEventListener('click', closeMenu); }
+        });
+    </script>
 
 </body>
 </html>
