@@ -1,318 +1,2254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Explore Our Gallery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --accent-dark-teal: #012726;
-      --accent-hover-teal: #004D4B;
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Poppins',sans-serif;
-      background:#fff;
-      color:#111;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      padding:20px;
-    }
-    .gallery-section{
-      max-width:1100px;
-      width:100%;
-      text-align:center;
-      padding:60px 20px;
-    }
-    .gallery-section h2{font-size:2rem;font-weight:600;margin-bottom:12px}
-    .gallery-section p{
-      font-size:0.95rem;color:#666;max-width:600px;margin:0 auto 40px;line-height:1.6;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HV PHOTOGRAPHY</title>
+    <style>
+        /* --- Google Font Import --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+        
+        /* --- Universal box-sizing --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* ---------- Carousel ---------- */
-    .carousel{
-      position:relative;
-      width:100%;
-      height:420px;
-      perspective:1200px;
-      overflow:hidden;
-      touch-action: pan-y;
-    }
-    .carousel-track{
-      position:absolute;
-      width:100%;
-      height:100%;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      transition:transform .9s cubic-bezier(.25,.8,.25,1);
-    }
-    .carousel .image-wrapper {
-      position: absolute;
-      width: 240px;
-      height: 360px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border-radius: 16px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.15);
-      transition: all .8s cubic-bezier(.25,.8,.25,1);
-      opacity: 1;
-      transform-style: preserve-3d;
-      background-color: #f0f0f0;
-      overflow: hidden;
-    }
+        /* --- Root variables --- */
+        :root {
+            --primary-bg: #fefefe;
+            --secondary-bg: #f8f8f8;
+            --accent-color: #1a1a1a;
+            --text-primary: #121212;
+            --text-secondary: #666666;
+            --text-light: #888888;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            
+            --spacing: 0.25rem;
+            --color-gray-200: oklch(92.8% 0.006 264.531);
+            --color-white: #fff;
+            --color-black: #000;
+            --color-dark-teal: #012726;
+            --color-teal-hover: #004D4B;
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-weight-medium: 500;
+            --font-weight-normal: 400;
+            --font-weight-bold: 700;
+            --text-base: 1rem;
+            --text-base--line-height: 1.5;
+            --radius-md: 0.375rem;
+            --default-transition-duration: 0.15s;
+            --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    .carousel .image-wrapper a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      text-decoration: none;
-      color: inherit;
-    }
-    .carousel img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Changed to cover for a fuller look */
-      border-radius:16px;
-    }
+        /* --- Body styles --- */
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            padding-top: 80px; /* Increased for fixed header - prevents overlap */
+            background-color: var(--primary-bg);
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            color: var(--text-primary);
+        }
 
-    /* UPDATED: Captions are always visible now */
-    .image-caption {
-      position: absolute;
-      bottom: 0px;
-      left: 0;
-      right: 0;
-      padding: 8px 0;
-      background-color: rgba(0, 0, 0, 0.6); /* Default prominent background */
-      color: #fff;
-      font-size: 0.75rem;
-      text-align: center;
-      border-bottom-left-radius: 16px;
-      border-bottom-right-radius: 16px;
-      z-index: 10;
-      opacity: 1; /* Always visible */
-      transform: translateY(0); /* Always visible */
-      transition: background-color 0.5s ease; /* Animate background fade */
-    }
+        /* --- Header styles --- */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            transition-property: all;
+            transition-duration: 0.3s;
+            transition-timing-function: var(--default-transition-timing-function);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
 
-    /* Make captions on side images less prominent */
-    .image-wrapper:not(.pos0) .image-caption {
-      background-color: rgba(0, 0, 0, 0.3);
-      font-size: 0.7rem;
-    }
+        /* Container */
+        .header-container {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1400px;
+        }
 
-    /* 3-D positions */
-    .pos-3{transform:translateX(-420px) scale(.75) rotateY(30deg);opacity:1;z-index:1}
-    .pos-2{transform:translateX(-280px) scale(.85) rotateY(20deg);opacity:1;z-index:2}
-    .pos-1{transform:translateX(-140px) scale(.95) rotateY(10deg);opacity:1;z-index:3}
-    .pos0 {transform:translateX(0)    scale(1.15);   opacity:1;  z-index:5}
-    .pos1 {transform:translateX(140px) scale(.95) rotateY(-10deg);opacity:1;z-index:3}
-    .pos2 {transform:translateX(280px) scale(.85) rotateY(-20deg);opacity:1;z-index:2}
-    .pos3 {transform:translateX(420px) scale(.75) rotateY(-30deg);opacity:1;z-index:1}
+        @media (min-width: 48rem) {
+            .header-container {
+                width: 90%;
+            }
+        }
 
-    /* NEW: Arrow Navigation for Desktop */
-    .carousel-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
-      width: 44px;
-      height: 44px;
-      background-color: var(--accent-dark-teal);
-      border: none;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-    .carousel-arrow:hover {
-      background-color: var(--accent-hover-teal);
-      transform: translateY(-50%) scale(1.05);
-    }
-    .arrow-left { left: 20px; }
-    .arrow-right { right: 20px; }
-    .carousel-arrow svg {
-      stroke: #fff;
-      width: 24px;
-      height: 24px;
-    }
-    
-    /* HIDE dots by default on desktop */
-    .dots{ display: none; }
+        @media (max-width: 768px) {
+            .header-container {
+                padding-left: 16px;
+                padding-right: 16px;
+                width: 100%;
+            }
+            .nav-left, .nav-right {
+                margin: 0;
+                padding: 0;
+            }
+            .logo, .menu-button {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                padding-top: 70px; /* Adjusted for mobile */
+            }
+        }
 
-    /* ---------- Responsive (Mobile View) ---------- */
-    @media (max-width: 900px){
-      body, .gallery-section { padding: 0; }
-      .gallery-section { padding: 60px 0; }
-      /* UPDATED: Reduced vertical padding by reducing carousel height */
-      .carousel { height: 360px; }
-      .carousel .image-wrapper, .carousel img{max-width:200px;max-height:300px}
-      .pos-3{transform:translateX(-320px) scale(.70) rotateY(35deg)}
-      .pos-2{transform:translateX(-210px) scale(.80) rotateY(25deg)}
-      .pos-1{transform:translateX(-110px) scale(.90) rotateY(12deg)}
-      .pos0 {transform:translateX(0) scale(1.10)}
-      .pos1 {transform:translateX(110px) scale(.90) rotateY(-12deg)}
-      .pos2 {transform:translateX(210px) scale(.80) rotateY(-25deg)}
-      .pos3 {transform:translateX(320px) scale(.70) rotateY(-35deg)}
-    }
-    
-    /* On mobile, hide arrows and show dots */
-    @media (max-width: 768px) {
-      .carousel-arrow { display: none; }
-      .dots {
-        display:flex;
-        justify-content:center;
-        gap:10px;
-        margin-top:30px;
-      }
-      .dot{width:10px;height:10px;background:#ddd;border-radius:50%;transition:.3s;cursor:pointer}
-      .dot.active{background: var(--accent-dark-teal);transform:scale(1.3)}
-    }
+        /* Navigation */
+        .nav {
+            padding-top: calc(var(--spacing) * 3);
+            padding-bottom: calc(var(--spacing) * 3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-    @media (max-width:600px){
-      body, .gallery-section { padding: 0; }
-      .gallery-section { padding: 60px 0; }
-       /* UPDATED: Further reduced vertical padding for small phones */
-      .carousel { height: 320px; }
-      .carousel .image-wrapper, .carousel img{max-width:160px;max-height:240px}
-      .pos-3{transform:translateX(-250px) scale(.65)}
-      .pos-2{transform:translateX(-170px) scale(.75)}
-      .pos-1{transform:translateX(-90px) scale(.88)}
-      .pos0 {transform:translateX(0) scale(1.05)}
-      .pos1 {transform:translateX(90px) scale(.88)}
-      .pos2 {transform:translateX(170px) scale(.75)}
-      .pos3 {transform:translateX(250px) scale(.65)}
-    }
-  </style>
+        /* Logo and nav links container */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 6);
+        }
+        
+        @media (max-width: 768px) {
+            .nav {
+                padding-top: calc(var(--spacing) * 2);
+                padding-bottom: calc(var(--spacing) * 2);
+            }
+        }
+        
+        /* Logo image */
+        .logo {
+            margin-right: calc(var(--spacing) * 6);
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Nav links (hidden on mobile, flex on md) */
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: calc(var(--spacing) * 2);
+        }
+
+        @media (min-width: 48rem) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* Nav link hover effect */
+        .nav-link {
+            padding-left: calc(var(--spacing) * 4);
+            padding-right: calc(var(--spacing) * 4);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 8px;
+            left: 50%;
+            background-color: var(--color-dark-teal);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        @media (hover: hover) {
+            .nav-link:hover {
+                color: var(--color-dark-teal);
+                background-color: transparent;
+            }
+            
+            .nav-link:hover:after {
+                width: 70%;
+            }
+        }
+
+        /* Right-side buttons container */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        /* Mobile menu button */
+        .menu-button {
+            display: flex;
+            padding: calc(var(--spacing) * 1.5);
+            border: 1px solid var(--color-dark-teal);
+            border-radius: var(--radius-md);
+            color: var(--color-dark-teal);
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: var(--color-dark-teal);
+            color: white;
+        }
+
+        @media (min-width: 48rem) {
+            .menu-button {
+                display: none;
+            }
+        }
+
+        /* Mobile menu styles - COMPLETELY FIXED */
+        #mobileMenu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 85vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #ffffff;
+            padding: 24px 16px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        #mobileMenu.active {
+            transform: translateX(0);
+        }
+
+        #menuOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        #menuOverlay.active {
+            display: block;
+        }
+
+        .mobile-menu-close {
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            transition: background 0.2s ease, transform 0.2s ease;
+            align-self: flex-end;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-close svg {
+            width: 24px;
+            height: 24px;
+            color: #4b5563;
+        }
+
+        .mobile-menu-content {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 16px 12px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #2d3436;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .mobile-menu-auth {
+            flex-shrink: 0;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .mobile-menu-auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-menu-auth-button {
+            padding: 14px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .mobile-menu-auth-button.submit {
+            background: var(--color-dark-teal);
+            color: var(--color-white);
+        }
+
+        .mobile-menu-auth-button.join {
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+
+        @media (hover: hover) {
+            .mobile-menu-auth-button.submit:hover {
+                background: var(--color-teal-hover);
+            }
+            .mobile-menu-auth-button.join:hover {
+                background: #f3f4f6;
+            }
+        }
+
+        /* Auth buttons container */
+        .auth-buttons {
+            display: none;
+            align-items: center;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        @media (min-width: 48rem) {
+            .auth-buttons {
+                display: flex;
+            }
+        }
+
+        /* Auth button */
+        .auth-button {
+            padding-left: calc(var(--spacing) * 5);
+            padding-right: calc(var(--spacing) * 5);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
+            border: 1px solid var(--color-dark-teal);
+            border-radius: var(--radius-md);
+            color: var(--color-dark-teal);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .auth-button.submit {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+            border: none;
+        }
+
+        @media (hover: hover) {
+            .auth-button:hover {
+                color: var(--color-white);
+                background-color: var(--color-teal-hover);
+            }
+            .auth-button.submit:hover {
+                background-color: var(--color-teal-hover);
+            }
+        }
+
+        /* NEW STYLE FOR MOBILE-ONLY "BOOK US" BUTTON */
+        .mobile-auth-button {
+            display: inline-block;
+        }
+        
+        @media (min-width: 48rem) { /* 768px */
+            .mobile-auth-button {
+                display: none;
+            }
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background-color: var(--color-gray-200);
+        }
+
+        @media (max-width: 768px) {
+            .divider {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        /* --- Hero Section Styles --- */
+        /* Main Wrapper for All Content */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 30px;
+            margin: 0 auto;
+        }
+
+        /* Header Content Styling */
+        .hero-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            max-width: 800px;
+            z-index: 10;
+            position: relative;
+            margin-bottom: -10px;
+            padding-top: 20px; /* Added to ensure content doesn't touch navbar */
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+
+        .hero-header h1 {
+            font-size: 72px;
+            font-weight: 600;
+            line-height: 1.05;
+            margin: 0;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+        }
+
+        .hero-header h1 .serif {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .hero-header .subheading {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0;
+            max-width: 600px;
+            font-weight: 400;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 5px;
+        }
+
+        .hero-header .cta-button {
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-header .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .secondary-button {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        /* FIXED: Secondary button hover styles */
+        .secondary-button:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Carousel Container */
+        .carousel-section {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .carousel-container {
+            width: 100%;
+            max-width: 1600px;
+            height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 800px;
+            mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+            -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+        }
+
+        .carousel {
+            position: relative;
+            width: 1px;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotateAnimation 60s linear infinite;
+        }
+
+        @keyframes rotateAnimation {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .image-container {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 1600px; 
+            height: 400px;
+            transform-style: preserve-3d;
+            transform-origin: center;
+            transform: translateX(-50%);
+        }
+        
+        .image-container:nth-child(1) { transform: translateX(-50%) rotateY(30deg); }
+        .image-container:nth-child(2) { transform: translateX(-50%) rotateY(60deg); }
+        .image-container:nth-child(3) { transform: translateX(-50%) rotateY(90deg); }
+        .image-container:nth-child(4) { transform: translateX(-50%) rotateY(120deg); }
+        .image-container:nth-child(5) { transform: translateX(-50%) rotateY(150deg); }
+        .image-container:nth-child(6) { transform: translateX(-50%) rotateY(180deg); }
+
+        .image-container img {
+            position: absolute;
+            width: 280px; 
+            height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .image-container .img-front { transform: rotateY(90deg); left: 0; }
+        .image-container .img-back { transform: rotateY(-90deg); right: 0; }
+
+        /* Stats Section */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 15px 0;
+            width: 100%;
+            max-width: 800px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Content Section - Added for mobile layout */
+        .mobile-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            max-width: 600px;
+            padding: 20px 0;
+        }
+
+        /* --- Services Section Styles --- */
+        .services-section {
+            width: 100%;
+            padding: 80px 0;
+        }
+
+        .section-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .left-content {
+            position: sticky;
+            top: 140px;
+            flex: 0 0 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 2rem;
+        }
+
+        .left-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+        }
+
+        .left-content h2 .serif {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
+        .left-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 450px;
+        }
+
+        .right-content {
+            flex: 0 0 55%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Service Card Styling */
+        .service-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px) scale(0.98);
+            border: 1px solid var(--border-color);
+        }
+
+        .service-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+            background-color: var(--color-dark-teal);
+        }
+        
+        .icon-circle svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .learn-more {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--color-dark-teal);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .learn-more::after {
+            content: "→";
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Desktop Hover Effects */
+        @media (hover: hover) {
+            .service-card:hover {
+                transform: translateY(-6px) scale(1.01);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+            }
+            .service-card:hover .icon-circle {
+                background-color: var(--color-teal-hover);
+                transform: scale(1.1);
+            }
+            .learn-more:hover {
+                color: var(--color-teal-hover);
+                padding-left: 4px;
+            }
+            .learn-more:hover::after {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Hide on mobile */
+        .hide-on-mobile {
+            display: block;
+        }
+
+        /* --- Gallery Section Styles --- */
+        .gallery-section {
+            width: 100%;
+            padding: 80px 0;
+            text-align: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .gallery-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .gallery-section p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .gallery-carousel {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            perspective: 1200px;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        .gallery-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform .9s cubic-bezier(.25,.8,.25,1);
+            will-change: transform;
+        }
+
+        .gallery-image-wrapper {
+            position: absolute;
+            width: 240px;
+            height: 360px;
+            border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(0,0,0,.15);
+            transition: all .8s cubic-bezier(.25,.8,.25,1);
+            transform-style: preserve-3d;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-image-wrapper a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .gallery-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            -webkit-user-drag: none;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 5px 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.75rem;
+            text-align: center;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .gallery-image-wrapper.pos0 .image-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-pos-3 { transform: translateX(-460px) scale(.75) rotateY(30deg); z-index: 1; }
+        .gallery-pos-2 { transform: translateX(-320px) scale(.85) rotateY(20deg); z-index: 2; }
+        .gallery-pos-1 { transform: translateX(-170px) scale(.95) rotateY(10deg); z-index: 3; }
+        .gallery-pos0 { transform: translateX(0) scale(1.1); z-index: 5; }
+        .gallery-pos1 { transform: translateX(170px) scale(.95) rotateY(-10deg); z-index: 3; }
+        .gallery-pos2 { transform: translateX(320px) scale(.85) rotateY(-20deg); z-index: 2; }
+        .gallery-pos3 { transform: translateX(460px) scale(.75) rotateY(-30deg); z-index: 1; }
+
+        .gallery-image-wrapper:not(.gallery-pos0) a {
+            pointer-events: none;
+        }
+
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .gallery-dot {
+            width: 10px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 50%;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .gallery-dot.active {
+            background: var(--color-dark-teal);
+            transform: scale(1.3);
+        }
+
+        /* --- Testimonials Section Styles --- */
+        .testimonials-section {
+            width: 100%;
+            padding: 80px 0;
+        }
+
+        .testimonial-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 1100px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
+            border: 1px solid var(--border-color);
+            margin: 0 auto;
+        }
+
+        .testimonial-text-content {
+            width: 45%;
+            padding-right: 40px;
+        }
+
+        .testimonial-text-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text-content h2 .serif {
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
+        .testimonial-text-content p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .testimonial-btn {
+            background: var(--color-dark-teal);
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-btn:hover {
+            background: var(--color-teal-hover);
+            transform: translateY(-3px);
+        }
+
+        .testimonials-scroller {
+            width: 50%;
+            height: 285px;
+            overflow: hidden;
+            cursor: ns-resize;
+            position: relative;
+        }
+
+        .testimonials-scroller::before,
+        .testimonials-scroller::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 50px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .testimonials-scroller::before {
+            top: 0;
+            background: linear-gradient(to bottom, white, transparent);
+        }
+
+        .testimonials-scroller::after {
+            bottom: 0;
+            background: linear-gradient(to top, white, transparent);
+        }
+
+        .testimonial-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .testimonial-item.active {
+            opacity: 1;
+        }
+
+        .testimonial-item:not(.active) {
+            opacity: 0.35;
+            transform: scale(0.95);
+        }
+
+        .testimonial-item.exit {
+            transform: translateY(-100%) scale(0.9);
+            opacity: 0;
+        }
+
+        .testimonial-item.enter-reverse {
+            transform: translateY(-100%) scale(0.9);
+            opacity: 0;
+        }
+
+        .testimonial-profile {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .testimonial-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-info blockquote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+            border: none;
+            padding: 0;
+            margin: 0 0 8px 0;
+        }
+
+        .testimonial-info h3 {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* --- Footer Section Styles --- */
+        .footer-section {
+            width: 100%;
+            position: relative;
+            margin-top: 80px;
+        }
+
+        .footer-upper {
+            background-color: #f8f9fa;
+            position: relative;
+            padding: 80px 0 150px 0;
+        }
+
+        .footer-lower {
+            background-color: #012726;
+            padding: 190px 40px 60px 40px;
+        }
+
+        .subscribe-card {
+            background: linear-gradient(135deg, #003d3b, #012726);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 10px 40px rgba(0, 39, 38, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: 90%;
+            max-width: 1200px;
+            z-index: 10;
+        }
+
+        .subscribe-info {
+            flex: 1;
+        }
+
+        .subscribe-info h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-info p {
+            font-size: 1rem;
+            color: #d1d5db;
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        .subscribe-form-area {
+            flex-basis: 45%;
+        }
+
+        .subscribe-form-area label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-with-prefix {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 0 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-with-prefix .prefix {
+            color: #ffffff;
+            margin-right: 8px;
+        }
+
+        .subscribe-form input[type="tel"] {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            color: #ffffff;
+            padding: 16px 0;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-with-prefix:focus-within {
+            border-color: #ffffff;
+        }
+
+        .subscribe-form button {
+            background-color: #ffffff;
+            color: #012726;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-form button:hover {
+            background-color: #e2e6ea;
+        }
+
+        .form-disclaimer {
+            font-size: 0.8rem;
+            color: #b3d1d0;
+            margin-top: 16px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo-area {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex-basis: 30%;
+        }
+
+        .footer-logo-img {
+            max-width: 140px;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+        }
+
+        .logo-tagline {
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
+
+        .footer-links-container {
+            display: flex;
+            gap: 120px;
+        }
+
+        .footer-column h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 18px;
+        }
+
+        .footer-column ul li a {
+            text-decoration: none;
+            color: #d1d5db;
+            font-size: 1rem;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .footer-column ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-copyright-bar {
+            max-width: 1200px;
+            margin: 60px auto 0 auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .copyright-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .copyright-links a {
+            text-decoration: none;
+            color: #d1d5db;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .copyright-links a:hover {
+            color: #ffffff;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 1600px) {
+            .carousel-container {
+                width: 98vw;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .hero-header h1 {
+                font-size: 60px;
+            }
+            
+            .stats-container {
+                gap: 40px;
+            }
+            
+            .stat-number {
+                font-size: 36px;
+            }
+
+            .testimonial-container {
+                flex-direction: column;
+                height: auto;
+                padding: 50px 40px;
+                width: 90%;
+            }
+            
+            .testimonial-text-content, .testimonials-scroller {
+                width: 100%;
+            }
+            
+            .testimonial-text-content {
+                text-align: center;
+                margin-bottom: 40px;
+                padding-right: 0;
+            }
+            
+            .subscribe-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 40px;
+            }
+            
+            .subscribe-form-area {
+                width: 100%;
+                margin-top: 20px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 50px;
+            }
+            
+            .footer-links-container {
+                gap: 60px;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 992px) { /* Tablet */
+            .main-wrapper {
+                gap: 10px;
+            }
+            
+            .hero-header h1 {
+                font-size: 52px;
+            }
+            
+            .section-wrapper {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .left-content {
+                position: static;
+                margin-bottom: 3rem;
+                width: 100%;
+                padding-right: 0;
+                text-align: left; 
+                align-items: flex-start;
+            }
+            
+            .left-content p {
+                max-width: 550px;
+            }
+            
+            .right-content {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .gallery-section h2 {
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+            
+            .gallery-section p {
+                font-size: 0.85rem;
+                margin-bottom: 25px;
+            }
+            
+            .gallery-carousel {
+                height: 360px;
+            }
+            
+            .gallery-image-wrapper, .gallery-image-wrapper img {
+                max-width: 200px;
+                max-height: 300px;
+            }
+            
+            .gallery-pos-3 { transform: translateX(-360px) scale(.70) rotateY(35deg); }
+            .gallery-pos-2 { transform: translateX(-240px) scale(.80) rotateY(25deg); }
+            .gallery-pos-1 { transform: translateX(-120px) scale(.90) rotateY(12deg); }
+            .gallery-pos0 { transform: translateX(0) scale(1.05); }
+            .gallery-pos1 { transform: translateX(120px) scale(.90) rotateY(-12deg); }
+            .gallery-pos2 { transform: translateX(240px) scale(.80) rotateY(-25deg); }
+            .gallery-pos3 { transform: translateX(360px) scale(.70) rotateY(-35deg); }
+            
+            .gallery-dots {
+                margin-top: 18px;
+            }
+        }
+
+        @media (max-width: 768px) { /* Mobile */
+            body {
+                padding-top: 65px; /* Adjusted for mobile to prevent overlap */
+            }
+            
+            .main-wrapper {
+                gap: 5px;
+                padding: 0 20px;
+            }
+            
+            .hero-header {
+                margin-bottom: -15px;
+                padding-top: 10px; /* Added for mobile */
+            }
+            
+            .hero-header h1 {
+                font-size: 42px;
+            }
+            
+            /* Hide paragraph and buttons in header for mobile */
+            .hero-header .subheading,
+            .hero-header .cta-container {
+                display: none;
+            }
+            
+            /* Show mobile content section */
+            .mobile-content {
+                display: flex;
+            }
+            
+            /* Mobile buttons side by side in smaller size */
+            .mobile-cta-container {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                max-width: 100%;
+                margin-top: 0;
+                gap: 10px;
+            }
+            
+            .mobile-cta-button {
+                background-color: var(--accent-color);
+                color: #fff;
+                padding: 12px 16px;
+                border-radius: 30px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                transition: var(--transition);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                text-align: center;
+            }
+            
+            .mobile-secondary-button {
+                background-color: transparent;
+                color: var(--text-primary);
+                border: 1px solid var(--border-color);
+            }
+            
+            .mobile-secondary-button:hover {
+                background-color: var(--accent-color);
+                color: #fff;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .carousel-container {
+                height: 350px;
+                perspective: 600px;
+            }
+            
+            .image-container {
+                width: 1400px;
+                height: 400px;
+                top: -25px;
+            }
+            
+            .image-container img {
+                width: 280px;
+                height: 400px;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px 0;
+            }
+            
+            .stat-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+            }
+            
+            .stat-number {
+                margin-bottom: 0;
+                font-size: 32px;
+            }
+
+            /* Mobile Services Section */
+            .left-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .hide-on-mobile {
+                display: none;
+            }
+            
+            .service-card {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            .icon-circle {
+                width: 42px;
+                height: 42px;
+                margin-bottom: 0;
+                flex-shrink: 0;
+                border-radius: 10px;
+            }
+            
+            .icon-circle svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .card-content {
+                flex-grow: 1;
+            }
+            
+            .service-card h3 {
+                font-size: 1.05rem;
+                font-weight: 500;
+                margin-bottom: 0;
+            }
+            
+            .service-card p,
+            .service-card .learn-more {
+                display: none;
+            }
+
+            /* Mobile Gallery Section */
+            .subscribe-info h2, .gallery-section h2, .testimonial-text-content h2 {
+                font-size: 2.2rem;
+            }
+            
+            .subscribe-form {
+                flex-direction: column;
+            }
+            
+            .footer-links-container {
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 40px;
+            }
+            
+            .footer-upper {
+                padding-top: 60px;
+                padding-bottom: 240px;
+            }
+            
+            .footer-lower {
+                padding-top: 340px;
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-bottom: 40px;
+            }
+            
+            .footer-copyright-bar {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .copyright-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 12px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .gallery-section h2 {
+                font-size: 1.4rem;
+                margin-bottom: 6px;
+            }
+            
+            .gallery-section p {
+                font-size: 0.8rem;
+                margin-bottom: 20px;
+            }
+            
+            .gallery-carousel {
+                height: 300px;
+            }
+            
+            .gallery-image-wrapper, .gallery-image-wrapper img {
+                max-width: 160px;
+                max-height: 240px;
+            }
+            
+            .gallery-pos-3 { transform: translateX(-280px) scale(.65); }
+            .gallery-pos-2 { transform: translateX(-190px) scale(.75); }
+            .gallery-pos-1 { transform: translateX(-95px) scale(.88); }
+            .gallery-pos0 { transform: translateX(0) scale(1.0); }
+            .gallery-pos1 { transform: translateX(95px) scale(.88); }
+            .gallery-pos2 { transform: translateX(190px) scale(.75); }
+            .gallery-pos3 { transform: translateX(280px) scale(.65); }
+            
+            .gallery-dots {
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-header h1 {
+                font-size: 36px;
+            }
+            
+            /* Ensure buttons are still side by side on very small screens */
+            .mobile-cta-container {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .mobile-cta-button {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <header class="header">
+        <div class="header-container">
+            <nav class="nav">
+                <div class="nav-left">
+                    <a href="/">
+                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
+                    </a>
+                    <div class="nav-links">
+                        <a class="nav-link" href="/home">Home</a>
+                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/services">Services</a>
+                        <a class="nav-link" href="/gallery">Gallery</a>
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <!-- ADDED "BOOK US" BUTTON FOR MOBILE VIEW -->
+                    <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
+                    
+                    <button class="menu-button" id="mobileMenuButton">
+                        <svg width="24" height="24" viewBox="0 0 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- This container is for the desktop "Book Us" button -->
+                    <div class="auth-buttons">
+                        <a class="auth-button submit" href="/book-us">Book Us</a>
+                    </div>
+                </div>
+            </nav>
+            <div id="mobileMenu">
+                <div class="mobile-menu-close" id="mobileMenuClose">
+                    <svg viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                <div class="mobile-menu-content">
+                    <div class="mobile-nav-links">
+                        <a href="/home" class="mobile-nav-link">Home</a>
+                        <a href="/about" class="mobile-nav-link">About</a>
+                        <a href="/services" class="mobile-nav-link">Services</a>
+                        <a href="/gallery" class="mobile-nav-link">Gallery</a>
+                        <a href="/contact" class="mobile-nav-link">Contact</a>
+                    </div>
+                </div>
+                <div class="mobile-menu-auth">
+                    <div class="mobile-menu-auth-buttons">
+                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
+                    </div>
+                </div>
+            </div>
+            <div id="menuOverlay"></div>
+            <div class="divider"></div>
+        </div>
+    </header>
 
-  <section class="gallery-section">
-    <h2>Explore our Gallery</h2>
-    <p>Our components will save you countless hours. By using our templates, your end result always carries our competence in design.</p>
+    <!-- Hero Section -->
+    <div class="main-wrapper">
+        <div class="hero-header">
+            <div class="logo-text">HV PHOTOGRAPHY</div>
+            <h1>
+                Capturing Your <span class="serif">Timeless</span> Moments
+            </h1>
+            <p class="subheading">
+                Professional photography services for weddings, portraits, and commercial projects. 
+                Creating stunning visual stories that last a lifetime.
+            </p>
+            <div class="cta-container">
+                <a href="#" class="cta-button">BOOK A SESSION</a>
+                <a href="#" class="cta-button secondary-button">VIEW PORTFOLIO</a>
+            </div>
+        </div>
 
-    <div class="carousel" id="carousel-container">
-      <div class="carousel-track" id="track">
-        <!-- Image wrappers remain the same -->
-        <div class="image-wrapper" data-caption="Beautiful Landscape 1"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="1"></a><div class="image-caption">Beautiful Landscape 1</div></div>
-        <div class="image-wrapper" data-caption="City Lights at Night"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="2"></a><div class="image-caption">City Lights at Night</div></div>
-        <div class="image-wrapper" data-caption="Abstract Art Piece"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="3"></a><div class="image-caption">Abstract Art Piece</div></div>
-        <div class="image-wrapper" data-caption="Nature's Serenity"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="4"></a><div class="image-caption">Nature's Serenity</div></div>
-        <div class="image-wrapper" data-caption="Modern Architecture"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="5"></a><div class="image-caption">Modern Architecture</div></div>
-        <div class="image-wrapper" data-caption="Vibrant Colors"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="6"></a><div class="image-caption">Vibrant Colors</div></div>
-        <div class="image-wrapper" data-caption="Peaceful Sunset"><a href="#"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="7"></a><div class="image-caption">Peaceful Sunset</div></div>
-      </div>
-      
-      <!-- NEW: Arrow Buttons -->
-      <button class="carousel-arrow arrow-left" id="arrow-left" aria-label="Previous Image">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      <button class="carousel-arrow arrow-right" id="arrow-right" aria-label="Next Image">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
+        <div class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel">
+                    <!-- Image Pair 1 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/G6siuhhNQSB2gaFkH6aMateuzc.jpeg" alt="Serene Skincare Product Display" class="img-front">
+                        <img src="https://framerusercontent.com/images/Dg5s46HOSjEmmegZTSjQWyHpP8.jpeg" alt="Skincare Close-Up" class="img-back">
+                    </div>
+                    <!-- Image Pair 2 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/VYYcAtDRIswXBd4zTCcu6rEzIg.jpeg" alt="Serene Minimalist Interior" class="img-front">
+                        <img src="https://framerusercontent.com/images/ss6OW8LWSmhlaaINuDE7e3bukmE.jpeg" alt="Elegant Glass Dropper Bottles" class="img-back">
+                    </div>
+                    <!-- Image Pair 3 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/rox4QKJhhbkPtiKSD36oL2Dhrj8.jpeg" alt="Modern Minimalist Kitchen" class="img-front">
+                        <img src="https://framerusercontent.com/images/iiL0z78FdG5EeSqFkapc1nPKM.jpeg" alt="Contemplative Man in Hat" class="img-back">
+                    </div>
+                    <!-- Image Pair 4 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/0Y5dLXOw24YXzYFZU4E7VLVb1pw.jpeg" alt="Minimalist Fashion Look" class="img-front">
+                        <img src="https://framerusercontent.com/images/EdXMPSaxTDaDCUY5OYJ5EmcdqbM.jpeg" alt="Minimalist Interior with Staircase" class="img-back">
+                    </div>
+                    <!-- Image Pair 5 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/AlCSDEz5Qo20KzcbCw2WCooWC4.jpeg" alt="Minimalist Perfume Scene" class="img-front">
+                        <img src="https://framerusercontent.com/images/FvLq9vcRfOUVoCC7txtWbWvHty4.jpeg" alt="Minimalist Skincare Arrangement" class="img-back">
+                    </div>
+                    <!-- Image Pair 6 -->
+                    <div class="image-container">
+                        <img src="https://framerusercontent.com/images/tj3ikl2RgG7ScvnfpWMAXcULc.jpeg" alt="Woman Running Outdoors" class="img-front">
+                        <img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" alt="Stylish Sunglasses Display" class="img-back">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Content Section - Only visible on mobile -->
+        <div class="mobile-content">
+            <p class="subheading">
+                Professional photography services for weddings, portraits, and commercial projects. 
+                Creating stunning visual stories that last a lifetime.
+            </p>
+            <div class="mobile-cta-container">
+                <a href="#" class="mobile-cta-button">BOOK A SESSION</a>
+                <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW PORTFOLIO</a>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+        
+        <!-- Services Section -->
+        <div class="services-section">
+            <div class="section-wrapper">
+                <!-- Left Sticky Content -->
+                <div class="left-content">
+                    <h2>Our Creative <span class="serif">Services</span></h2>
+                    <p>
+                        We transform your moments into timeless art. Whether it's cinematic storytelling or stunning stills, every frame we capture is a masterpiece.
+                    </p>
+                </div>
+
+                <!-- Right Scrolling Content -->
+                <div class="right-content">
+                    
+                    <!-- Card 1: Portrait Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- User Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Portrait Photography</h3>
+                            <p>Elegant and authentic portraits that capture personality and emotion. Perfect for individuals, families, and professional headshots.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Wedding Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- Rings Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="6"></circle><circle cx="16" cy="16" r="6"></circle></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Wedding Photography</h3>
+                            <p>Documenting your special day with artistic vision. We capture the emotion, beauty, and joy of your celebration from start to finish.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Commercial Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- Building Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Commercial Photography</h3>
+                            <p>Professional imagery for brands and businesses that elevates your visual identity, from product shots to corporate events.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Aerial (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Drone Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.5A2.5 2.5 0 0 1 9.5 16V8a2.5 2.5 0 0 1 5 0v8a2.5 2.5 0 0 1-2.5 2.5Z"></path><path d="M12 8V2"></path><path d="m8 6 1.83 1.83"></path><path d="M16 6l-1.83 1.83"></path><path d="M18 12h6"></path><path d="M6 12H0"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Aerial & Drone Photography</h3>
+                            <p>Capture breathtaking perspectives with our professional drone services. Ideal for real estate, landscapes, and unique event coverage.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Editing (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Magic Wand Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5 4 8l4 4L12.5 8l-3-5.5Z"></path><path d="m14 7 5.5 5.5-4 4-5.5-5.5Z"></path><path d="M2 22l4-4"></path><path d="m13 19 4.5 2.5-2.5-4.5"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Editing & Retouching</h3>
+                            <p>Advanced post-production, color grading, and retouching to perfect every detail and enhance the visual storytelling of your images.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Campaigns (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Megaphone Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Brand Campaigns</h3>
+                            <p>Strategic brand visuals crafted to strengthen identity and engagement across social platforms and marketing campaigns.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery-section">
+            <h2>Explore Our Gallery</h2>
+            <p>From weddings and portraits to commercial projects, every frame we capture is a masterpiece of light, emotion, and storytelling.</p>
+            <div class="gallery-carousel" id="gallery-carousel">
+                <div class="gallery-track" id="gallery-track">
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/07/58/57/0758579a393bb6b6938a1012a20822e1.jpg" alt="Event Photography">
+                        </a>
+                        <div class="image-caption">Event Photography</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/02/67/a9/0267a9839cd191a3c10b102029e7b23c.jpg" alt="Wedding Photography">
+                        </a>
+                        <div class="image-caption">Wedding Photography</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/92/83/81/928381a4d6f93774b3a6cb9383bed264.jpg" alt="Pre Wedding">
+                        </a>
+                        <div class="image-caption">Pre Wedding</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/f3/da/65/f3da658d506509a244c11f7c357f4955.jpg" alt="Maternity">
+                        </a>
+                        <div class="image-caption">Maternity</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/ae/a8/19/aea8198f163a35a7a40775d15c82fe1a.jpg" alt="Pre Birthday">
+                        </a>
+                        <div class="image-caption">Pre Birthday</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/87/44/21/8744219460010f3c53b20c8a6663f458.jpg" alt="Haldi Gallery">
+                        </a>
+                        <div class="image-caption">Haldi Gallery</div>
+                    </div>
+                    <div class="gallery-image-wrapper">
+                        <a href="#">
+                            <img src="https://i.pinimg.com/564x/a9/22/e1/a922e1b12853288a75b28d7d4c22995f.jpg" alt="Wedding Gallery">
+                        </a>
+                        <div class="image-caption">Wedding Gallery</div>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-dots" id="gallery-dots"></div>
+        </div>
+
+        <!-- Testimonials Section -->
+        <div class="testimonials-section">
+            <div class="testimonial-container">
+                <div class="testimonial-text-content">
+                    <h2>Voices of <br><span class="serif">Our Clients</span></h2>
+                    <p>Discover the experiences of couples and brands who trusted us to capture their most precious moments. Their stories are our greatest endorsement.</p>
+                    <button class="testimonial-btn">View The Gallery</button>
+                </div>
+                <div class="testimonials-scroller" id="testimonials-scroller">
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>The wedding photos are breathtaking! You captured every single moment perfectly.</blockquote>
+                            <h3>Sarah & Tom, Wedding Clients</h3>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>Incredibly professional and creative. The commercial shots elevated our brand's entire visual identity.</blockquote>
+                            <h3>David Chen, CEO of Innovate Co.</h3>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/women/77.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>Patient, fun, and amazing with the kids. Our family portraits are treasures we will cherish forever.</blockquote>
+                            <h3>The Miller Family, Portrait Session</h3>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>The drone shots for our real estate listings were a game-changer. Simply stunning results.</blockquote>
+                            <h3>Marcus Wright, Real Estate Agent</h3>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>From the initial concept to the final edits, the whole process was seamless and exceeded expectations.</blockquote>
+                            <h3>Chloe Davis, Brand Manager</h3>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-profile">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Profile">
+                        </div>
+                        <div class="testimonial-info">
+                            <blockquote>A true artist with a camera. The way they use light is just magical. Highly recommended for any project.</blockquote>
+                            <h3>Ben Carter, Musician</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="dots" id="dots"></div>
-  </section>
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="footer-upper">
+            <div class="subscribe-card">
+                <div class="subscribe-info">
+                    <h2>Ready to Capture Your Moment?</h2>
+                    <p>From weddings and portraits to commercial projects, we're here to create stunning visual stories that last a lifetime. Let's discuss your vision.</p>
+                </div>
+                <div class="subscribe-form-area">
+                    <label for="mobile">Book a Free Consultation</label>
+                    <form action="#" method="POST" class="subscribe-form">
+                        <div class="input-with-prefix">
+                            <span class="prefix">+91</span>
+                            <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}">
+                        </div>
+                        <button type="submit">Request Booking</button>
+                    </form>
+                    <p class="form-disclaimer">We'll contact you within 24 hours to schedule your session</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-lower">
+            <div class="footer-bottom">
+                <div class="footer-logo-area">
+                    <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
+                    <p class="logo-tagline">Capturing Life's Timeless Moments.</p>
+                </div>
+                <div class="footer-links-container">
+                    <div class="footer-column">
+                        <h3>Company</h3>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Our Blog</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Services</h3>
+                        <ul>
+                            <li><a href="#">Portrait Photography</a></li>
+                            <li><a href="#">Wedding Photography</a></li>
+                            <li><a href="#">Commercial Shoots</a></li>
+                            <li><a href="#">View Gallery</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright-bar">
+                <p class="copyright-text">&copy; HV Photography. All rights reserved.</p>
+                <div class="copyright-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Booking Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-  <script>
-    const carouselContainer = document.getElementById('carousel-container');
-    const track = document.getElementById('track');
-    const imageWrappers = document.querySelectorAll('.carousel .image-wrapper');
-    const dotsContainer = document.getElementById('dots');
-    // NEW: Select arrows
-    const arrowLeft = document.getElementById('arrow-left');
-    const arrowRight = document.getElementById('arrow-right');
+    <!-- In-built JavaScript for Mobile Menu Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const menuOverlay = document.getElementById('menuOverlay');
 
-    const total = imageWrappers.length;
-    let idx = 0;
-    let auto = null;
+            const openMenu = () => {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            };
 
-    const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
+            const closeMenu = () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            };
 
-    // Build dots (they will be hidden by CSS on desktop)
-    for (let i = 0; i < total; i++) {
-      const d = document.createElement('div');
-      d.className = 'dot';
-      d.dataset.idx = i;
-      dotsContainer.appendChild(d);
-    }
-    const dots = document.querySelectorAll('.dot');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', openMenu);
+            }
+            
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeMenu);
+            }
+            
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', closeMenu);
+            }
+            
+            // Close menu when clicking on menu links
+            const mobileMenuLinks = document.querySelectorAll('#mobileMenu a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
+            });
 
-    function update() {
-      for (let i = 0; i < positions.length; i++) {
-        const wrapperIdx = (idx + i - 3 + total) % total;
-        imageWrappers[wrapperIdx].className = 'image-wrapper ' + positions[i];
-      }
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    }
+            // Scroll-based reveal animation for service cards
+            const cards = document.querySelectorAll('.service-card');
+            const revealOnScroll = () => {
+                const trigger = window.innerHeight * 0.9;
+                cards.forEach(card => {
+                    const top = card.getBoundingClientRect().top;
+                    if (top < trigger) {
+                        card.classList.add('show');
+                    }
+                });
+            };
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll();
 
-    function go(dir) {
-      clearInterval(auto);
-      idx = (idx + dir + total) % total;
-      update();
-      startAuto();
-    }
+            // --- GALLERY CAROUSEL SCRIPT ---
+            const galleryCarousel = document.getElementById('gallery-carousel');
+            if (galleryCarousel) {
+                const imageWrappers = galleryCarousel.querySelectorAll('.gallery-image-wrapper');
+                const dotsContainer = document.getElementById('gallery-dots');
+                const total = imageWrappers.length;
+                const positions = ['gallery-pos-3','gallery-pos-2','gallery-pos-1','gallery-pos0','gallery-pos1','gallery-pos2','gallery-pos3'];
+                const offsetByClass = { 'gallery-pos-3':-3, 'gallery-pos-2':-2, 'gallery-pos-1':-1, 'gallery-pos0':0, 'gallery-pos1':1, 'gallery-pos2':2, 'gallery-pos3':3 };
+                let idx = 0, auto = null, startX = 0, lastX = 0, velocity = 0, lastTime = 0;
+                
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'gallery-dot';
+                    dot.dataset.idx = i;
+                    dotsContainer.appendChild(dot);
+                }
+                
+                const dots = dotsContainer.querySelectorAll('.gallery-dot');
+                
+                function update() {
+                    for (let i = 0; i < positions.length; i++) {
+                        const wrapperIdx = (idx + i - 3 + total) % total;
+                        imageWrappers[wrapperIdx].className = 'gallery-image-wrapper ' + positions[i];
+                    }
+                    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+                }
+                
+                function go(dir) { 
+                    idx = (idx + dir + total) % total; 
+                    update(); 
+                }
+                
+                function startAuto(){ 
+                    auto = setInterval(() => go(1), 4000); // Slowed down for better viewing
+                }
+                
+                function stopAuto(){ 
+                    clearInterval(auto); 
+                }
+                
+                galleryCarousel.addEventListener('touchstart', e => {
+                    stopAuto(); 
+                    startX = e.touches[0].clientX; 
+                    lastX = startX;
+                    lastTime = Date.now(); 
+                    velocity = 0;
+                }, { passive: true });
+                
+                galleryCarousel.addEventListener('touchmove', e => {
+                    const currentX = e.touches[0].clientX;
+                    const deltaX = currentX - lastX;
+                    const deltaTime = Date.now() - lastTime;
+                    velocity = deltaX / Math.max(1, deltaTime);
+                    lastX = currentX; 
+                    lastTime = Date.now();
+                }, { passive: true });
+                
+                galleryCarousel.addEventListener('touchend', () => {
+                    const distance = lastX - startX;
+                    if (Math.abs(distance) > 40) {
+                        const dir = distance < 0 ? 1 : -1;
+                        const momentum = Math.abs(velocity) > 0.5 ? 2 : 1;
+                        go(dir * momentum);
+                    }
+                    startAuto();
+                });
+                
+                imageWrappers.forEach((wrapper) => {
+                    wrapper.addEventListener('click', (e) => {
+                        const cls = [...wrapper.classList].find(c => c.startsWith('gallery-pos'));
+                        const offset = offsetByClass[cls] ?? 0;
+                        if (offset !== 0) {
+                            e.preventDefault(); 
+                            stopAuto();
+                            idx = (idx + offset + total) % total;
+                            update(); 
+                            startAuto();
+                        }
+                    }, { capture:true });
+                });
+                
+                dots.forEach(d => d.addEventListener('click', () => {
+                    stopAuto(); 
+                    idx = +d.dataset.idx; 
+                    update(); 
+                    startAuto();
+                }));
+                
+                galleryCarousel.addEventListener('mouseenter', stopAuto);
+                galleryCarousel.addEventListener('mouseleave', startAuto);
+                update();
+                startAuto();
+            }
 
-    function startAuto() {
-      if (window.innerWidth < 768) return; // Still disable auto-scroll on mobile
-      auto = setInterval(() => go(1), 3000);
-    }
+            // --- TESTIMONIAL SCROLLER SCRIPT ---
+            const testimonialsContainer = document.getElementById('testimonials-scroller');
+            if (testimonialsContainer) {
+                let isAnimating = false;
+                let reviewIndex = 0;
+                const totalReviews = testimonialsContainer.children.length;
+                const animationDuration = 400;
 
-    /* ---- Event Listeners ---- */
-    // NEW: Arrow click listeners
-    arrowLeft.addEventListener('click', () => go(-1));
-    arrowRight.addEventListener('click', () => go(1));
-    
-    dots.forEach(d => d.addEventListener('click', () => {
-      clearInterval(auto);
-      idx = +d.dataset.idx;
-      update();
-      startAuto();
-    }));
+                const updateHighlight = () => {
+                    testimonialsContainer.querySelector('.testimonial-item.active')?.classList.remove('active');
+                    testimonialsContainer.querySelector('.testimonial-item:nth-child(2)')?.classList.add('active');
+                };
 
-    carouselContainer.addEventListener('mouseenter', () => clearInterval(auto));
-    carouselContainer.addEventListener('mouseleave', () => startAuto());
+                const cycleForward = () => {
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    reviewIndex = Math.min(reviewIndex + 1, totalReviews - 3);
+                    const firstItem = testimonialsContainer.querySelector('.testimonial-item:first-child');
+                    firstItem.classList.add('exit');
+                    setTimeout(() => {
+                        firstItem.classList.remove('exit');
+                        testimonialsContainer.appendChild(firstItem);
+                        updateHighlight(); 
+                        isAnimating = false;
+                    }, animationDuration);
+                };
 
-    // Mobile Touch/Swipe Functionality
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const swipeThreshold = 50;
+                const cycleBackward = () => {
+                    if (isAnimating) return;
+                    isAnimating = true;
+                    reviewIndex = Math.max(reviewIndex - 1, 0);
+                    const lastItem = testimonialsContainer.querySelector('.testimonial-item:last-child');
+                    const firstItem = testimonialsContainer.querySelector('.testimonial-item:first-child');
+                    lastItem.classList.add('enter-reverse');
+                    testimonialsContainer.insertBefore(lastItem, firstItem);
+                    requestAnimationFrame(() => { 
+                        lastItem.classList.remove('enter-reverse'); 
+                    });
+                    setTimeout(() => {
+                        updateHighlight(); 
+                        isAnimating = false;
+                    }, animationDuration);
+                };
 
-    carouselContainer.addEventListener('touchstart', (e) => {
-        clearInterval(auto);
-        touchStartX = e.touches[0].clientX;
-    }, { passive: true });
+                const handleWheel = (event) => {
+                    event.preventDefault();
+                    if (event.deltaY > 0) cycleForward(); 
+                    else cycleBackward();
+                };
 
-    carouselContainer.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].clientX;
-        handleSwipe();
-        startAuto();
-    });
-
-    function handleSwipe() {
-        const swipeDistance = touchEndX - touchStartX;
-        if (Math.abs(swipeDistance) < swipeThreshold) return;
-        if (swipeDistance < 0) {
-            go(1); // Swipe Left
-        } else {
-            go(-1); // Swipe Right
-        }
-    }
-
-    // Init
-    update();
-    startAuto();
-  </script>
+                testimonialsContainer.addEventListener('wheel', handleWheel, { passive: false });
+                updateHighlight();
+            }
+        });
+    </script>
 </body>
 </html>
