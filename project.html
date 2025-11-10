@@ -120,8 +120,8 @@
         
         @media (max-width: 768px) {
             .nav {
-                padding-top: calc(var(--spacing) * 2);
-                padding-bottom: calc(var(--spacing) * 2);
+                padding-top: calc(var(--spacing) * 3);
+                padding-bottom: calc(var(--spacing) * 3);
             }
         }
         
@@ -615,62 +615,6 @@
             letter-spacing: 1px;
         }
 
-        /* Footer Content Styling */
-        .hero-footer {
-            width: 100%;
-            padding: 0;
-            z-index: 10;
-            position: relative;
-        }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 100%;
-        }
-
-        .card {
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            gap: 12px;
-            padding: 20px 15px;
-            border-radius: var(--radius);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            background-color: var(--secondary-bg);
-        }
-
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto;
-            background-color: rgba(0, 0, 0, 0.03);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .card h6 {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .card p {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            margin: 0;
-        }
-
         /* Mobile Content Section - Added for mobile layout */
         .mobile-content {
             display: none;
@@ -680,6 +624,150 @@
             gap: 16px;
             max-width: 600px;
             padding: 20px 0;
+        }
+
+        /* --- Services Section Styles --- */
+        .services-section {
+            width: 100%;
+            padding: 80px 0;
+        }
+
+        .section-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+
+        }
+
+        .left-content {
+            position: sticky;
+            top: 140px;
+            flex: 0 0 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 2rem;
+        }
+
+        .left-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+        }
+
+        .left-content h2 .serif {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
+        .left-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 450px;
+        }
+
+        .right-content {
+            flex: 0 0 55%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Service Card Styling */
+        .service-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px) scale(0.98);
+            border: 1px solid var(--border-color);
+        }
+
+        .service-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+            background-color: var(--color-dark-teal);
+        }
+        
+        .icon-circle svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .learn-more {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--color-dark-teal);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .learn-more::after {
+            content: "→";
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Desktop Hover Effects */
+        @media (hover: hover) {
+            .service-card:hover {
+                transform: translateY(-6px) scale(1.01);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+            }
+            .service-card:hover .icon-circle {
+                background-color: var(--color-teal-hover);
+                transform: scale(1.1);
+            }
+            .learn-more:hover {
+                color: var(--color-teal-hover);
+                padding-left: 4px;
+            }
+            .learn-more:hover::after {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Hide on mobile */
+        .hide-on-mobile {
+            display: block;
         }
 
         /* --- Responsive Adjustments --- */
@@ -712,16 +800,26 @@
                 font-size: 52px;
             }
             
-            .content-grid {
-                gap: 15px;
+            .section-wrapper {
+                flex-direction: column;
+                gap: 0;
             }
             
-            .card {
-                padding: 15px 10px;
+            .left-content {
+                position: static;
+                margin-bottom: 3rem;
+                width: 100%;
+                padding-right: 0;
+                text-align: left; 
+                align-items: flex-start;
             }
             
-            .stats-container {
-                gap: 20px;
+            .left-content p {
+                max-width: 550px;
+            }
+            
+            .right-content {
+                width: 100%;
             }
         }
 
@@ -827,38 +925,54 @@
                 font-size: 32px;
             }
 
-            .content-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
+            /* Mobile Services Section */
+            .left-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .hide-on-mobile {
+                display: none;
             }
             
-            .card {
-                padding: 15px;
-                text-align: left;
-                flex-direction: row;
-                align-items: flex-start;
-                gap: 10px;
+            .service-card {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.75rem 1rem;
             }
             
-            .card-icon {
-                margin: 0;
+            .icon-circle {
+                width: 42px;
+                height: 42px;
+                margin-bottom: 0;
                 flex-shrink: 0;
+                border-radius: 10px;
+            }
+            
+            .icon-circle svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .card-content {
+                flex-grow: 1;
+            }
+            
+            .service-card h3 {
+                font-size: 1.05rem;
+                font-weight: 500;
+                margin-bottom: 0;
+            }
+            
+            .service-card p,
+            .service-card .learn-more {
+                display: none;
             }
         }
 
         @media (max-width: 480px) {
             .hero-header h1 {
                 font-size: 36px;
-            }
-            
-            .card {
-                flex-direction: column;
-                text-align: center;
-                gap: 8px;
-            }
-            
-            .card-icon {
-                margin: 0 auto;
             }
             
             /* Ensure buttons are still side by side on very small screens */
@@ -955,33 +1069,33 @@
                 <div class="carousel">
                     <!-- Image Pair 1 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/1200x/66/4e/86/664e869da4e38ca3fd4b3806bc66e32d.jpg" alt="Serene Skincare Product Display" class="img-front">
-                        <img src="https://i.pinimg.com/736x/33/c0/9e/33c09e9cca3d93a2a2bcd02cf52d4494.jpg" alt="Skincare Close-Up" class="img-back">
+                        <img src="https://framerusercontent.com/images/G6siuhhNQSB2gaFkH6aMateuzc.jpeg" alt="Serene Skincare Product Display" class="img-front">
+                        <img src="https://framerusercontent.com/images/Dg5s46HOSjEmmegZTSjQWyHpP8.jpeg" alt="Skincare Close-Up" class="img-back">
                     </div>
                     <!-- Image Pair 2 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/736x/ef/b2/4c/efb24cbc559511d1acf4758d7aeda016.jpg" alt="Serene Minimalist Interior" class="img-front">
-                        <img src="https://i.pinimg.com/736x/2f/e7/fa/2fe7faee1714498b52b997ad4fac492e.jpg" alt="Elegant Glass Dropper Bottles" class="img-back">
+                        <img src="https://framerusercontent.com/images/VYYcAtDRIswXBd4zTCcu6rEzIg.jpeg" alt="Serene Minimalist Interior" class="img-front">
+                        <img src="https://framerusercontent.com/images/ss6OW8LWSmhlaaINuDE7e3bukmE.jpeg" alt="Elegant Glass Dropper Bottles" class="img-back">
                     </div>
                     <!-- Image Pair 3 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/736x/f1/af/f6/f1aff62ffa3386bdd7ac4cb415250582.jpg" alt="Modern Minimalist Kitchen" class="img-front">
-                        <img src="https://i.pinimg.com/736x/4d/ac/31/4dac31907cec640ec51c111aeea3d046.jpg" alt="Contemplative Man in Hat" class="img-back">
+                        <img src="https://framerusercontent.com/images/rox4QKJhhbkPtiKSD36oL2Dhrj8.jpeg" alt="Modern Minimalist Kitchen" class="img-front">
+                        <img src="https://framerusercontent.com/images/iiL0z78FdG5EeSqFkapc1nPKM.jpeg" alt="Contemplative Man in Hat" class="img-back">
                     </div>
                     <!-- Image Pair 4 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/736x/ff/c8/2a/ffc82a1626f215df28313272d3db5c58.jpg" alt="Minimalist Fashion Look" class="img-front">
-                        <img src="https://i.pinimg.com/736x/bf/ac/5b/bfac5b72b8f8497c8d052fd7c846c07c.jpg" alt="Minimalist Interior with Staircase" class="img-back">
+                        <img src="https://framerusercontent.com/images/0Y5dLXOw24YXzYFZU4E7VLVb1pw.jpeg" alt="Minimalist Fashion Look" class="img-front">
+                        <img src="https://framerusercontent.com/images/EdXMPSaxTDaDCUY5OYJ5EmcdqbM.jpeg" alt="Minimalist Interior with Staircase" class="img-back">
                     </div>
                     <!-- Image Pair 5 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/736x/f1/94/f3/f194f382a37d89cb7a09d11c35a3cf05.jpg" alt="Minimalist Perfume Scene" class="img-front">
-                        <img src="https://i.pinimg.com/736x/4e/fb/02/4efb020a8cd1ea7c73eb26bc663133d9.jpg" alt="Minimalist Skincare Arrangement" class="img-back">
+                        <img src="https://framerusercontent.com/images/AlCSDEz5Qo20KzcbCw2WCooWC4.jpeg" alt="Minimalist Perfume Scene" class="img-front">
+                        <img src="https://framerusercontent.com/images/FvLq9vcRfOUVoCC7txtWbWvHty4.jpeg" alt="Minimalist Skincare Arrangement" class="img-back">
                     </div>
                     <!-- Image Pair 6 -->
                     <div class="image-container">
-                        <img src="https://i.pinimg.com/736x/5d/4e/5d/5d4e5d31a3758c9d615f1041c4607457.jpg" alt="Woman Running Outdoors" class="img-front">
-                        <img src="https://i.pinimg.com/736x/f9/40/2c/f9402c318179e439db3b5bdc3aec50e3.jpg" alt="Stylish Sunglasses Display" class="img-back">
+                        <img src="https://framerusercontent.com/images/tj3ikl2RgG7ScvnfpWMAXcULc.jpeg" alt="Woman Running Outdoors" class="img-front">
+                        <img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" alt="Stylish Sunglasses Display" class="img-back">
                     </div>
                 </div>
             </div>
@@ -1014,27 +1128,96 @@
             </div>
         </div>
         
-        <div class="hero-footer">
-            <div class="content-grid">
-                <div class="card">
-                    <div class="card-icon">📸</div>
-                    <div>
-                        <h6>Portrait Photography</h6>
-                        <p>Elegant and authentic portraits that capture personality and emotion in every shot.</p>
-                    </div>
+        <!-- Services Section -->
+        <div class="services-section">
+            <div class="section-wrapper">
+                <!-- Left Sticky Content -->
+                <div class="left-content">
+                    <h2>Our Creative <span class="serif">Services</span></h2>
+                    <p>
+                        We transform your moments into timeless art. Whether it's cinematic storytelling or stunning stills, every frame we capture is a masterpiece.
+                    </p>
                 </div>
-                <div class="card">
-                    <div class="card-icon">💒</div>
-                    <div>
-                        <h6>Wedding Photography</h6>
-                        <p>Documenting your special day with artistic vision and attention to every precious moment.</p>
+
+                <!-- Right Scrolling Content -->
+                <div class="right-content">
+                    
+                    <!-- Card 1: Portrait Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- User Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Portrait Photography</h3>
+                            <p>Elegant and authentic portraits that capture personality and emotion. Perfect for individuals, families, and professional headshots.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🏢</div>
-                    <div>
-                        <h6>Commercial Photography</h6>
-                        <p>Professional imagery for brands and businesses that elevates your visual identity.</p>
+
+                    <!-- Card 2: Wedding Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- Rings Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="6"></circle><circle cx="16" cy="16" r="6"></circle></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Wedding Photography</h3>
+                            <p>Documenting your special day with artistic vision. We capture the emotion, beauty, and joy of your celebration from start to finish.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Commercial Photography -->
+                    <div class="service-card">
+                        <div class="icon-circle">
+                            <!-- Building Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Commercial Photography</h3>
+                            <p>Professional imagery for brands and businesses that elevates your visual identity, from product shots to corporate events.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Aerial (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Drone Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.5A2.5 2.5 0 0 1 9.5 16V8a2.5 2.5 0 0 1 5 0v8a2.5 2.5 0 0 1-2.5 2.5Z"></path><path d="M12 8V2"></path><path d="m8 6 1.83 1.83"></path><path d="M16 6l-1.83 1.83"></path><path d="M18 12h6"></path><path d="M6 12H0"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Aerial & Drone Photography</h3>
+                            <p>Capture breathtaking perspectives with our professional drone services. Ideal for real estate, landscapes, and unique event coverage.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Editing (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Magic Wand Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5 4 8l4 4L12.5 8l-3-5.5Z"></path><path d="m14 7 5.5 5.5-4 4-5.5-5.5Z"></path><path d="M2 22l4-4"></path><path d="m13 19 4.5 2.5-2.5-4.5"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Editing & Retouching</h3>
+                            <p>Advanced post-production, color grading, and retouching to perfect every detail and enhance the visual storytelling of your images.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Campaigns (HIDDEN ON MOBILE) -->
+                    <div class="service-card hide-on-mobile">
+                        <div class="icon-circle">
+                            <!-- Megaphone Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+                        </div>
+                        <div class="card-content">
+                            <h3>Brand Campaigns</h3>
+                            <p>Strategic brand visuals crafted to strengthen identity and engagement across social platforms and marketing campaigns.</p>
+                            <a href="#" class="learn-more">Learn More</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1085,6 +1268,20 @@
                     closeMenu();
                 }
             });
+
+            // Scroll-based reveal animation for service cards
+            const cards = document.querySelectorAll('.service-card');
+            const revealOnScroll = () => {
+                const trigger = window.innerHeight * 0.9;
+                cards.forEach(card => {
+                    const top = card.getBoundingClientRect().top;
+                    if (top < trigger) {
+                        card.classList.add('show');
+                    }
+                });
+            };
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll();
         });
     </script>
 </body>
