@@ -671,6 +671,17 @@
             margin: 0;
         }
 
+        /* Mobile Content Section - Added for mobile layout */
+        .mobile-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            max-width: 600px;
+            padding: 20px 0;
+        }
+
         /* --- Responsive Adjustments --- */
         @media (max-width: 1600px) {
             .carousel-container {
@@ -733,12 +744,20 @@
                 font-size: 42px;
             }
             
-            .hero-header .subheading {
-                font-size: 18px;
+            /* Hide paragraph and buttons in header for mobile */
+            .hero-header .subheading,
+            .hero-header .cta-container {
+                display: none;
             }
             
-            /* FIXED: Mobile buttons side by side in smaller size */
-            .cta-container {
+            /* Show mobile content section */
+            .mobile-content {
+                display: flex;
+            }
+            
+            /* Mobile buttons side by side in smaller size */
+            .mobile-cta-container {
+                display: flex;
                 flex-direction: row;
                 width: 100%;
                 max-width: 100%;
@@ -746,11 +765,32 @@
                 gap: 10px;
             }
             
-            .hero-header .cta-button {
+            .mobile-cta-button {
+                background-color: var(--accent-color);
+                color: #fff;
                 padding: 12px 16px;
+                border-radius: 30px;
+                text-decoration: none;
                 font-size: 14px;
+                font-weight: 500;
+                transition: var(--transition);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
                 flex: 1;
                 text-align: center;
+            }
+            
+            .mobile-secondary-button {
+                background-color: transparent;
+                color: var(--text-primary);
+                border: 1px solid var(--border-color);
+            }
+            
+            .mobile-secondary-button:hover {
+                background-color: var(--accent-color);
+                color: #fff;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
             
             .carousel-container {
@@ -822,12 +862,12 @@
             }
             
             /* Ensure buttons are still side by side on very small screens */
-            .cta-container {
+            .mobile-cta-container {
                 flex-direction: row;
                 gap: 8px;
             }
             
-            .hero-header .cta-button {
+            .mobile-cta-button {
                 padding: 10px 12px;
                 font-size: 13px;
             }
@@ -944,6 +984,18 @@
                         <img src="https://framerusercontent.com/images/fygSgZa0uPr6Y8XEICHCJZhZSc.jpeg" alt="Stylish Sunglasses Display" class="img-back">
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Content Section - Only visible on mobile -->
+        <div class="mobile-content">
+            <p class="subheading">
+                Professional photography services for weddings, portraits, and commercial projects. 
+                Creating stunning visual stories that last a lifetime.
+            </p>
+            <div class="mobile-cta-container">
+                <a href="#" class="mobile-cta-button">BOOK A SESSION</a>
+                <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW PORTFOLIO</a>
             </div>
         </div>
 
