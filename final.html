@@ -53,6 +53,11 @@
             background-color: var(--primary-bg);
             overflow-x: hidden; /* Prevent horizontal scrolling */
             color: var(--text-primary);
+            transition: overflow 0.3s ease;
+        }
+
+        body.scroll-locked {
+            overflow: hidden;
         }
 
         /* --- Header styles --- */
@@ -773,62 +778,74 @@
         /* --- Gallery Section Styles --- */
         .gallery-section {
             width: 100%;
-            padding: 80px 0;
-            text-align: center;
             max-width: 1100px;
-            margin: 0 auto;
+            text-align: center;
+            padding: 80px 0;
         }
 
         .gallery-section h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             font-weight: 600;
-            margin-bottom: 12px;
             color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+        }
+
+        .gallery-section h2 .serif {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--color-dark-teal);
         }
 
         .gallery-section p {
-            font-size: 1rem;
             color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
             max-width: 600px;
             margin: 0 auto 40px;
-            line-height: 1.7;
         }
 
+        /* ---------- Carousel ---------- */
         .gallery-carousel {
-            position: relative;
-            width: 100%;
-            height: 420px;
-            perspective: 1200px;
-            overflow: hidden;
-            touch-action: pan-y;
+            position:relative;
+            width:100%;
+            height:420px;
+            perspective:1200px;
+            overflow:hidden;
+            touch-action:pan-y;
+            margin: 0 auto;
         }
 
-        .gallery-track {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform .9s cubic-bezier(.25,.8,.25,1);
+        .carousel-track{
+            position:absolute;
+            width:100%;
+            height:100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            transition:transform .9s cubic-bezier(.25,.8,.25,1);
             will-change: transform;
         }
 
-        .gallery-image-wrapper {
+        .gallery-carousel .image-wrapper {
             position: absolute;
             width: 240px;
             height: 360px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             border-radius: 16px;
-            box-shadow: 0 12px 28px rgba(0,0,0,.15);
+            box-shadow: var(--shadow);
             transition: all .8s cubic-bezier(.25,.8,.25,1);
             transform-style: preserve-3d;
-            background-color: #f0f0f0;
+            background-color: var(--secondary-bg);
             overflow: hidden;
             cursor: pointer;
         }
 
-        .gallery-image-wrapper a {
+        .gallery-carousel .image-wrapper a {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -838,10 +855,14 @@
             color: inherit;
         }
 
-        .gallery-image-wrapper img {
-            width: 100%;
-            height: 100%;
+        .gallery-carousel img{
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: cover;
+            border-radius:16px;
+            background-color: var(--secondary-bg);
             -webkit-user-drag: none;
         }
 
@@ -850,10 +871,11 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 5px 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            font-size: 0.75rem;
+            padding: 12px 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: var(--color-white);
+            font-size: 0.85rem;
+            font-weight: 500;
             text-align: center;
             border-bottom-left-radius: 16px;
             border-bottom-right-radius: 16px;
@@ -862,216 +884,296 @@
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        .gallery-image-wrapper.pos0 .image-caption {
-            opacity: 1;
-            transform: translateY(0);
+        .image-wrapper.pos0 .image-caption { 
+            opacity: 1; 
+            transform: translateY(0); 
         }
 
-        .gallery-pos-3 { transform: translateX(-460px) scale(.75) rotateY(30deg); z-index: 1; }
-        .gallery-pos-2 { transform: translateX(-320px) scale(.85) rotateY(20deg); z-index: 2; }
-        .gallery-pos-1 { transform: translateX(-170px) scale(.95) rotateY(10deg); z-index: 3; }
-        .gallery-pos0 { transform: translateX(0) scale(1.1); z-index: 5; }
-        .gallery-pos1 { transform: translateX(170px) scale(.95) rotateY(-10deg); z-index: 3; }
-        .gallery-pos2 { transform: translateX(320px) scale(.85) rotateY(-20deg); z-index: 2; }
-        .gallery-pos3 { transform: translateX(460px) scale(.75) rotateY(-30deg); z-index: 1; }
+        /* 3D positions */
+        .pos-3{transform:translateX(-460px) scale(.75) rotateY(30deg);z-index:1}
+        .pos-2{transform:translateX(-320px) scale(.85) rotateY(20deg);z-index:2}
+        .pos-1{transform:translateX(-170px) scale(.95) rotateY(10deg);z-index:3}
+        .pos0 {transform:translateX(0) scale(1.1);z-index:5}
+        .pos1 {transform:translateX(170px) scale(.95) rotateY(-10deg);z-index:3}
+        .pos2 {transform:translateX(320px) scale(.85) rotateY(-20deg);z-index:2}
+        .pos3 {transform:translateX(460px) scale(.75) rotateY(-30deg);z-index:1}
 
-        .gallery-image-wrapper:not(.gallery-pos0) a {
-            pointer-events: none;
+        /* Only center image is clickable (prevents accidental nav on side taps) */
+        .image-wrapper:not(.pos0) a { pointer-events: none; }
+
+        /* Dots */
+        .dots{ 
+            display:flex;
+            justify-content:center;
+            gap:10px;
+            margin-top:25px; 
         }
 
-        .gallery-dots {
+        .dot{ 
+            width:10px;
+            height:10px;
+            background:#ddd;
+            border-radius:50%;
+            transition:.3s;
+            cursor:pointer; 
+        }
+
+        .dot.active{
+            background:var(--color-dark-teal);
+            transform:scale(1.3)
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            line-height: 1;
+            z-index: 10;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 25px;
+            align-items: center;
+            transition: var(--transition);
         }
 
-        .gallery-dot {
-            width: 10px;
-            height: 10px;
-            background: #ddd;
-            border-radius: 50%;
-            transition: .3s;
-            cursor: pointer;
+        .nav-btn:hover { 
+            background-color: var(--color-dark-teal); 
         }
 
-        .gallery-dot.active {
-            background: var(--color-dark-teal);
-            transform: scale(1.3);
-        }
+        #prev-btn { left: 10px; }
+        #next-btn { right: 10px; }
 
         /* --- Testimonials Section Styles --- */
         .testimonials-section {
             width: 100%;
             padding: 80px 0;
+            position: relative;
         }
 
         .testimonial-container {
-            background: #ffffff;
             width: 100%;
-            max-width: 1100px;
-            border-radius: 24px;
+            max-width: 1200px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 60px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07);
-            border: 1px solid var(--border-color);
+            padding: 40px;
             margin: 0 auto;
         }
 
-        .testimonial-text-content {
+        .text-content {
             width: 45%;
-            padding-right: 40px;
+            padding-right: 60px;
         }
 
-        .testimonial-text-content h2 {
+        .text-content h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             font-weight: 600;
             line-height: 1.2;
             color: var(--text-primary);
             margin-bottom: 1rem;
         }
-
-        .testimonial-text-content h2 .serif {
-            font-style: italic;
-            color: var(--color-dark-teal);
+        
+        .text-content h2 .serif { 
+            font-style: italic; 
+            color: var(--color-dark-teal); 
         }
 
-        .testimonial-text-content p {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
+        .text-content p { 
+            font-size: 1.1rem; 
+            color: var(--text-secondary); 
+            margin-bottom: 2rem; 
+            line-height: 1.7; 
         }
 
-        .testimonial-btn {
+        .btn {
             background: var(--color-dark-teal);
             color: #fff;
             border: none;
-            padding: 14px 32px;
-            border-radius: 12px;
+            padding: 16px 32px;
+            border-radius: 30px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .testimonial-btn:hover {
-            background: var(--color-teal-hover);
-            transform: translateY(-3px);
+        .btn:hover { 
+            background: var(--color-teal-hover); 
+            transform: translateY(-3px); 
         }
 
-        .testimonials-scroller {
+        /* --- Desktop Styles --- */
+        .testimonials {
             width: 50%;
-            height: 285px;
+            height: 325px;
             overflow: hidden;
-            cursor: ns-resize;
             position: relative;
         }
-
-        .testimonials-scroller::before,
-        .testimonials-scroller::after {
+        
+        .testimonials::before, .testimonials::after {
             content: '';
             position: absolute;
-            left: 0;
+            left: 0; 
             right: 0;
-            height: 50px;
+            height: 60px;
             z-index: 2;
             pointer-events: none;
         }
 
-        .testimonials-scroller::before {
-            top: 0;
-            background: linear-gradient(to bottom, white, transparent);
+        .testimonials::before { 
+            top: -10px; 
+            background: linear-gradient(to bottom, var(--primary-bg), transparent); 
         }
 
-        .testimonials-scroller::after {
-            bottom: 0;
-            background: linear-gradient(to top, white, transparent);
+        .testimonials::after { 
+            bottom: -10px; 
+            background: linear-gradient(to top, var(--primary-bg), transparent); 
+        }
+
+        .testimonial-track { 
+            height: 100%; 
         }
 
         .testimonial-item {
             display: flex;
-            align-items: flex-start;
-            padding: 20px 10px;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 20px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
-            border-bottom: 1px solid var(--border-color);
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
         }
-
+        
         .testimonial-item.active {
             opacity: 1;
+            transform: scale(1.0);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
         }
 
-        .testimonial-item:not(.active) {
-            opacity: 0.35;
-            transform: scale(0.95);
+        .testimonial-item:not(.active) { 
+            opacity: 0.5; 
+            transform: scale(0.95); 
         }
 
-        .testimonial-item.exit {
-            transform: translateY(-100%) scale(0.9);
-            opacity: 0;
+        .testimonial-item.exit { 
+            transform: translateY(-115%) scale(0.9); 
+            opacity: 0; 
         }
 
-        .testimonial-item.enter-reverse {
-            transform: translateY(-100%) scale(0.9);
-            opacity: 0;
+        .testimonial-item.enter-reverse { 
+            transform: translateY(-115%) scale(0.9); 
+            opacity: 0; 
+        }
+        
+        .profile { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            overflow: hidden; 
+            margin-right: 20px; 
+            flex-shrink: 0; 
         }
 
-        .testimonial-profile {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 20px;
-            flex-shrink: 0;
+        .profile img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        
+        .info blockquote { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic; 
+            font-size: 1.1rem; 
+            color: var(--text-primary); 
+            line-height: 1.6; 
+            border: none; 
+            padding: 0; 
+            margin: 0 0 8px 0; 
         }
 
-        .testimonial-profile img {
+        .info h3 { 
+            font-size: 0.95rem; 
+            color: var(--text-secondary); 
+            font-weight: 500; 
+        }
+        
+        .testimonial-dots { 
+            display: none; 
+        }
+
+        /* Scroll progress indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 80px;
+            left: 0;
             width: 100%;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 1000;
+            display: none;
+        }
+
+        .scroll-progress-bar {
             height: 100%;
-            object-fit: cover;
+            background: var(--color-dark-teal);
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
-        .testimonial-info blockquote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            line-height: 1.6;
-            border: none;
-            padding: 0;
-            margin: 0 0 8px 0;
+        .testimonials-section.scroll-active .scroll-progress {
+            display: block;
         }
 
-        .testimonial-info h3 {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            font-weight: 500;
+        /* Testimonial counter */
+        .testimonial-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--color-dark-teal);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 10;
         }
 
-        /* --- Footer Section Styles --- */
+        /* --- Footer Styles --- */
         .footer-section {
             width: 100%;
+            margin-top: 0;
+        }
+
+        .upper-half {
+            background-color: var(--primary-bg);
             position: relative;
-            margin-top: 80px;
+            padding-top: 80px; 
+            padding-bottom: 150px; 
         }
 
-        .footer-upper {
-            background-color: #f8f9fa;
-            position: relative;
-            padding: 80px 0 150px 0;
+        .lower-half {
+            background-color: var(--color-dark-teal);
+            padding: 190px 40px 60px 40px; 
         }
-
-        .footer-lower {
-            background-color: #012726;
-            padding: 190px 40px 60px 40px;
-        }
-
+        
+        /* --- Subscribe Card --- */
         .subscribe-card {
-            background: linear-gradient(135deg, #003d3b, #012726);
+            background: linear-gradient(135deg, #003d3b, var(--color-dark-teal));
             color: #ffffff;
             border-radius: 24px;
             padding: 60px;
@@ -1090,42 +1192,19 @@
             z-index: 10;
         }
 
-        .subscribe-info {
-            flex: 1;
-        }
-
-        .subscribe-info h2 {
+        .subscribe-info { flex: 1; }
+        .subscribe-info h2 { 
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 600;
-            line-height: 1.2;
-            margin-bottom: 1rem;
+            font-size: 2.8rem; 
+            font-weight: 600; 
+            line-height: 1.2; 
+            margin-bottom: 1rem; 
         }
-
-        .subscribe-info p {
-            font-size: 1rem;
-            color: #d1d5db;
-            line-height: 1.6;
-            max-width: 90%;
-        }
-
-        .subscribe-form-area {
-            flex-basis: 45%;
-        }
-
-        .subscribe-form-area label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        .subscribe-form {
-            display: flex;
-            gap: 12px;
-        }
-
+        .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
+        .subscribe-form-area { flex-basis: 45%; }
+        .subscribe-form-area label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
+        .subscribe-form { display: flex; gap: 12px; }
+        
         .input-with-prefix {
             flex-grow: 1;
             display: flex;
@@ -1134,14 +1213,16 @@
             border: 2px solid transparent;
             border-radius: 12px;
             padding: 0 20px;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
         .input-with-prefix .prefix {
             color: #ffffff;
+            font-size: 1rem;
             margin-right: 8px;
+            pointer-events: none;
         }
-
+        
         .subscribe-form input[type="tel"] {
             width: 100%;
             background-color: transparent;
@@ -1150,93 +1231,48 @@
             padding: 16px 0;
             font-size: 1rem;
             outline: none;
+            font-family: var(--font-sans);
         }
-
+        
+        .subscribe-form input[type="tel"]::placeholder { color: #b3d1d0; }
+        
         .input-with-prefix:focus-within {
             border-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
-        .subscribe-form button {
-            background-color: #ffffff;
-            color: #012726;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .subscribe-form button { 
+            background-color: #ffffff; 
+            color: var(--color-dark-teal); 
+            border: none; 
+            padding: 16px 32px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-family: var(--font-sans);
+            transition: background-color 0.3s ease; 
         }
+        .subscribe-form button:hover { background-color: #e2e6ea; }
+        .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
+        .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
 
-        .subscribe-form button:hover {
-            background-color: #e2e6ea;
-        }
-
-        .form-disclaimer {
-            font-size: 0.8rem;
-            color: #b3d1d0;
-            margin-top: 16px;
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-logo-area {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            flex-basis: 30%;
-        }
-
+        /* --- Bottom Footer Area (Links) --- */
+        .footer-bottom { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1200px; margin: 0 auto; }
+        .footer-logo-area { display: flex; flex-direction: column; gap: 16px; flex-basis: 30%; }
         .footer-logo-img {
             max-width: 140px;
             filter: brightness(0) invert(1);
             opacity: 0.9;
         }
-
-        .logo-tagline {
-            font-size: 0.95rem;
-            color: #d1d5db;
-        }
-
-        .footer-links-container {
-            display: flex;
-            gap: 120px;
-        }
-
-        .footer-column h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-column ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 18px;
-        }
-
-        .footer-column ul li a {
-            text-decoration: none;
-            color: #d1d5db;
-            font-size: 1rem;
-            transition: color 0.2s ease-in-out;
-        }
-
-        .footer-column ul li a:hover {
-            color: #ffffff;
-        }
+        .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
+        .footer-links-container { display: flex; gap: 120px; }
+        .footer-column h3 { font-size: 1rem; font-weight: 600; color: #ffffff; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 18px; }
+        .footer-column ul li a { text-decoration: none; color: #d1d5db; font-size: 1rem; transition: color 0.2s ease-in-out; }
+        .footer-column ul li a:hover { color: #ffffff; }
 
         .footer-copyright-bar {
             max-width: 1200px;
@@ -1250,20 +1286,9 @@
             font-size: 0.9rem;
         }
 
-        .copyright-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .copyright-links a {
-            text-decoration: none;
-            color: #d1d5db;
-            transition: color 0.2s ease-in-out;
-        }
-
-        .copyright-links a:hover {
-            color: #ffffff;
-        }
+        .copyright-links { display: flex; gap: 24px; }
+        .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
+        .copyright-links a:hover { color: #ffffff; }
 
         /* --- Responsive Adjustments --- */
         @media (max-width: 1600px) {
@@ -1285,44 +1310,18 @@
                 font-size: 36px;
             }
 
-            .testimonial-container {
-                flex-direction: column;
-                height: auto;
-                padding: 50px 40px;
-                width: 90%;
+            .gallery-section h2,
+            .text-content h2,
+            .subscribe-info h2 {
+                font-size: 2.8rem;
             }
-            
-            .testimonial-text-content, .testimonials-scroller {
-                width: 100%;
-            }
-            
-            .testimonial-text-content {
-                text-align: center;
-                margin-bottom: 40px;
-                padding-right: 0;
-            }
-            
-            .subscribe-card {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 40px;
-            }
-            
-            .subscribe-form-area {
-                width: 100%;
-                margin-top: 20px;
-            }
-            
-            .footer-bottom {
-                flex-direction: column;
-                gap: 50px;
-            }
-            
-            .footer-links-container {
-                gap: 60px;
-                width: 100%;
-                justify-content: space-between;
-            }
+        }
+
+        @media (max-width: 1024px) {
+            .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
+            .subscribe-form-area { width: 100%; margin-top: 20px; }
+            .footer-bottom { flex-direction: column; gap: 50px; }
+            .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
         }
 
         @media (max-width: 992px) { /* Tablet */
@@ -1355,38 +1354,64 @@
             .right-content {
                 width: 100%;
             }
+
+            .gallery-section h2,
+            .text-content h2,
+            .subscribe-info h2 {
+                font-size: 2.5rem;
+            }
+
+            .testimonial-container {
+                flex-direction: column;
+                padding: 40px 20px;
+            }
+
+            .text-content, .testimonials { 
+                width: 100%; 
+            }
+
+            .text-content { 
+                text-align: center; 
+                margin-bottom: 40px; 
+                padding-right: 0; 
+            }
         }
 
-        @media (max-width: 900px) {
-            .gallery-section h2 {
-                font-size: 1.6rem;
-                margin-bottom: 8px;
+        @media (max-width: 900px){
+            .gallery-section { 
+                padding: 60px 0; 
             }
             
-            .gallery-section p {
-                font-size: 0.85rem;
-                margin-bottom: 25px;
+            .gallery-section h2 { 
+                font-size: 2.2rem; 
+                margin-bottom: 1rem; 
             }
             
-            .gallery-carousel {
-                height: 360px;
+            .gallery-section p { 
+                font-size: 1rem; 
+                margin-bottom: 30px; 
+            }
+
+            .gallery-carousel { 
+                height: 360px; 
             }
             
-            .gallery-image-wrapper, .gallery-image-wrapper img {
+            .gallery-carousel .image-wrapper, 
+            .gallery-carousel img {
                 max-width: 200px;
                 max-height: 300px;
             }
             
-            .gallery-pos-3 { transform: translateX(-360px) scale(.70) rotateY(35deg); }
-            .gallery-pos-2 { transform: translateX(-240px) scale(.80) rotateY(25deg); }
-            .gallery-pos-1 { transform: translateX(-120px) scale(.90) rotateY(12deg); }
-            .gallery-pos0 { transform: translateX(0) scale(1.05); }
-            .gallery-pos1 { transform: translateX(120px) scale(.90) rotateY(-12deg); }
-            .gallery-pos2 { transform: translateX(240px) scale(.80) rotateY(-25deg); }
-            .gallery-pos3 { transform: translateX(360px) scale(.70) rotateY(-35deg); }
+            .pos-3{transform:translateX(-360px) scale(.70) rotateY(35deg)}
+            .pos-2{transform:translateX(-240px) scale(.80) rotateY(25deg)}
+            .pos-1{transform:translateX(-120px) scale(.90) rotateY(12deg)}
+            .pos0 {transform:translateX(0) scale(1.05)}
+            .pos1 {transform:translateX(120px) scale(.90) rotateY(-12deg)}
+            .pos2 {transform:translateX(240px) scale(.80) rotateY(-25deg)}
+            .pos3 {transform:translateX(360px) scale(.70) rotateY(-35deg)}
             
-            .gallery-dots {
-                margin-top: 18px;
+            .dots { 
+                margin-top: 20px; 
             }
         }
 
@@ -1537,75 +1562,170 @@
             }
 
             /* Mobile Gallery Section */
-            .subscribe-info h2, .gallery-section h2, .testimonial-text-content h2 {
-                font-size: 2.2rem;
+            .gallery-section { 
+                padding: 40px 0; 
             }
             
-            .subscribe-form {
-                flex-direction: column;
+            .gallery-section h2 { 
+                font-size: 2rem; 
+                margin-bottom: 0.8rem; 
             }
             
-            .footer-links-container {
-                flex-direction: column;
-                justify-content: flex-start;
-                gap: 40px;
+            .gallery-section p { 
+                font-size: 0.95rem; 
+                margin-bottom: 25px; 
             }
-            
-            .footer-upper {
-                padding-top: 60px;
-                padding-bottom: 240px;
-            }
-            
-            .footer-lower {
-                padding-top: 340px;
-                padding-left: 20px;
-                padding-right: 20px;
-                padding-bottom: 40px;
-            }
-            
-            .footer-copyright-bar {
-                flex-direction: column;
-                gap: 16px;
-                text-align: center;
-            }
-            
-            .copyright-links {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 12px 20px;
-            }
-        }
 
-        @media (max-width: 600px) {
-            .gallery-section h2 {
-                font-size: 1.4rem;
-                margin-bottom: 6px;
+            .gallery-carousel { 
+                height: 300px; 
             }
             
-            .gallery-section p {
-                font-size: 0.8rem;
-                margin-bottom: 20px;
-            }
-            
-            .gallery-carousel {
-                height: 300px;
-            }
-            
-            .gallery-image-wrapper, .gallery-image-wrapper img {
+            .gallery-carousel .image-wrapper, 
+            .gallery-carousel img {
                 max-width: 160px;
                 max-height: 240px;
             }
             
-            .gallery-pos-3 { transform: translateX(-280px) scale(.65); }
-            .gallery-pos-2 { transform: translateX(-190px) scale(.75); }
-            .gallery-pos-1 { transform: translateX(-95px) scale(.88); }
-            .gallery-pos0 { transform: translateX(0) scale(1.0); }
-            .gallery-pos1 { transform: translateX(95px) scale(.88); }
-            .gallery-pos2 { transform: translateX(190px) scale(.75); }
-            .gallery-pos3 { transform: translateX(280px) scale(.65); }
+            .pos-3{transform:translateX(-280px) scale(.65)}
+            .pos-2{transform:translateX(-190px) scale(.75)}
+            .pos-1{transform:translateX(-95px) scale(.88)}
+            .pos0 {transform:translateX(0) scale(1.0)}
+            .pos1 {transform:translateX(95px) scale(.88)}
+            .pos2 {transform:translateX(190px) scale(.75)}
+            .pos3 {transform:translateX(280px) scale(.65)}
             
-            .gallery-dots {
-                margin-top: 12px;
+            .dots { 
+                margin-top: 15px; 
+            }
+            
+            #prev-btn { 
+                left: 5px; 
+            }
+            
+            #next-btn { 
+                right: 5px; 
+            }
+
+            /* Mobile Testimonials Section */
+            .testimonials-section { 
+                padding: 40px 0; 
+            }
+            
+            .text-content h2 { 
+                font-size: 2rem; 
+                margin-bottom: 0.8rem; 
+            }
+            
+            .text-content p { 
+                font-size: 0.95rem; 
+                margin-bottom: 25px; 
+            }
+
+            .testimonials {
+                height: auto;
+                overflow: hidden;
+            }
+
+            .testimonials::before, .testimonials::after { 
+                display: none; 
+            }
+            
+            .testimonial-track {
+                display: flex;
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .testimonial-item {
+                width: 100%;
+                flex-shrink: 0;
+                margin-bottom: 0;
+                opacity: 1 !important;
+                transform: none !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+                padding: 24px;
+            }
+
+            .profile {
+                margin-right: 0;
+                margin-bottom: 16px;
+            }
+
+            .info blockquote {
+                font-size: 1.1rem;
+            }
+
+            .testimonial-dots {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 25px;
+            }
+
+            .dot {
+                width: 10px; 
+                height: 10px;
+                background: var(--border-color);
+                border-radius: 50%;
+                transition: background-color 0.3s;
+                cursor: pointer;
+            }
+
+            .dot.active { 
+                background: var(--color-dark-teal); 
+            }
+
+            .scroll-progress {
+                top: 65px;
+            }
+
+            /* Mobile Footer */
+            .subscribe-info h2 { 
+                font-size: 2.2rem; 
+            }
+            
+            .subscribe-form { 
+                flex-direction: column; 
+            }
+            
+            .footer-links-container { 
+                flex-direction: column; 
+                gap: 40px; 
+                justify-content: flex-start; 
+            }
+            
+            .upper-half { 
+                padding-top: 60px; 
+                padding-bottom: 280px; 
+            }
+            
+            .lower-half { 
+                padding-top: 380px; 
+                padding-left: 20px; 
+                padding-right: 20px; 
+                padding-bottom: 40px; 
+            }
+            
+            .subscribe-form input[type="tel"]::placeholder { 
+                font-size: 0.9rem; 
+            }
+            
+            .footer-copyright-bar { 
+                flex-direction: column; 
+                gap: 16px; 
+                text-align: center; 
+            }
+            
+            .copyright-links { 
+                justify-content: center; 
+                flex-wrap: wrap; 
+                gap: 12px 20px; 
+            }
+            
+            .copyright-text, .copyright-links a { 
+                font-size: 0.8rem; 
             }
         }
 
@@ -1624,10 +1744,21 @@
                 padding: 10px 12px;
                 font-size: 13px;
             }
+
+            .gallery-section h2,
+            .text-content h2,
+            .subscribe-info h2 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-progress">
+        <div class="scroll-progress-bar"></div>
+    </div>
+
     <!-- Navbar -->
     <header class="header">
         <div class="header-container">
@@ -1863,129 +1994,93 @@
         </div>
 
         <!-- Gallery Section -->
-        <div class="gallery-section">
-            <h2>Explore Our Gallery</h2>
-            <p>From weddings and portraits to commercial projects, every frame we capture is a masterpiece of light, emotion, and storytelling.</p>
-            <div class="gallery-carousel" id="gallery-carousel">
-                <div class="gallery-track" id="gallery-track">
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/07/58/57/0758579a393bb6b6938a1012a20822e1.jpg" alt="Event Photography">
-                        </a>
-                        <div class="image-caption">Event Photography</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/02/67/a9/0267a9839cd191a3c10b102029e7b23c.jpg" alt="Wedding Photography">
-                        </a>
-                        <div class="image-caption">Wedding Photography</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/92/83/81/928381a4d6f93774b3a6cb9383bed264.jpg" alt="Pre Wedding">
-                        </a>
-                        <div class="image-caption">Pre Wedding</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/f3/da/65/f3da658d506509a244c11f7c357f4955.jpg" alt="Maternity">
-                        </a>
-                        <div class="image-caption">Maternity</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/ae/a8/19/aea8198f163a35a7a40775d15c82fe1a.jpg" alt="Pre Birthday">
-                        </a>
-                        <div class="image-caption">Pre Birthday</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/87/44/21/8744219460010f3c53b20c8a6663f458.jpg" alt="Haldi Gallery">
-                        </a>
-                        <div class="image-caption">Haldi Gallery</div>
-                    </div>
-                    <div class="gallery-image-wrapper">
-                        <a href="#">
-                            <img src="https://i.pinimg.com/564x/a9/22/e1/a922e1b12853288a75b28d7d4c22995f.jpg" alt="Wedding Gallery">
-                        </a>
-                        <div class="image-caption">Wedding Gallery</div>
-                    </div>
+        <section class="gallery-section">
+            <h2>Explore Our <span class="serif">Gallery</span></h2>
+            <p>Discover our stunning portfolio of photography work. From weddings to commercial projects, each image tells a unique story captured with artistic vision.</p>
+
+            <div class="gallery-carousel" id="carousel-container">
+                <div class="carousel-track" id="track">
+                    <div class="image-wrapper"><a href="https://example.com/link1"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Event Photography"></a><div class="image-caption">Event Photography</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link2"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Wedding Photography"></a><div class="image-caption">Wedding Photography</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link3"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Pre Wedding"></a><div class="image-caption">Pre Wedding</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link4"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Maternity"></a><div class="image-caption">Maternity</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link5"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Pre Birthday"></a><div class="image-caption">Pre Birthday</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link6"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc02626-YBgbZO7VoKS80Gby.jpg" alt="Haldi Gallery"></a><div class="image-caption">Haldi Gallery</div></div>
+                    <div class="image-wrapper"><a href="https://example.com/link7"><img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Wedding Gallery"></a><div class="image-caption">Wedding Gallery</div></div>
                 </div>
+                <button id="prev-btn" class="nav-btn">&#10094;</button>
+                <button id="next-btn" class="nav-btn">&#10095;</button>
             </div>
-            <div class="gallery-dots" id="gallery-dots"></div>
-        </div>
+
+            <div class="dots" id="dots"></div>
+        </section>
 
         <!-- Testimonials Section -->
-        <div class="testimonials-section">
+        <section class="testimonials-section" id="testimonials-section">
             <div class="testimonial-container">
-                <div class="testimonial-text-content">
-                    <h2>Voices of <br><span class="serif">Our Clients</span></h2>
-                    <p>Discover the experiences of couples and brands who trusted us to capture their most precious moments. Their stories are our greatest endorsement.</p>
-                    <button class="testimonial-btn">View The Gallery</button>
+                <div class="text-content">
+                    <h2>Voices of <span class="serif">Our Clients</span></h2>
+                    <p>
+                        Discover the experiences of couples and brands who trusted us to capture their most precious moments. Their stories are our greatest endorsement.
+                    </p>
+                    <a href="/gallery" class="btn">View The Gallery</a>
                 </div>
-                <div class="testimonials-scroller" id="testimonials-scroller">
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile">
+
+                <div class="testimonials">
+                    <div class="testimonial-track">
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Profile of Sarah & Tom"></div>
+                            <div class="info">
+                                <blockquote>The wedding photos are absolutely breathtaking! You captured every single moment perfectly.</blockquote>
+                                <h3>Sarah & Tom, Wedding Clients</h3>
+                            </div>
                         </div>
-                        <div class="testimonial-info">
-                            <blockquote>The wedding photos are breathtaking! You captured every single moment perfectly.</blockquote>
-                            <h3>Sarah & Tom, Wedding Clients</h3>
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Profile of David Chen"></div>
+                            <div class="info">
+                                <blockquote>Incredibly professional and creative. The commercial shots elevated our brand's entire visual identity.</blockquote>
+                                <h3>David Chen, CEO of Innovate Co.</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/men/56.jpg" alt="Profile">
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/women/77.jpg" alt="Profile of The Miller Family"></div>
+                            <div class="info">
+                                <blockquote>Patient, fun, and amazing with the kids. Our family portraits are treasures we will cherish forever.</blockquote>
+                                <h3>The Miller Family, Portrait Session</h3>
+                            </div>
                         </div>
-                        <div class="testimonial-info">
-                            <blockquote>Incredibly professional and creative. The commercial shots elevated our brand's entire visual identity.</blockquote>
-                            <h3>David Chen, CEO of Innovate Co.</h3>
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile of Marcus Wright"></div>
+                            <div class="info">
+                                <blockquote>The drone shots for our real estate listings were a game-changer. Simply stunning results.</blockquote>
+                                <h3>Marcus Wright, Real Estate Agent</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/women/77.jpg" alt="Profile">
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile of Chloe Davis"></div>
+                            <div class="info">
+                                <blockquote>From the initial concept to the final edits, the whole process was seamless and exceeded expectations.</blockquote>
+                                <h3>Chloe Davis, Brand Manager</h3>
+                            </div>
                         </div>
-                        <div class="testimonial-info">
-                            <blockquote>Patient, fun, and amazing with the kids. Our family portraits are treasures we will cherish forever.</blockquote>
-                            <h3>The Miller Family, Portrait Session</h3>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile">
-                        </div>
-                        <div class="testimonial-info">
-                            <blockquote>The drone shots for our real estate listings were a game-changer. Simply stunning results.</blockquote>
-                            <h3>Marcus Wright, Real Estate Agent</h3>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile">
-                        </div>
-                        <div class="testimonial-info">
-                            <blockquote>From the initial concept to the final edits, the whole process was seamless and exceeded expectations.</blockquote>
-                            <h3>Chloe Davis, Brand Manager</h3>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-profile">
-                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Profile">
-                        </div>
-                        <div class="testimonial-info">
-                            <blockquote>A true artist with a camera. The way they use light is just magical. Highly recommended for any project.</blockquote>
-                            <h3>Ben Carter, Musician</h3>
+                        <div class="testimonial-item">
+                            <div class="profile"><img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Profile of Ben Carter"></div>
+                            <div class="info">
+                                <blockquote>A true artist with a camera. The way they use light is just magical. Highly recommended for any project.</blockquote>
+                                <h3>Ben Carter, Musician</h3>
+                            </div>
                         </div>
                     </div>
+                    <div class="testimonial-counter" id="testimonialCounter">1/6</div>
+                    <div class="testimonial-dots"></div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Footer Section -->
     <footer class="footer-section">
-        <div class="footer-upper">
+        <div class="upper-half">
             <div class="subscribe-card">
                 <div class="subscribe-info">
                     <h2>Ready to Capture Your Moment?</h2>
@@ -1996,15 +2091,16 @@
                     <form action="#" method="POST" class="subscribe-form">
                         <div class="input-with-prefix">
                             <span class="prefix">+91</span>
-                            <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}">
+                            <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}" autocomplete="off">
                         </div>
                         <button type="submit">Request Booking</button>
                     </form>
-                    <p class="form-disclaimer">We'll contact you within 24 hours to schedule your session</p>
+                    <p class="form-disclaimer">By requesting a booking, you agree to our <a href="#">Privacy Policy</a>.</p>
                 </div>
             </div>
         </div>
-        <div class="footer-lower">
+
+        <div class="lower-half">
             <div class="footer-bottom">
                 <div class="footer-logo-area">
                     <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
@@ -2031,6 +2127,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="footer-copyright-bar">
                 <p class="copyright-text">&copy; HV Photography. All rights reserved.</p>
                 <div class="copyright-links">
@@ -2101,153 +2198,331 @@
             window.addEventListener('scroll', revealOnScroll);
             revealOnScroll();
 
-            // --- GALLERY CAROUSEL SCRIPT ---
-            const galleryCarousel = document.getElementById('gallery-carousel');
-            if (galleryCarousel) {
-                const imageWrappers = galleryCarousel.querySelectorAll('.gallery-image-wrapper');
-                const dotsContainer = document.getElementById('gallery-dots');
-                const total = imageWrappers.length;
-                const positions = ['gallery-pos-3','gallery-pos-2','gallery-pos-1','gallery-pos0','gallery-pos1','gallery-pos2','gallery-pos3'];
-                const offsetByClass = { 'gallery-pos-3':-3, 'gallery-pos-2':-2, 'gallery-pos-1':-1, 'gallery-pos0':0, 'gallery-pos1':1, 'gallery-pos2':2, 'gallery-pos3':3 };
-                let idx = 0, auto = null, startX = 0, lastX = 0, velocity = 0, lastTime = 0;
-                
-                for (let i = 0; i < total; i++) {
-                    const dot = document.createElement('div');
-                    dot.className = 'gallery-dot';
-                    dot.dataset.idx = i;
-                    dotsContainer.appendChild(dot);
+            // Gallery Carousel Functionality
+            const carouselContainer = document.getElementById('carousel-container');
+            const imageWrappers = document.querySelectorAll('.gallery-carousel .image-wrapper');
+            const dotsContainer = document.getElementById('dots');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const total = imageWrappers.length;
+            const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
+            const offsetByClass = { 'pos-3':-3, 'pos-2':-2, 'pos-1':-1, 'pos0':0, 'pos1':1, 'pos2':2, 'pos3':3 };
+
+            let idx = 0, auto = null;
+            let startX = 0, lastX = 0, velocity = 0, lastTime = 0;
+
+            // dots
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.dataset.idx = i;
+                dotsContainer.appendChild(dot);
+            }
+            const dots = document.querySelectorAll('.dot');
+
+            function update() {
+                for (let i = 0; i < positions.length; i++) {
+                    const wrapperIdx = (idx + i - 3 + total) % total;
+                    imageWrappers[wrapperIdx].className = 'image-wrapper ' + positions[i];
                 }
-                
-                const dots = dotsContainer.querySelectorAll('.gallery-dot');
-                
-                function update() {
-                    for (let i = 0; i < positions.length; i++) {
-                        const wrapperIdx = (idx + i - 3 + total) % total;
-                        imageWrappers[wrapperIdx].className = 'gallery-image-wrapper ' + positions[i];
-                    }
-                    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-                }
-                
-                function go(dir) { 
-                    idx = (idx + dir + total) % total; 
-                    update(); 
-                }
-                
-                function startAuto(){ 
-                    auto = setInterval(() => go(1), 4000); // Slowed down for better viewing
-                }
-                
-                function stopAuto(){ 
-                    clearInterval(auto); 
-                }
-                
-                galleryCarousel.addEventListener('touchstart', e => {
-                    stopAuto(); 
-                    startX = e.touches[0].clientX; 
-                    lastX = startX;
-                    lastTime = Date.now(); 
-                    velocity = 0;
-                }, { passive: true });
-                
-                galleryCarousel.addEventListener('touchmove', e => {
-                    const currentX = e.touches[0].clientX;
-                    const deltaX = currentX - lastX;
-                    const deltaTime = Date.now() - lastTime;
-                    velocity = deltaX / Math.max(1, deltaTime);
-                    lastX = currentX; 
-                    lastTime = Date.now();
-                }, { passive: true });
-                
-                galleryCarousel.addEventListener('touchend', () => {
-                    const distance = lastX - startX;
-                    if (Math.abs(distance) > 40) {
-                        const dir = distance < 0 ? 1 : -1;
-                        const momentum = Math.abs(velocity) > 0.5 ? 2 : 1;
-                        go(dir * momentum);
-                    }
-                    startAuto();
-                });
-                
-                imageWrappers.forEach((wrapper) => {
-                    wrapper.addEventListener('click', (e) => {
-                        const cls = [...wrapper.classList].find(c => c.startsWith('gallery-pos'));
-                        const offset = offsetByClass[cls] ?? 0;
-                        if (offset !== 0) {
-                            e.preventDefault(); 
-                            stopAuto();
-                            idx = (idx + offset + total) % total;
-                            update(); 
-                            startAuto();
-                        }
-                    }, { capture:true });
-                });
-                
-                dots.forEach(d => d.addEventListener('click', () => {
-                    stopAuto(); 
-                    idx = +d.dataset.idx; 
-                    update(); 
-                    startAuto();
-                }));
-                
-                galleryCarousel.addEventListener('mouseenter', stopAuto);
-                galleryCarousel.addEventListener('mouseleave', startAuto);
-                update();
-                startAuto();
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
             }
 
-            // --- TESTIMONIAL SCROLLER SCRIPT ---
-            const testimonialsContainer = document.getElementById('testimonials-scroller');
-            if (testimonialsContainer) {
-                let isAnimating = false;
-                let reviewIndex = 0;
-                const totalReviews = testimonialsContainer.children.length;
-                const animationDuration = 400;
+            function go(dir) {
+                idx = (idx + dir + total) % total;
+                update();
+            }
 
-                const updateHighlight = () => {
-                    testimonialsContainer.querySelector('.testimonial-item.active')?.classList.remove('active');
-                    testimonialsContainer.querySelector('.testimonial-item:nth-child(2)')?.classList.add('active');
-                };
+            function startAuto(){ auto = setInterval(() => go(1), 3000); }
+            function stopAuto(){ clearInterval(auto); }
 
-                const cycleForward = () => {
-                    if (isAnimating) return;
+            // Button navigation
+            prevBtn.addEventListener('click', () => {
+                stopAuto();
+                go(-1);
+                startAuto();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                stopAuto();
+                go(1);
+                startAuto();
+            });
+
+            // momentum swipe
+            carouselContainer.addEventListener('touchstart', e => {
+                stopAuto();
+                startX = e.touches[0].clientX;
+                lastX = startX;
+                lastTime = Date.now();
+                velocity = 0;
+            });
+            carouselContainer.addEventListener('touchmove', e => {
+                const currentX = e.touches[0].clientX;
+                const deltaX = currentX - lastX;
+                const deltaTime = Date.now() - lastTime;
+                velocity = deltaX / Math.max(1, deltaTime);
+                lastX = currentX;
+                lastTime = Date.now();
+            });
+            carouselContainer.addEventListener('touchend', () => {
+                const distance = lastX - startX;
+                if (Math.abs(distance) > 40) {
+                    const dir = distance < 0 ? 1 : -1;
+                    const momentum = Math.abs(velocity) > 0.5 ? 2 : 1;
+                    go(dir * momentum);
+                }
+                startAuto();
+            });
+
+            // fix: tap-to-focus using current class (never miscalculates)
+            imageWrappers.forEach((wrapper) => {
+                wrapper.addEventListener('click', (e) => {
+                    // If this isn't the center, focus it; don't navigate
+                    const cls = [...wrapper.classList].find(c => c.startsWith('pos'));
+                    const offset = offsetByClass[cls] ?? 0;
+
+                    if (offset !== 0) {
+                        e.preventDefault(); // stop link highlight/navigation
+                        stopAuto();
+                        idx = (idx + offset + total) % total; // jump directly
+                        update();
+                        startAuto();
+                    }
+                    // if offset === 0, it's centered → allow link to work normally
+                }, { capture:true }); // capture ensures we intercept before link
+            });
+
+            // Optional: dot navigation
+            dots.forEach(d => d.addEventListener('click', () => {
+                stopAuto();
+                idx = +d.dataset.idx;
+                update();
+                startAuto();
+            }));
+
+            // Pause on hover (desktop)
+            carouselContainer.addEventListener('mouseenter', stopAuto);
+            carouselContainer.addEventListener('mouseleave', startAuto);
+
+            update();
+            startAuto();
+
+            // Testimonials Section with Scroll Locking
+            const testimonialsSection = document.getElementById('testimonials-section');
+            const testimonialContainer = document.querySelector('.testimonial-container');
+            const testimonialsList = document.querySelector('.testimonials');
+            const testimonialTrack = document.querySelector('.testimonial-track');
+            const testimonialItems = document.querySelectorAll('.testimonial-item');
+            const testimonialDotsContainer = document.querySelector('.testimonial-dots');
+            const testimonialCounter = document.getElementById('testimonialCounter');
+            const scrollProgress = document.querySelector('.scroll-progress-bar');
+            
+            let isAnimating = false;
+            const animationDuration = 400;
+            let isDesktop = window.innerWidth > 768;
+            let isTestimonialsActive = false;
+            let currentTestimonialIndex = 0;
+            let autoScrollInterval;
+            let scrollLockActive = false;
+            let testimonialCount = 0;
+            const totalTestimonials = 6;
+
+            // --- Desktop Scroll Logic ---
+            let isSectionVisible = false;
+            const desktopFunctions = {
+                updateHighlight: () => {
+                    const allItems = testimonialsList.querySelectorAll('.testimonial-item');
+                    allItems.forEach(item => item.classList.remove('active'));
+                    const middleItem = testimonialsList.querySelector('.testimonial-item:nth-child(2)');
+                    if (middleItem) middleItem.classList.add('active');
+                },
+                cycleForward: () => {
+                    if (isAnimating || testimonialCount >= totalTestimonials) return; 
                     isAnimating = true;
-                    reviewIndex = Math.min(reviewIndex + 1, totalReviews - 3);
-                    const firstItem = testimonialsContainer.querySelector('.testimonial-item:first-child');
+                    const firstItem = testimonialTrack.querySelector('.testimonial-item:first-child');
                     firstItem.classList.add('exit');
                     setTimeout(() => {
                         firstItem.classList.remove('exit');
-                        testimonialsContainer.appendChild(firstItem);
-                        updateHighlight(); 
+                        testimonialTrack.appendChild(firstItem);
+                        desktopFunctions.updateHighlight();
                         isAnimating = false;
+                        testimonialCount++;
+                        updateTestimonialCounter();
+                        checkTestimonialCompletion();
                     }, animationDuration);
-                };
-
-                const cycleBackward = () => {
-                    if (isAnimating) return;
+                },
+                cycleBackward: () => {
+                    if (isAnimating || testimonialCount >= totalTestimonials) return; 
                     isAnimating = true;
-                    reviewIndex = Math.max(reviewIndex - 1, 0);
-                    const lastItem = testimonialsContainer.querySelector('.testimonial-item:last-child');
-                    const firstItem = testimonialsContainer.querySelector('.testimonial-item:first-child');
+                    const lastItem = testimonialTrack.querySelector('.testimonial-item:last-child');
+                    const firstItem = testimonialTrack.querySelector('.testimonial-item:first-child');
                     lastItem.classList.add('enter-reverse');
-                    testimonialsContainer.insertBefore(lastItem, firstItem);
-                    requestAnimationFrame(() => { 
-                        lastItem.classList.remove('enter-reverse'); 
-                    });
+                    testimonialTrack.insertBefore(lastItem, firstItem);
+                    requestAnimationFrame(() => lastItem.classList.remove('enter-reverse'));
                     setTimeout(() => {
-                        updateHighlight(); 
+                        desktopFunctions.updateHighlight();
                         isAnimating = false;
+                        testimonialCount++;
+                        updateTestimonialCounter();
+                        checkTestimonialCompletion();
                     }, animationDuration);
-                };
+                },
+                wheelHandler: (event) => {
+                    if (!isSectionVisible || !scrollLockActive || testimonialCount >= totalTestimonials) return;
+                    event.preventDefault(); 
+                    if (event.deltaY > 0) {
+                        desktopFunctions.cycleForward();
+                    } else {
+                        desktopFunctions.cycleBackward();
+                    }
+                }
+            };
 
-                const handleWheel = (event) => {
-                    event.preventDefault();
-                    if (event.deltaY > 0) cycleForward(); 
-                    else cycleBackward();
-                };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isSectionVisible = entry.isIntersecting;
+                    
+                    if (entry.isIntersecting && !isTestimonialsActive && testimonialCount < totalTestimonials) {
+                        // Section just came into view - activate scroll locking
+                        activateTestimonialsScroll();
+                    } else if (!entry.isIntersecting && isTestimonialsActive) {
+                        // Section left view - deactivate
+                        deactivateTestimonialsScroll();
+                    }
+                });
+            }, { threshold: 0.5 });
 
-                testimonialsContainer.addEventListener('wheel', handleWheel, { passive: false });
-                updateHighlight();
+            // --- Mobile Swipe Logic ---
+            const mobileFunctions = {
+                currentIndex: 0,
+                touchStartX: 0,
+                updateDots: () => {
+                    const dots = testimonialDotsContainer.querySelectorAll('.dot');
+                    dots.forEach((dot, index) => dot.classList.toggle('active', index === mobileFunctions.currentIndex));
+                },
+                goToSlide: (index) => {
+                    if (testimonialCount >= totalTestimonials) return;
+                    mobileFunctions.currentIndex = index;
+                    testimonialTrack.style.transform = `translateX(-${index * 100}%)`;
+                    mobileFunctions.updateDots();
+                    updateScrollProgress();
+                    testimonialCount++;
+                    updateTestimonialCounter();
+                    checkTestimonialCompletion();
+                },
+                touchStartHandler: (e) => mobileFunctions.touchStartX = e.touches[0].clientX,
+                touchEndHandler: (e) => {
+                    if (!scrollLockActive || testimonialCount >= totalTestimonials) return;
+                    const touchEndX = e.changedTouches[0].clientX;
+                    const swipeDistance = touchEndX - mobileFunctions.touchStartX;
+                    if (Math.abs(swipeDistance) < 50) return;
+                    if (swipeDistance < 0 && mobileFunctions.currentIndex < testimonialItems.length - 1) {
+                        mobileFunctions.goToSlide(mobileFunctions.currentIndex + 1);
+                    } else if (swipeDistance > 0 && mobileFunctions.currentIndex > 0) {
+                        mobileFunctions.goToSlide(mobileFunctions.currentIndex - 1);
+                    }
+                },
+                setupDots: () => {
+                    testimonialDotsContainer.innerHTML = '';
+                    testimonialItems.forEach((_, index) => {
+                        const dot = document.createElement('button');
+                        dot.classList.add('dot');
+                        dot.setAttribute('aria-label', `Go to testimonial ${index + 1}`);
+                        dot.addEventListener('click', () => mobileFunctions.goToSlide(index));
+                        testimonialDotsContainer.appendChild(dot);
+                    });
+                    mobileFunctions.updateDots();
+                }
+            };
+
+            function updateTestimonialCounter() {
+                testimonialCounter.textContent = `${testimonialCount}/${totalTestimonials}`;
             }
+
+            function updateScrollProgress() {
+                if (!isDesktop) {
+                    const progress = (mobileFunctions.currentIndex / (testimonialItems.length - 1)) * 100;
+                    scrollProgress.style.width = `${progress}%`;
+                } else {
+                    const progress = (testimonialCount / totalTestimonials) * 100;
+                    scrollProgress.style.width = `${progress}%`;
+                }
+            }
+
+            function checkTestimonialCompletion() {
+                if (testimonialCount >= totalTestimonials) {
+                    // All testimonials viewed - release scroll lock after a brief delay
+                    setTimeout(() => {
+                        deactivateTestimonialsScroll();
+                        // Smooth scroll to footer
+                        document.querySelector('.footer-section').scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 1000);
+                }
+            }
+
+            function activateTestimonialsScroll() {
+                isTestimonialsActive = true;
+                scrollLockActive = true;
+                document.body.classList.add('scroll-locked');
+                testimonialsSection.classList.add('scroll-active');
+                
+                if (isDesktop) {
+                    window.addEventListener('wheel', desktopFunctions.wheelHandler, { passive: false });
+                    desktopFunctions.updateHighlight();
+                } else {
+                    mobileFunctions.setupDots();
+                    mobileFunctions.goToSlide(0);
+                    testimonialsList.addEventListener('touchstart', mobileFunctions.touchStartHandler, { passive: true });
+                    testimonialsList.addEventListener('touchend', mobileFunctions.touchEndHandler);
+                }
+
+                updateTestimonialCounter();
+            }
+
+            function deactivateTestimonialsScroll() {
+                isTestimonialsActive = false;
+                scrollLockActive = false;
+                document.body.classList.remove('scroll-locked');
+                testimonialsSection.classList.remove('scroll-active');
+                
+                if (isDesktop) {
+                    window.removeEventListener('wheel', desktopFunctions.wheelHandler);
+                } else {
+                    testimonialsList.removeEventListener('touchstart', mobileFunctions.touchStartHandler);
+                    testimonialsList.removeEventListener('touchend', mobileFunctions.touchEndHandler);
+                }
+
+                clearInterval(autoScrollInterval);
+            }
+
+            // Setup testimonials based on screen size
+            function setupTestimonials() {
+                isDesktop = window.innerWidth > 768;
+                
+                if (isDesktop) {
+                    observer.observe(testimonialsSection);
+                    desktopFunctions.updateHighlight();
+                    testimonialTrack.style.transform = '';
+                } else {
+                    mobileFunctions.setupDots();
+                    mobileFunctions.goToSlide(0);
+                }
+            }
+
+            // Initial setup
+            setupTestimonials();
+            window.addEventListener('resize', setupTestimonials);
+
+            // Allow escape from scroll lock with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && scrollLockActive) {
+                    deactivateTestimonialsScroll();
+                }
+            });
         });
     </script>
 </body>
