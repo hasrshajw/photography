@@ -640,7 +640,7 @@
             gap: 5%;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 30px;
+            padding: 30px 0;
         }
 
         .left-content {
@@ -773,16 +773,20 @@
 
         /* --- Book Us Section Styles --- */
         .book-us-section {
-            width: 100%;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
             background-color: var(--secondary-bg);
-            padding: 120px 40px;
+            padding: 120px 0;
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
             overflow: hidden;
         }
         
@@ -801,6 +805,7 @@
             max-width: 750px;
             position: relative;
             z-index: 2;
+            padding: 0 30px;
         }
 
         .eyebrow-text {
@@ -1458,12 +1463,13 @@
             
             .main-wrapper {
                 gap: 5px;
-                padding: 0 20px;
+                padding: 0;
             }
             
             .hero-header {
                 margin-bottom: -15px;
                 padding-top: 10px; /* Added for mobile */
+                padding: 0 20px;
             }
             
             .hero-header h1 {
@@ -1479,6 +1485,7 @@
             /* Show mobile content section */
             .mobile-content {
                 display: flex;
+                padding: 0px 20px 30px 20px;
             }
             
             /* Mobile buttons side by side in smaller size */
@@ -1538,7 +1545,7 @@
             .stats-container {
                 flex-direction: column;
                 gap: 15px;
-                padding: 10px 0;
+                padding: 10px 20px 10px 20px;
             }
             
             .stat-item {
@@ -1554,6 +1561,10 @@
             }
 
             /* Mobile Services Section */
+            .services-section {
+                padding: 0 20px;
+            }
+            
             .left-content h2 {
                 font-size: 2.5rem;
             }
@@ -1597,6 +1608,27 @@
                 display: none;
             }
 
+            /* Mobile Book Us Section */
+            .book-us-section { 
+                padding: 80px 0;
+            }
+            
+            .book-us-content { 
+                text-align: left; 
+                padding: 0 20px;
+            }
+            
+            .eyebrow-text { font-size: 0.8rem; }
+            .book-us-content h2 { font-size: 2.5rem; }
+            .book-us-content p { font-size: 1rem; margin-bottom: 2.5rem; }
+            
+            .cta-button {
+                display: flex;
+                width: 100%;
+                padding: 18px 24px;
+                font-size: 1.1rem;
+            }
+
             /* Mobile Gallery Section */
             .gallery-section { 
                 padding: 40px 0; 
@@ -1605,11 +1637,13 @@
             .gallery-section h2 { 
                 font-size: 2rem; 
                 margin-bottom: 0.8rem; 
+                padding: 0 20px;
             }
             
             .gallery-section p { 
                 font-size: 0.95rem; 
                 margin-bottom: 25px; 
+                padding: 0 20px;
             }
 
             .gallery-carousel { 
@@ -1632,6 +1666,7 @@
             
             .dots { 
                 margin-top: 15px; 
+                padding: 0 20px;
             }
             
             #prev-btn { 
@@ -1642,30 +1677,13 @@
                 right: 5px; 
             }
 
-            /* Mobile Book Us Section */
-            .book-us-section { 
-                padding: 80px 24px 90px;
-            }
-            
-            .book-us-content { text-align: left; }
-            .eyebrow-text { font-size: 0.8rem; }
-            .book-us-content h2 { font-size: 2.5rem; }
-            .book-us-content p { font-size: 1rem; margin-bottom: 2.5rem; }
-            
-            .cta-button {
-                display: flex;
-                width: 100%;
-                padding: 18px 24px;
-                font-size: 1.1rem;
-            }
-
             /* Mobile Testimonials Section */
             .testimonials-section {
-                padding: 60px 0;
+                padding: 0 0 60px 0;
             }
 
             .testimonial-container {
-                padding: 40px 20px;
+                padding: 0px 20px;
             }
 
             .text-content h2 { 
@@ -2041,23 +2059,25 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Book Us Section -->
-        <section class="book-us-section">
-            <div class="book-us-content">
-                <p class="eyebrow-text">Let's Create Together</p>
-                <h2>Book Your <span class="serif">Unforgettable</span> Session</h2>
-                <p>
-                    Whether you're planning a wedding, a family portrait, or a commercial project, we're ready to bring your vision to life. Let's collaborate to create timeless images you'll cherish forever.
-                </p>
-                <a href="#" class="cta-button">
-                    Book Us Now
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
-            </div>
-        </section>
+    <!-- Book Us Section -->
+    <section class="book-us-section">
+        <div class="book-us-content">
+            <p class="eyebrow-text">Let's Create Together</p>
+            <h2>Book Your <span class="serif">Unforgettable</span> Session</h2>
+            <p>
+                Whether you're planning a wedding, a family portrait, or a commercial project, we're ready to bring your vision to life. Let's collaborate to create timeless images you'll cherish forever.
+            </p>
+            <a href="#" class="cta-button">
+                Book Us Now
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+        </div>
+    </section>
 
-        <!-- Gallery Section -->
+    <!-- Gallery Section -->
+    <div class="main-wrapper">
         <section class="gallery-section">
             <h2>Explore Our <span class="serif">Gallery</span></h2>
             <p>Discover our stunning portfolio of photography work. From weddings to commercial projects, each image tells a unique story captured with artistic vision.</p>
