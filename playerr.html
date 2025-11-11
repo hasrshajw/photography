@@ -10,7 +10,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
-        /* --- Google Font Import & Variables --- */
         :root {
             --primary-bg: #fefefe;
             --secondary-bg: #f8f8f8;
@@ -32,7 +31,6 @@
             --font-serif: 'Playfair Display', serif;
         }
 
-        /* --- Universal Reset & Base Styles --- */
         * {
             margin: 0;
             padding: 0;
@@ -48,7 +46,6 @@
             color: var(--text-primary);
         }
 
-        /* --- Header Styles --- */
         .header {
             position: fixed;
             top: 0;
@@ -137,7 +134,6 @@
             gap: 1rem;
         }
 
-        /* Fixed Mobile Menu Button Size */
         .menu-button {
             display: flex;
             padding: 0.75rem;
@@ -210,7 +206,6 @@
             gap: 1rem;
         }
 
-        /* Mobile Menu */
         #mobileMenu {
             position: fixed;
             top: 0;
@@ -248,7 +243,6 @@
             display: block;
         }
 
-        /* Fixed Mobile Menu Close Button Size */
         .mobile-menu-close {
             padding: 0.75rem;
             border-radius: 8px;
@@ -322,7 +316,6 @@
             background-color: #e5e7eb;
         }
 
-        /* --- Skeleton Loading --- */
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -345,11 +338,42 @@
             margin: 0 auto 3rem;
         }
 
-        .skeleton-carousel {
-            height: 500px;
+        .skeleton-carousel-container {
+            position: relative;
             width: 100%;
-            margin-bottom: 2rem;
+            height: 500px;
+            perspective: 1200px;
+            overflow: hidden;
+            margin: 0 auto;
         }
+
+        .skeleton-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .skeleton-image-wrapper {
+            position: absolute;
+            width: 280px;
+            height: 420px;
+            border-radius: 16px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .skeleton-pos-3 { transform: translateX(-500px) scale(0.75) rotateY(30deg); z-index: 1; }
+        .skeleton-pos-2 { transform: translateX(-350px) scale(0.85) rotateY(20deg); z-index: 2; }
+        .skeleton-pos-1 { transform: translateX(-180px) scale(0.95) rotateY(10deg); z-index: 3; }
+        .skeleton-pos0 { transform: translateX(0) scale(1.1); z-index: 5; }
+        .skeleton-pos1 { transform: translateX(180px) scale(0.95) rotateY(-10deg); z-index: 3; }
+        .skeleton-pos2 { transform: translateX(350px) scale(0.85) rotateY(-20deg); z-index: 2; }
+        .skeleton-pos3 { transform: translateX(500px) scale(0.75) rotateY(-30deg); z-index: 1; }
 
         .skeleton-dots {
             display: flex;
@@ -364,12 +388,79 @@
             border-radius: 50%;
         }
 
-        .skeleton-download {
-            height: 450px;
+        .skeleton-download-container {
             width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
         }
 
-        /* --- Gallery Section --- */
+        .skeleton-text-content {
+            width: 45%;
+            z-index: 2;
+        }
+
+        .skeleton-text-line {
+            height: 20px;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .skeleton-text-line.short {
+            width: 40%;
+        }
+
+        .skeleton-text-line.medium {
+            width: 70%;
+        }
+
+        .skeleton-text-line.long {
+            width: 90%;
+            height: 60px;
+            margin-bottom: 2.5rem;
+        }
+
+        .skeleton-button {
+            height: 60px;
+            width: 250px;
+            border-radius: 12px;
+        }
+
+        .skeleton-image-stack {
+            width: 50%;
+            position: relative;
+            height: 450px;
+        }
+
+        .skeleton-stack-image {
+            position: absolute;
+            border-radius: 16px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border: 5px solid white;
+        }
+
+        .skeleton-stack-1 {
+            width: 300px;
+            height: 420px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%) rotateZ(-5deg);
+            z-index: 1;
+        }
+
+        .skeleton-stack-2 {
+            width: 320px;
+            height: 240px;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%) rotateZ(5deg);
+            z-index: 3;
+        }
+
         .gallery-section {
             width: 100%;
             max-width: 1200px;
@@ -391,7 +482,6 @@
             color: var(--color-dark-teal);
         }
 
-        /* Carousel Styles */
         .gallery-carousel {
             position: relative;
             width: 100%;
@@ -449,14 +539,12 @@
             transform: scale(1.05);
         }
 
-        /* Remove blue tap highlight on mobile */
         .image-wrapper:active,
         .image-wrapper:focus {
             outline: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Carousel Positions */
         .pos-3 { transform: translateX(-500px) scale(0.75) rotateY(30deg); z-index: 1; }
         .pos-2 { transform: translateX(-350px) scale(0.85) rotateY(20deg); z-index: 2; }
         .pos-1 { transform: translateX(-180px) scale(0.95) rotateY(10deg); z-index: 3; }
@@ -469,7 +557,6 @@
             pointer-events: none;
         }
 
-        /* Navigation */
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -519,7 +606,6 @@
             transform: scale(1.3);
         }
 
-        /* --- Full Screen Modal --- */
         .modal {
             display: none;
             position: fixed;
@@ -552,12 +638,13 @@
         .modal-image {
             max-width: 100%;
             max-height: 90vh;
+            width: auto;
+            height: auto;
             object-fit: contain;
             border-radius: 8px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        /* Improved Modal Controls - Visible on white backgrounds */
         .modal-close {
             position: absolute;
             top: -50px;
@@ -620,7 +707,6 @@
             right: 20px;
         }
 
-        /* --- Download Section --- */
         .download-section {
             width: 100%;
             padding: 4rem 1rem;
@@ -779,7 +865,6 @@
             100% { background-position: 100% 50%; }
         }
 
-        /* Layout for when there are no extra images */
         .download-container.no-images .image-stack-container {
             display: none;
         }
@@ -796,7 +881,6 @@
             max-width: 600px;
         }
 
-        /* --- Footer Section --- */
         .footer-section {
             background-color: var(--color-dark-teal);
             padding: 4rem 2rem 2rem;
@@ -891,7 +975,6 @@
             color: #ffffff;
         }
 
-        /* --- Status Messages --- */
         .status-message {
             text-align: center;
             padding: 3rem 1rem;
@@ -911,7 +994,6 @@
             display: none !important;
         }
 
-        /* --- Responsive Design --- */
         @media (max-width: 1024px) {
             .gallery-carousel {
                 height: 450px;
@@ -929,6 +1011,18 @@
             .pos2 { transform: translateX(280px) scale(0.85) rotateY(-20deg); }
             .pos3 { transform: translateX(420px) scale(0.75) rotateY(-30deg); }
 
+            .skeleton-image-wrapper {
+                width: 240px;
+                height: 360px;
+            }
+
+            .skeleton-pos-3 { transform: translateX(-420px) scale(0.75) rotateY(30deg); }
+            .skeleton-pos-2 { transform: translateX(-280px) scale(0.85) rotateY(20deg); }
+            .skeleton-pos-1 { transform: translateX(-140px) scale(0.95) rotateY(10deg); }
+            .skeleton-pos1 { transform: translateX(140px) scale(0.95) rotateY(-10deg); }
+            .skeleton-pos2 { transform: translateX(280px) scale(0.85) rotateY(-20deg); }
+            .skeleton-pos3 { transform: translateX(420px) scale(0.75) rotateY(-30deg); }
+
             .modal-nav {
                 width: 40px;
                 height: 40px;
@@ -943,7 +1037,7 @@
                 right: 10px;
             }
 
-            .skeleton-carousel {
+            .skeleton-carousel-container {
                 height: 450px;
             }
         }
@@ -977,6 +1071,19 @@
             .pos1 { transform: translateX(100px) scale(0.9) rotateY(-12deg); }
             .pos2 { transform: translateX(200px) scale(0.8) rotateY(-25deg); }
             .pos3 { transform: translateX(320px) scale(0.7) rotateY(-35deg); }
+
+            .skeleton-image-wrapper {
+                width: 200px;
+                height: 300px;
+            }
+
+            .skeleton-pos-3 { transform: translateX(-320px) scale(0.7) rotateY(35deg); }
+            .skeleton-pos-2 { transform: translateX(-200px) scale(0.8) rotateY(25deg); }
+            .skeleton-pos-1 { transform: translateX(-100px) scale(0.9) rotateY(12deg); }
+            .skeleton-pos0 { transform: translateX(0) scale(1.05); }
+            .skeleton-pos1 { transform: translateX(100px) scale(0.9) rotateY(-12deg); }
+            .skeleton-pos2 { transform: translateX(200px) scale(0.8) rotateY(-25deg); }
+            .skeleton-pos3 { transform: translateX(320px) scale(0.7) rotateY(-35deg); }
 
             .nav-btn {
                 width: 40px;
@@ -1024,6 +1131,16 @@
                 transform: translateY(-50%) rotateZ(8deg);
             }
 
+            .skeleton-stack-1 {
+                width: 200px;
+                height: 280px;
+            }
+
+            .skeleton-stack-2 {
+                width: 220px;
+                height: 165px;
+            }
+
             .download-button {
                 display: flex;
                 width: 100%;
@@ -1031,13 +1148,11 @@
                 font-size: 1.1rem;
             }
 
-            /* Mobile layout for no images */
             .download-container.no-images .text-content {
                 text-align: center;
                 margin-bottom: 0;
             }
 
-            /* Modal adjustments for mobile */
             .modal-content {
                 max-width: 95%;
                 max-height: 95%;
@@ -1074,7 +1189,7 @@
                 gap: 0.75rem;
             }
 
-            .skeleton-carousel {
+            .skeleton-carousel-container {
                 height: 400px;
             }
 
@@ -1083,8 +1198,8 @@
                 width: 250px;
             }
 
-            .skeleton-download {
-                height: 400px;
+            .skeleton-image-stack {
+                height: 350px;
             }
         }
 
@@ -1110,11 +1225,24 @@
             .pos2 { transform: translateX(160px) scale(0.75); }
             .pos3 { transform: translateX(250px) scale(0.65); }
 
+            .skeleton-image-wrapper {
+                width: 160px;
+                height: 240px;
+            }
+
+            .skeleton-pos-3 { transform: translateX(-250px) scale(0.65); }
+            .skeleton-pos-2 { transform: translateX(-160px) scale(0.75); }
+            .skeleton-pos-1 { transform: translateX(-80px) scale(0.88); }
+            .skeleton-pos0 { transform: translateX(0) scale(1.0); }
+            .skeleton-pos1 { transform: translateX(80px) scale(0.88); }
+            .skeleton-pos2 { transform: translateX(160px) scale(0.75); }
+            .skeleton-pos3 { transform: translateX(250px) scale(0.65); }
+
             .text-content h2 {
                 font-size: 1.8rem;
             }
 
-            .skeleton-carousel {
+            .skeleton-carousel-container {
                 height: 350px;
             }
 
@@ -1126,7 +1254,6 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <header class="header">
         <div class="header-container">
             <nav class="nav">
@@ -1174,11 +1301,20 @@
         </div>
     </header>
 
-    <!-- Skeleton Loading -->
     <div id="skeleton-loading">
         <section class="gallery-section">
             <div class="skeleton skeleton-header"></div>
-            <div class="skeleton skeleton-carousel"></div>
+            <div class="skeleton-carousel-container">
+                <div class="skeleton-track">
+                    <div class="skeleton-image-wrapper skeleton-pos-3"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos-2"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos-1"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos0"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos1"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos2"></div>
+                    <div class="skeleton-image-wrapper skeleton-pos3"></div>
+                </div>
+            </div>
             <div class="skeleton-dots">
                 <div class="skeleton skeleton-dot"></div>
                 <div class="skeleton skeleton-dot"></div>
@@ -1190,21 +1326,28 @@
             </div>
         </section>
         <section class="download-section">
-            <div class="skeleton skeleton-download"></div>
+            <div class="skeleton-download-container">
+                <div class="skeleton-text-content">
+                    <div class="skeleton skeleton-text-line short"></div>
+                    <div class="skeleton skeleton-text-line medium"></div>
+                    <div class="skeleton skeleton-text-line long"></div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+                <div class="skeleton-image-stack">
+                    <div class="skeleton-stack-image skeleton-stack-1"></div>
+                    <div class="skeleton-stack-image skeleton-stack-2"></div>
+                </div>
+            </div>
         </section>
     </div>
 
-    <!-- Status Message -->
     <div id="status-message" class="status-message hidden">Loading your project gallery...</div>
 
-    <!-- Gallery Section -->
     <section id="gallery-section" class="gallery-section hidden">
         <h2 class="section-title">Explore Your <span class="serif">Gallery</span></h2>
         
         <div class="gallery-carousel" id="carousel-container">
-            <div class="carousel-track" id="track">
-                <!-- Carousel images will be dynamically inserted here -->
-            </div>
+            <div class="carousel-track" id="track"></div>
             <button id="prev-btn" class="nav-btn">&#10094;</button>
             <button id="next-btn" class="nav-btn">&#10095;</button>
         </div>
@@ -1212,7 +1355,6 @@
         <div class="dots" id="dots"></div>
     </section>
 
-    <!-- Full Screen Modal -->
     <div class="modal" id="imageModal">
         <div class="modal-content">
             <img class="modal-image" id="modalImage" src="" alt="Full screen image">
@@ -1228,7 +1370,6 @@
         </div>
     </div>
 
-    <!-- Download Section - ALWAYS VISIBLE -->
     <section id="download-content" class="download-section hidden">
         <div class="download-container" id="download-container">
             <div class="text-content">
@@ -1247,14 +1388,12 @@
                 </a>
             </div>
             <div class="image-stack-container">
-                <!-- Extra images will be dynamically inserted here -->
                 <img id="gallery-img-1" class="image-stack-item hidden" data-speed="0.08" alt="Gallery image">
                 <img id="gallery-img-2" class="image-stack-item hidden" data-speed="0.03" alt="Gallery image">
             </div>
         </div>
     </section>
 
-    <!-- Footer Section -->
     <footer class="footer-section">
         <div class="footer-content">
             <div class="footer-logo-area">
@@ -1283,7 +1422,6 @@
         </div>
     </footer>
 
-    <!-- Firebase and Application Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
@@ -1301,7 +1439,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // UI Elements
         const skeletonLoading = document.getElementById('skeleton-loading');
         const statusMessage = document.getElementById('status-message');
         const gallerySection = document.getElementById('gallery-section');
@@ -1312,14 +1449,12 @@
         const galleryImg1 = document.getElementById('gallery-img-1');
         const galleryImg2 = document.getElementById('gallery-img-2');
         
-        // Modal Elements
         const imageModal = document.getElementById('imageModal');
         const modalImage = document.getElementById('modalImage');
         const modalClose = document.getElementById('modalClose');
         const modalPrev = document.getElementById('modalPrev');
         const modalNext = document.getElementById('modalNext');
 
-        // Mobile Menu Functionality
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuClose = document.getElementById('mobileMenuClose');
@@ -1341,17 +1476,14 @@
         mobileMenuClose.addEventListener('click', closeMenu);
         menuOverlay.addEventListener('click', closeMenu);
 
-        // Close menu when clicking on menu links
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.addEventListener('click', closeMenu);
         });
 
-        // Close menu when pressing Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeMenu();
         });
 
-        // Gallery Carousel Functionality
         let currentIndex = 0;
         let autoPlayInterval;
         let allImages = [];
@@ -1363,19 +1495,29 @@
 
         function initializeCarousel(images) {
             allImages = images;
-            // Clear existing content
             carouselTrack.innerHTML = '';
             
-            // Create image wrappers
             images.forEach((imageUrl, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'image-wrapper';
-                wrapper.innerHTML = `<img src="${imageUrl}" alt="Project image ${index + 1}" loading="lazy">`;
+                
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = `Project image ${index + 1}`;
+                img.loading = 'lazy';
+                
+                img.onload = function() {
+                    this.style.opacity = '1';
+                };
+                
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.3s ease';
+                
+                wrapper.appendChild(img);
                 wrapper.addEventListener('click', () => openModal(index));
                 carouselTrack.appendChild(wrapper);
             });
 
-            // Initialize dots
             const dotsContainer = document.getElementById('dots');
             dotsContainer.innerHTML = '';
             
@@ -1388,11 +1530,9 @@
 
             updateCarousel();
 
-            // Set up navigation
             document.getElementById('prev-btn').addEventListener('click', () => navigateCarousel(-1));
             document.getElementById('next-btn').addEventListener('click', () => navigateCarousel(1));
 
-            // Dot navigation
             dotsContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('dot')) {
                     const index = parseInt(e.target.dataset.index);
@@ -1400,13 +1540,9 @@
                 }
             });
 
-            // Touch and mouse events for dragging
             setupDragEvents();
-
-            // Auto-play - works on both mobile and desktop
             startAutoPlay();
             
-            // Pause on hover
             const carouselContainer = document.getElementById('carousel-container');
             carouselContainer.addEventListener('mouseenter', stopAutoPlay);
             carouselContainer.addEventListener('mouseleave', startAutoPlay);
@@ -1415,13 +1551,11 @@
         function setupDragEvents() {
             const carouselContainer = document.getElementById('carousel-container');
             
-            // Mouse events
             carouselContainer.addEventListener('mousedown', dragStart);
             carouselContainer.addEventListener('mousemove', drag);
             carouselContainer.addEventListener('mouseup', dragEnd);
             carouselContainer.addEventListener('mouseleave', dragEnd);
             
-            // Touch events
             carouselContainer.addEventListener('touchstart', dragStart);
             carouselContainer.addEventListener('touchmove', drag);
             carouselContainer.addEventListener('touchend', dragEnd);
@@ -1454,7 +1588,6 @@
             
             const diff = currentPosition - startPos;
             
-            // Only allow horizontal dragging with some resistance
             if (Math.abs(diff) > 10) {
                 currentTranslate = prevTranslate + diff * 0.5;
             }
@@ -1468,20 +1601,17 @@
             
             const movedBy = currentTranslate - prevTranslate;
             
-            // If drag was significant enough, change slide
             if (movedBy < -50) {
                 navigateCarousel(1);
             } else if (movedBy > 50) {
                 navigateCarousel(-1);
             }
             
-            // Reset transform
             currentTranslate = 0;
             prevTranslate = 0;
             carouselTrack.style.transform = '';
             carouselTrack.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)';
             
-            // Restart auto-play
             startAutoPlay();
         }
 
@@ -1527,13 +1657,22 @@
             }
         }
 
-        // Modal functionality
         let currentModalIndex = 0;
 
         function openModal(index) {
             stopAutoPlay();
             currentModalIndex = index;
-            modalImage.src = allImages[index];
+            
+            const img = new Image();
+            img.src = allImages[index];
+            img.onload = function() {
+                modalImage.src = allImages[index];
+                modalImage.style.opacity = '1';
+            };
+            
+            modalImage.style.opacity = '0';
+            modalImage.style.transition = 'opacity 0.3s ease';
+            
             imageModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1546,10 +1685,17 @@
 
         function navigateModal(direction) {
             currentModalIndex = (currentModalIndex + direction + allImages.length) % allImages.length;
-            modalImage.src = allImages[currentModalIndex];
+            
+            const img = new Image();
+            img.src = allImages[currentModalIndex];
+            img.onload = function() {
+                modalImage.src = allImages[currentModalIndex];
+                modalImage.style.opacity = '1';
+            };
+            
+            modalImage.style.opacity = '0';
         }
 
-        // Modal event listeners
         modalClose.addEventListener('click', closeModal);
         modalPrev.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1560,14 +1706,12 @@
             navigateModal(1);
         });
 
-        // Close modal when clicking outside the image
         imageModal.addEventListener('click', (e) => {
             if (e.target === imageModal) {
                 closeModal();
             }
         });
 
-        // Keyboard navigation for modal
         document.addEventListener('keydown', (e) => {
             if (!imageModal.classList.contains('active')) return;
             
@@ -1580,7 +1724,6 @@
             }
         });
 
-        // Main Application Logic
         document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const projectId = params.get('id');
@@ -1597,48 +1740,53 @@
                 if (docSnap.exists()) {
                     const projectData = docSnap.data();
                     
-                    // Update page content
                     document.title = `${projectData.name} - HV Photography`;
 
                     if (projectData.imageURLs && projectData.imageURLs.length > 0) {
                         const images = projectData.imageURLs;
-                        
-                        // Show first 7 images in carousel
                         const carouselImages = images.slice(0, 7);
+                        
                         if (carouselImages.length > 0) {
                             initializeCarousel(carouselImages);
                         }
 
-                        // Handle extra images in download section (images 8 and 9)
                         const extraImages = images.slice(7, 9);
                         
                         if (extraImages.length === 0) {
-                            // No extra images - hide image stack and center content
                             downloadContainer.classList.add('no-images');
                         } else {
-                            // We have extra images - show them
                             if (extraImages[0]) {
-                                galleryImg1.src = extraImages[0];
-                                galleryImg1.classList.remove('hidden');
-                                // Fix: Add click event to download section images
+                                const img1 = new Image();
+                                img1.src = extraImages[0];
+                                img1.onload = function() {
+                                    galleryImg1.src = extraImages[0];
+                                    galleryImg1.classList.remove('hidden');
+                                    galleryImg1.style.opacity = '1';
+                                };
+                                galleryImg1.style.opacity = '0';
+                                galleryImg1.style.transition = 'opacity 0.3s ease';
                                 galleryImg1.addEventListener('click', () => openModal(7));
                             }
                             if (extraImages[1]) {
-                                galleryImg2.src = extraImages[1];
-                                galleryImg2.classList.remove('hidden');
-                                // Fix: Add click event to download section images
+                                const img2 = new Image();
+                                img2.src = extraImages[1];
+                                img2.onload = function() {
+                                    galleryImg2.src = extraImages[1];
+                                    galleryImg2.classList.remove('hidden');
+                                    galleryImg2.style.opacity = '1';
+                                };
+                                galleryImg2.style.opacity = '0';
+                                galleryImg2.style.transition = 'opacity 0.3s ease';
                                 galleryImg2.addEventListener('click', () => openModal(8));
                             }
                         }
 
-                        // Set up download button
                         if (projectData.link) {
                             downloadButton.href = projectData.link;
                             downloadButton.target = '_blank';
                             downloadButton.rel = 'noopener noreferrer';
                         }
 
-                        // Hide skeleton and show actual content after a small delay for smooth transition
                         setTimeout(() => {
                             skeletonLoading.classList.add('hidden');
                             statusMessage.classList.add('hidden');
