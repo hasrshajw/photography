@@ -3,294 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Project</title>
+    <title>Project Gallery - HV Photography</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.firebasestorage.app",
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const projectNameTitle = document.getElementById('project-name');
-        const statusMessage = document.getElementById('status-message');
-        const mainContent = document.getElementById('main-content');
-        const carouselTrack = document.getElementById('track');
-        const dotsContainer = document.getElementById('dots');
-        const downloadSectionImages = document.querySelector('.image-stack-container');
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const params = new URLSearchParams(window.location.search);
-            const projectId = params.get('id');
-
-            if (!projectId) {
-                statusMessage.textContent = 'Error: No project ID provided. The link is invalid.';
-                statusMessage.className = 'status error';
-                mainContent.style.display = 'none';
-                return;
-            }
-
-            try {
-                const projectRef = doc(db, 'projects', projectId);
-                const docSnap = await getDoc(projectRef);
-
-                if (docSnap.exists()) {
-                    const projectData = docSnap.data();
-                    
-                    projectNameTitle.textContent = projectData.name;
-                    document.title = projectData.name;
-
-                    if (projectData.imageURLs && projectData.imageURLs.length > 0) {
-                        const allImages = projectData.imageURLs;
-                        const galleryImages = allImages.slice(0, 7);
-                        const extraImages = allImages.slice(7, 9);
-                        
-                        populateCarousel(galleryImages);
-                        
-                        if (extraImages.length > 0) {
-                            populateDownloadSection(extraImages);
-                        } else {
-                            document.querySelector('.image-stack-container').style.display = 'none';
-                        }
-                        
-                        initializeCarousel();
-                        
-                        const downloadButton = document.querySelector('.download-button');
-                        if (downloadButton && projectData.link) {
-                            downloadButton.href = projectData.link;
-                            downloadButton.target = '_blank';
-                        }
-                    } else {
-                        carouselTrack.innerHTML = '<div class="no-images-message">This project has no images.</div>';
-                        downloadSectionImages.style.display = 'none';
-                    }
-
-                    statusMessage.style.display = 'none';
-                    mainContent.style.display = 'block';
-
-                } else {
-                    statusMessage.textContent = 'Error: Project not found. It may have been deleted.';
-                    statusMessage.className = 'status error';
-                    mainContent.style.display = 'none';
-                }
-            } catch (error) {
-                console.error("Error fetching project:", error);
-                statusMessage.textContent = 'An error occurred while loading the project.';
-                statusMessage.className = 'status error';
-                mainContent.style.display = 'none';
-            }
-        });
-
-        function populateCarousel(images) {
-            carouselTrack.innerHTML = '';
-            
-            images.forEach((url, index) => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'image-wrapper';
-                
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = `Project image ${index + 1}`;
-                
-                link.appendChild(img);
-                wrapper.appendChild(link);
-                carouselTrack.appendChild(wrapper);
-            });
-        }
-
-        function populateDownloadSection(images) {
-            const stackContainer = document.querySelector('.image-stack-container');
-            stackContainer.innerHTML = '';
-            
-            images.forEach((url, index) => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = `Additional project image ${index + 1}`;
-                img.className = 'image-stack-item';
-                img.id = `gallery-img-${index + 1}`;
-                img.setAttribute('data-speed', index === 0 ? '0.08' : '0.03');
-                
-                stackContainer.appendChild(img);
-            });
-            
-            if (images.length === 1) {
-                document.getElementById('gallery-img-1').style.cssText = `
-                    width: 300px; height: 420px;
-                    top: 50%; left: 50%;
-                    transform: translate(-50%, -50%) rotateZ(-5deg);
-                    z-index: 1;
-                `;
-            }
-        }
-
-        function initializeCarousel() {
-            const imageWrappers = document.querySelectorAll('.gallery-carousel .image-wrapper');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const total = imageWrappers.length;
-            const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
-            const offsetByClass = { 'pos-3':-3, 'pos-2':-2, 'pos-1':-1, 'pos0':0, 'pos1':1, 'pos2':2, 'pos3':3 };
-
-            let idx = 0, auto = null;
-            let startX = 0, lastX = 0, velocity = 0, lastTime = 0;
-
-            dotsContainer.innerHTML = '';
-            for (let i = 0; i < total; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.dataset.idx = i;
-                dotsContainer.appendChild(dot);
-            }
-            const dots = document.querySelectorAll('.dot');
-
-            function update() {
-                for (let i = 0; i < positions.length; i++) {
-                    const wrapperIdx = (idx + i - 3 + total) % total;
-                    if (imageWrappers[wrapperIdx]) {
-                        imageWrappers[wrapperIdx].className = 'image-wrapper ' + positions[i];
-                    }
-                }
-                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-            }
-
-            function go(dir) {
-                idx = (idx + dir + total) % total;
-                update();
-            }
-
-            function startAuto(){ 
-                if (total > 1) {
-                    auto = setInterval(() => go(1), 3000); 
-                }
-            }
-            function stopAuto(){ clearInterval(auto); }
-
-            prevBtn.addEventListener('click', () => {
-                stopAuto();
-                go(-1);
-                startAuto();
-            });
-
-            nextBtn.addEventListener('click', () => {
-                stopAuto();
-                go(1);
-                startAuto();
-            });
-
-            const carouselContainer = document.getElementById('carousel-container');
-            carouselContainer.addEventListener('touchstart', e => {
-                stopAuto();
-                startX = e.touches[0].clientX;
-                lastX = startX;
-                lastTime = Date.now();
-                velocity = 0;
-            });
-            carouselContainer.addEventListener('touchmove', e => {
-                const currentX = e.touches[0].clientX;
-                const deltaX = currentX - lastX;
-                const deltaTime = Date.now() - lastTime;
-                velocity = deltaX / Math.max(1, deltaTime);
-                lastX = currentX;
-                lastTime = Date.now();
-            });
-            carouselContainer.addEventListener('touchend', () => {
-                const distance = lastX - startX;
-                if (Math.abs(distance) > 40) {
-                    const dir = distance < 0 ? 1 : -1;
-                    const momentum = Math.abs(velocity) > 0.5 ? 2 : 1;
-                    go(dir * momentum);
-                }
-                startAuto();
-            });
-
-            imageWrappers.forEach((wrapper) => {
-                wrapper.addEventListener('click', (e) => {
-                    const cls = [...wrapper.classList].find(c => c.startsWith('pos'));
-                    const offset = offsetByClass[cls] ?? 0;
-
-                    if (offset !== 0) {
-                        e.preventDefault();
-                        stopAuto();
-                        idx = (idx + offset + total) % total;
-                        update();
-                        startAuto();
-                    }
-                }, { capture:true });
-            });
-
-            dots.forEach(d => d.addEventListener('click', () => {
-                stopAuto();
-                idx = +d.dataset.idx;
-                update();
-                startAuto();
-            }));
-
-            carouselContainer.addEventListener('mouseenter', stopAuto);
-            carouselContainer.addEventListener('mouseleave', startAuto);
-
-            if (total > 0) {
-                update();
-                startAuto();
-            }
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            const downloadContainer = document.querySelector('.download-container');
-            if (downloadContainer) {
-                observer.observe(downloadContainer);
-            }
-
-            window.addEventListener('scroll', () => {
-                if (window.innerWidth > 768) {
-                    const scrollY = window.scrollY;
-                    const images = document.querySelectorAll('.image-stack-item');
-                    const section = document.querySelector('.download-section');
-                    if (section) {
-                        const sectionTop = section.offsetTop;
-                        images.forEach(img => {
-                            const speed = parseFloat(img.getAttribute('data-speed')) || 0;
-                            const yPos = -(scrollY - sectionTop) * speed;
-                            img.style.transform = `translateY(${yPos}px) rotateZ(${img.id === 'gallery-img-1' ? '-5' : '5'}deg)`;
-                        });
-                    }
-                }
-            });
-        }
-    </script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- Google Font Import & Variables --- */
         :root {
             --primary-bg: #fefefe;
             --secondary-bg: #f8f8f8;
@@ -303,22 +23,20 @@
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --radius: 12px;
             
-            --spacing: 0.25rem;
-            --color-gray-200: oklch(92.8% 0.006 264.531);
             --color-white: #fff;
             --color-black: #000;
             --color-dark-teal: #012726;
             --color-teal-hover: #004D4B;
             --color-vibrant-teal: #005F5C;
-            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            --font-weight-medium: 500;
-            --font-weight-normal: 400;
-            --font-weight-bold: 700;
-            --text-base: 1rem;
-            --text-base--line-height: 1.5;
-            --radius-md: 0.375rem;
-            --default-transition-duration: 0.15s;
-            --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        /* --- Universal Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -330,14 +48,12 @@
             color: var(--text-primary);
         }
 
+        /* --- Header Styles --- */
         .header {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 50;
-            transition-property: all;
-            transition-duration: 0.3s;
-            transition-timing-function: var(--default-transition-timing-function);
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -345,39 +61,12 @@
 
         .header-container {
             width: 90%;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
             max-width: 1400px;
         }
 
-        @media (min-width: 48rem) {
-            .header-container {
-                width: 90%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-container {
-                padding-left: 16px;
-                padding-right: 16px;
-                width: 100%;
-            }
-            .nav-left, .nav-right {
-                margin: 0;
-                padding: 0;
-            }
-            .logo, .menu-button {
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                padding-top: 70px;
-            }
-        }
-
         .nav {
-            padding-top: calc(var(--spacing) * 3);
-            padding-bottom: calc(var(--spacing) * 3);
+            padding: 1rem 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -386,18 +75,10 @@
         .nav-left {
             display: flex;
             align-items: center;
-            gap: calc(var(--spacing) * 6);
+            gap: 2rem;
         }
-        
-        @media (max-width: 768px) {
-            .nav {
-                padding-top: calc(var(--spacing) * 2);
-                padding-bottom: calc(var(--spacing) * 2);
-            }
-        }
-        
+
         .logo {
-            margin-right: calc(var(--spacing) * 6);
             height: 40px;
             width: auto;
             transition: transform 0.3s ease;
@@ -410,30 +91,24 @@
         .nav-links {
             display: none;
             align-items: center;
-            gap: calc(var(--spacing) * 2);
+            gap: 0.5rem;
         }
 
-        @media (min-width: 48rem) {
+        @media (min-width: 768px) {
             .nav-links {
                 display: flex;
             }
         }
 
         .nav-link {
-            padding-left: calc(var(--spacing) * 4);
-            padding-right: calc(var(--spacing) * 4);
-            padding-top: calc(var(--spacing) * 2);
-            padding-bottom: calc(var(--spacing) * 2);
-            font-size: var(--text-base);
-            line-height: var(--text-base--line-height);
-            font-weight: var(--font-weight-medium);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
             color: var(--text-primary);
-            transition-property: color, background-color;
-            transition-duration: var(--default-transition-duration);
-            transition-timing-function: var(--default-transition-timing-function);
             text-decoration: none;
-            border-radius: var(--radius-md);
+            border-radius: 6px;
             position: relative;
+            transition: var(--transition);
         }
 
         .nav-link:after {
@@ -448,28 +123,25 @@
             transform: translateX(-50%);
         }
 
-        @media (hover: hover) {
-            .nav-link:hover {
-                color: var(--color-dark-teal);
-                background-color: transparent;
-            }
-            
-            .nav-link:hover:after {
-                width: 70%;
-            }
+        .nav-link:hover {
+            color: var(--color-dark-teal);
+        }
+
+        .nav-link:hover:after {
+            width: 70%;
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: calc(var(--spacing) * 4);
+            gap: 1rem;
         }
 
         .menu-button {
             display: flex;
-            padding: calc(var(--spacing) * 1.5);
+            padding: 0.5rem;
             border: 1px solid var(--color-dark-teal);
-            border-radius: var(--radius-md);
+            border-radius: 6px;
             color: var(--color-dark-teal);
             background-color: transparent;
             cursor: pointer;
@@ -481,12 +153,55 @@
             color: white;
         }
 
-        @media (min-width: 48rem) {
+        @media (min-width: 768px) {
             .menu-button {
                 display: none;
             }
         }
 
+        .auth-button {
+            padding: 0.5rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid var(--color-dark-teal);
+            border-radius: 6px;
+            color: var(--color-dark-teal);
+            transition: var(--transition);
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .auth-button.submit {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+            border: none;
+        }
+
+        .auth-button:hover {
+            color: var(--color-white);
+            background-color: var(--color-teal-hover);
+        }
+
+        .mobile-auth-button {
+            display: inline-block;
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-auth-button {
+                display: none;
+            }
+            .auth-buttons {
+                display: flex;
+            }
+        }
+
+        .auth-buttons {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Mobile Menu */
         #mobileMenu {
             position: fixed;
             top: 0;
@@ -529,21 +244,9 @@
             border-radius: 8px;
             border: none;
             background: transparent;
-            transition: background 0.2s ease, transform 0.2s ease;
             align-self: flex-end;
             margin-bottom: 24px;
             cursor: pointer;
-        }
-
-        .mobile-menu-close svg {
-            width: 24px;
-            height: 24px;
-            color: #4b5563;
-        }
-
-        .mobile-menu-content {
-            flex-grow: 1;
-            overflow-y: auto;
         }
 
         .mobile-nav-links {
@@ -566,7 +269,7 @@
         .mobile-nav-link:hover {
             background-color: #f8f9fa;
         }
-        
+
         .mobile-menu-auth {
             flex-shrink: 0;
             padding-top: 20px;
@@ -594,214 +297,127 @@
             color: var(--color-white);
         }
 
-        .mobile-menu-auth-button.join {
-            border: 1px solid #d1d5db;
-            color: #4b5563;
-        }
-
-        @media (hover: hover) {
-            .mobile-menu-auth-button.submit:hover {
-                background: var(--color-teal-hover);
-            }
-            .mobile-menu-auth-button.join:hover {
-                background: #f3f4f6;
-            }
-        }
-
-        .auth-buttons {
-            display: none;
-            align-items: center;
-            gap: calc(var(--spacing) * 4);
-        }
-
-        @media (min-width: 48rem) {
-            .auth-buttons {
-                display: flex;
-            }
-        }
-
-        .auth-button {
-            padding-left: calc(var(--spacing) * 5);
-            padding-right: calc(var(--spacing) * 5);
-            padding-top: calc(var(--spacing) * 2);
-            padding-bottom: calc(var(--spacing) * 2);
-            font-size: var(--text-base);
-            line-height: var(--text-base--line-height);
-            font-weight: var(--font-weight-medium);
-            border: 1px solid var(--color-dark-teal);
-            border-radius: var(--radius-md);
-            color: var(--color-dark-teal);
-            transition-property: color, background-color;
-            transition-duration: var(--default-transition-duration);
-            transition-timing-function: var(--default-transition-timing-function);
-            text-decoration: none;
-            background-color: transparent;
-        }
-
-        .auth-button.submit {
-            background-color: var(--color-dark-teal);
-            color: var(--color-white);
-            border: none;
-        }
-
-        @media (hover: hover) {
-            .auth-button:hover {
-                color: var(--color-white);
-                background-color: var(--color-teal-hover);
-            }
-            .auth-button.submit:hover {
-                background-color: var(--color-teal-hover);
-            }
-        }
-
-        .mobile-auth-button {
-            display: inline-block;
-        }
-        
-        @media (min-width: 48rem) {
-            .mobile-auth-button {
-                display: none;
-            }
-        }
-
         .divider {
             height: 1px;
-            background-color: var(--color-gray-200);
+            background-color: #e5e7eb;
         }
 
-        @media (max-width: 768px) {
-            .divider {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-        }
-
-        .gallery-section {
-            width: 100%;
-            max-width: 1100px;
+        /* --- Project Header --- */
+        .project-header {
             text-align: center;
-            padding: 80px 0;
-            margin: 0 auto;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
         }
 
-        .gallery-section h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
+        .project-header h1 {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
             font-weight: 600;
+            margin-bottom: 1rem;
             color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            line-height: 1.15;
         }
 
-        .gallery-section h2 .serif {
-            font-family: 'Playfair Display', serif;
+        .project-header .serif {
             font-style: italic;
             color: var(--color-dark-teal);
         }
 
+        /* --- Gallery Section --- */
+        .gallery-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+        }
+
+        .section-title .serif {
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
+        /* Carousel Styles */
         .gallery-carousel {
-            position:relative;
-            width:100%;
-            height:420px;
-            perspective:1200px;
-            overflow:hidden;
-            touch-action:pan-y;
+            position: relative;
+            width: 100%;
+            height: 500px;
+            perspective: 1200px;
+            overflow: hidden;
+            touch-action: pan-y;
             margin: 0 auto;
         }
 
-        .carousel-track{
-            position:absolute;
-            width:100%;
-            height:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            transition:transform .9s cubic-bezier(.25,.8,.25,1);
+        .carousel-track {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
             will-change: transform;
         }
 
-        .gallery-carousel .image-wrapper {
+        .image-wrapper {
             position: absolute;
-            width: 240px;
-            height: 360px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 280px;
+            height: 420px;
             border-radius: 16px;
             box-shadow: var(--shadow);
-            transition: all .8s cubic-bezier(.25,.8,.25,1);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
             transform-style: preserve-3d;
             background-color: var(--secondary-bg);
             overflow: hidden;
             cursor: pointer;
         }
 
-        .gallery-carousel .image-wrapper a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .gallery-carousel img{
+        .image-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius:16px;
-            background-color: var(--secondary-bg);
-            -webkit-user-drag: none;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
         }
 
-        .pos-3{transform:translateX(-460px) scale(.75) rotateY(30deg);z-index:1}
-        .pos-2{transform:translateX(-320px) scale(.85) rotateY(20deg);z-index:2}
-        .pos-1{transform:translateX(-170px) scale(.95) rotateY(10deg);z-index:3}
-        .pos0 {transform:translateX(0) scale(1.1);z-index:5}
-        .pos1 {transform:translateX(170px) scale(.95) rotateY(-10deg);z-index:3}
-        .pos2 {transform:translateX(320px) scale(.85) rotateY(-20deg);z-index:2}
-        .pos3 {transform:translateX(460px) scale(.75) rotateY(-30deg);z-index:1}
-
-        .image-wrapper:not(.pos0) a { pointer-events: none; }
-
-        .dots{ 
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin-top:25px; 
+        .image-wrapper:hover img {
+            transform: scale(1.05);
         }
 
-        .dot{ 
-            width:10px;
-            height:10px;
-            background:#ddd;
-            border-radius:50%;
-            transition:.3s;
-            cursor:pointer; 
+        /* Carousel Positions */
+        .pos-3 { transform: translateX(-500px) scale(0.75) rotateY(30deg); z-index: 1; }
+        .pos-2 { transform: translateX(-350px) scale(0.85) rotateY(20deg); z-index: 2; }
+        .pos-1 { transform: translateX(-180px) scale(0.95) rotateY(10deg); z-index: 3; }
+        .pos0 { transform: translateX(0) scale(1.1); z-index: 5; }
+        .pos1 { transform: translateX(180px) scale(0.95) rotateY(-10deg); z-index: 3; }
+        .pos2 { transform: translateX(350px) scale(0.85) rotateY(-20deg); z-index: 2; }
+        .pos3 { transform: translateX(500px) scale(0.75) rotateY(-30deg); z-index: 1; }
+
+        .image-wrapper:not(.pos0) {
+            pointer-events: none;
         }
 
-        .dot.active{
-            background:var(--color-dark-teal);
-            transform:scale(1.3)
-        }
-
+        /* Navigation */
         .nav-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             font-size: 20px;
-            line-height: 1;
             z-index: 10;
             display: flex;
             justify-content: center;
@@ -809,21 +425,43 @@
             transition: var(--transition);
         }
 
-        .nav-btn:hover { 
-            background-color: var(--color-dark-teal); 
+        .nav-btn:hover {
+            background-color: var(--color-dark-teal);
+            transform: translateY(-50%) scale(1.1);
         }
 
-        #prev-btn { left: 10px; }
-        #next-btn { right: 10px; }
+        #prev-btn { left: 20px; }
+        #next-btn { right: 20px; }
 
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 50%;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--color-dark-teal);
+            transform: scale(1.3);
+        }
+
+        /* --- Download Section --- */
         .download-section {
             width: 100%;
-            padding: 140px 40px;
+            padding: 4rem 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            background-color: var(--primary-bg);
+            background-color: var(--secondary-bg);
         }
 
         .download-container {
@@ -849,15 +487,19 @@
         }
 
         .text-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
             font-weight: 600;
             line-height: 1.2;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
         }
         
-        .text-content h2 .serif { font-style: italic; color: var(--color-dark-teal); }
+        .text-content h2 .serif {
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
         .text-content p {
             font-size: 1.1rem;
             color: var(--text-secondary);
@@ -880,71 +522,99 @@
             object-fit: cover;
             border: 5px solid white;
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-            width: 100%;
-            height: 100%;
         }
 
         #gallery-img-1 {
-            width: 300px; height: 420px;
-            top: 50%; left: 0;
+            width: 300px;
+            height: 420px;
+            top: 50%;
+            left: 0;
             transform: translateY(-50%) rotateZ(-5deg);
             z-index: 1;
         }
 
         #gallery-img-2 {
-            width: 320px; height: 240px;
-            top: 50%; right: 0;
+            width: 320px;
+            height: 240px;
+            top: 50%;
+            right: 0;
             transform: translateY(-50%) rotateZ(5deg);
             z-index: 3;
         }
-        
-        @media (hover: hover) {
-            .image-stack-container:hover #gallery-img-1 {
-                transform: translateY(-55%) rotateZ(-8deg) scale(1.03);
-            }
-            .image-stack-container:hover #gallery-img-2 {
-                transform: translateY(-45%) rotateZ(8deg) scale(1.03);
-            }
+
+        .image-stack-container:hover #gallery-img-1 {
+            transform: translateY(-55%) rotateZ(-8deg) scale(1.03);
         }
 
-        .text-content > *, .image-stack-item {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        .image-stack-container:hover #gallery-img-2 {
+            transform: translateY(-45%) rotateZ(8deg) scale(1.03);
         }
-
-        .download-container.is-visible .text-content > *,
-        .download-container.is-visible .image-stack-item {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .download-container.is-visible .eyebrow-text { transition-delay: 0.1s; }
-        .download-container.is-visible h2 { transition-delay: 0.2s; }
-        .download-container.is-visible p { transition-delay: 0.3s; }
-        .download-container.is-visible .download-button { transition-delay: 0.4s; }
-        .download-container.is-visible #gallery-img-1 { transition-delay: 0.2s; }
-        .download-container.is-visible #gallery-img-2 { transition-delay: 0.4s; }
 
         .download-button {
-            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             background: linear-gradient(110deg, var(--color-vibrant-teal), var(--color-dark-teal) 45%, var(--color-vibrant-teal) 55%, var(--color-dark-teal));
-            background-size: 250% 100%; color: #fff; border: none; padding: 18px 40px; border-radius: 12px;
-            font-size: 1.1rem; font-weight: 600; text-decoration: none; cursor: pointer;
-            box-shadow: 0 5px 20px rgba(1, 39, 38, 0.2); position: relative; overflow: hidden;
+            background-size: 250% 100%;
+            color: #fff;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(1, 39, 38, 0.2);
+            position: relative;
+            overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             animation: gradient-shimmer 4s linear infinite;
         }
-        .download-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 75%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent); transform: skewX(-25deg); transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .download-button:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 35px rgba(1, 39, 38, 0.3); animation-play-state: paused; }
-        .download-button:hover::before { left: 150%; }
-        .download-button svg { width: 22px; height: 22px; stroke: #fff; stroke-width: 2.5; transition: transform 0.3s ease; }
-        .download-button:hover svg { transform: translateX(5px); }
-        @keyframes gradient-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 75%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .download-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(1, 39, 38, 0.3);
+            animation-play-state: paused;
+        }
+
+        .download-button:hover::before {
+            left: 150%;
+        }
+
+        .download-button svg {
+            width: 22px;
+            height: 22px;
+            stroke: #fff;
+            stroke-width: 2.5;
+            transition: transform 0.3s ease;
+        }
+
+        .download-button:hover svg {
+            transform: translateX(5px);
+        }
+
+        @keyframes gradient-shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* --- Footer Section --- */
         .footer-section {
             background-color: var(--color-dark-teal);
-            padding: 80px 40px 40px;
+            padding: 4rem 2rem 2rem;
             color: #ffffff;
         }
 
@@ -955,14 +625,14 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 40px;
+            gap: 2rem;
         }
 
         .footer-logo-area {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 1rem;
         }
 
         .footer-logo-img {
@@ -978,7 +648,7 @@
         }
 
         .footer-cta {
-            margin: 20px 0;
+            margin: 1rem 0;
         }
 
         .footer-cta-button {
@@ -1007,12 +677,12 @@
 
         .footer-bottom {
             width: 100%;
-            padding-top: 40px;
+            padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 1rem;
         }
 
         .copyright-text {
@@ -1022,7 +692,7 @@
 
         .footer-links {
             display: flex;
-            gap: 24px;
+            gap: 1.5rem;
         }
 
         .footer-links a {
@@ -1036,174 +706,175 @@
             color: #ffffff;
         }
 
-        .status {
+        /* --- Status Messages --- */
+        .status-message {
             text-align: center;
-            font-size: 1.2rem;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 600px;
-            border-radius: 12px;
-        }
-        .status.loading { color: var(--text-secondary); }
-        .status.error { background-color: #FEE2E2; color: #991B1B; }
-
-        .no-images-message {
-            text-align: center;
+            padding: 3rem 1rem;
             font-size: 1.2rem;
             color: var(--text-secondary);
-            padding: 2rem;
         }
 
-        @media (max-width: 1200px) {
-            .gallery-section h2 {
-                font-size: 2.8rem;
-            }
-            
-            .text-content h2 {
-                font-size: 2.8rem;
-            }
+        .status-error {
+            color: #dc2626;
+            background-color: #fef2f2;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 600px;
         }
 
-        @media (max-width: 900px){
-            .gallery-section { 
-                padding: 60px 0; 
-            }
-            
-            .gallery-section h2 { 
-                font-size: 2.2rem; 
-                margin-bottom: 1rem; 
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .project-header h1 {
+                font-size: 3rem;
             }
 
-            .gallery-carousel { 
-                height: 360px; 
-            }
-            
-            .gallery-carousel .image-wrapper, 
-            .gallery-carousel img {
-                max-width: 200px;
-                max-height: 300px;
-            }
-            
-            .pos-3{transform:translateX(-360px) scale(.70) rotateY(35deg)}
-            .pos-2{transform:translateX(-240px) scale(.80) rotateY(25deg)}
-            .pos-1{transform:translateX(-120px) scale(.90) rotateY(12deg)}
-            .pos0 {transform:translateX(0) scale(1.05)}
-            .pos1 {transform:translateX(120px) scale(.90) rotateY(-12deg)}
-            .pos2 {transform:translateX(240px) scale(.80) rotateY(-25deg)}
-            .pos3 {transform:translateX(360px) scale(.70) rotateY(-35deg)}
-            
-            .dots { 
-                margin-top: 20px; 
+            .gallery-carousel {
+                height: 450px;
             }
 
-            .download-section { 
-                padding: 80px 24px; 
-            }
-            
-            .download-container { 
-                flex-direction: column; 
-            }
-            
-            .text-content, .image-stack-container { 
-                width: 100%; 
-            }
-            
-            .text-content { 
-                text-align: left; 
-                margin-bottom: 50px; 
-            }
-            
-            .text-content h2 { 
-                font-size: 2.5rem; 
-            }
-            
-            .image-stack-container { 
-                height: 350px; 
-            }
-            
-            #gallery-img-1 { 
-                width: 200px; 
-                height: 280px; 
-                transform: translateY(-50%) rotateZ(-8deg); 
-            }
-            
-            #gallery-img-2 { 
-                width: 220px; 
-                height: 165px; 
-                transform: translateY(-50%) rotateZ(8deg); 
-            }
-            
-            .download-button { 
-                display: flex; 
-                width: 100%; 
-                padding: 18px 24px; 
-                font-size: 1.1rem; 
+            .image-wrapper {
+                width: 240px;
+                height: 360px;
             }
 
-            .footer-section {
-                padding: 60px 24px 30px;
-            }
+            .pos-3 { transform: translateX(-420px) scale(0.75) rotateY(30deg); }
+            .pos-2 { transform: translateX(-280px) scale(0.85) rotateY(20deg); }
+            .pos-1 { transform: translateX(-140px) scale(0.95) rotateY(10deg); }
+            .pos1 { transform: translateX(140px) scale(0.95) rotateY(-10deg); }
+            .pos2 { transform: translateX(280px) scale(0.85) rotateY(-20deg); }
+            .pos3 { transform: translateX(420px) scale(0.75) rotateY(-30deg); }
         }
 
         @media (max-width: 768px) {
-            .gallery-section { 
-                padding: 40px 0; 
-            }
-            
-            .gallery-section h2 { 
-                font-size: 2rem; 
-                margin-bottom: 0.8rem; 
+            body {
+                padding-top: 70px;
             }
 
-            .gallery-carousel { 
-                height: 300px; 
-            }
-            
-            .gallery-carousel .image-wrapper, 
-            .gallery-carousel img {
-                max-width: 160px;
-                max-height: 240px;
-            }
-            
-            .pos-3{transform:translateX(-280px) scale(.65)}
-            .pos-2{transform:translateX(-190px) scale(.75)}
-            .pos-1{transform:translateX(-95px) scale(.88)}
-            .pos0 {transform:translateX(0) scale(1.0)}
-            .pos1 {transform:translateX(95px) scale(.88)}
-            .pos2 {transform:translateX(190px) scale(.75)}
-            .pos3 {transform:translateX(280px) scale(.65)}
-            
-            .dots { 
-                margin-top: 15px; 
-            }
-            
-            #prev-btn { 
-                left: 5px; 
-            }
-            
-            #next-btn { 
-                right: 5px; 
+            .project-header {
+                padding: 2rem 1rem;
             }
 
-            .text-content h2 { 
-                font-size: 2rem; 
+            .project-header h1 {
+                font-size: 2.5rem;
             }
 
-            .footer-cta-button {
-                padding: 16px 32px;
-                font-size: 1rem;
+            .gallery-section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .gallery-carousel {
+                height: 400px;
+            }
+
+            .image-wrapper {
+                width: 200px;
+                height: 300px;
+            }
+
+            .pos-3 { transform: translateX(-320px) scale(0.7) rotateY(35deg); }
+            .pos-2 { transform: translateX(-200px) scale(0.8) rotateY(25deg); }
+            .pos-1 { transform: translateX(-100px) scale(0.9) rotateY(12deg); }
+            .pos0 { transform: translateX(0) scale(1.05); }
+            .pos1 { transform: translateX(100px) scale(0.9) rotateY(-12deg); }
+            .pos2 { transform: translateX(200px) scale(0.8) rotateY(-25deg); }
+            .pos3 { transform: translateX(320px) scale(0.7) rotateY(-35deg); }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+            }
+
+            #prev-btn { left: 10px; }
+            #next-btn { right: 10px; }
+
+            .download-section {
+                padding: 3rem 1rem;
+            }
+
+            .download-container {
+                flex-direction: column;
+            }
+
+            .text-content, .image-stack-container {
+                width: 100%;
+            }
+
+            .text-content {
+                text-align: left;
+                margin-bottom: 3rem;
+            }
+
+            .text-content h2 {
+                font-size: 2rem;
+            }
+
+            .image-stack-container {
+                height: 350px;
+            }
+
+            #gallery-img-1 {
+                width: 200px;
+                height: 280px;
+                transform: translateY(-50%) rotateZ(-8deg);
+            }
+
+            #gallery-img-2 {
+                width: 220px;
+                height: 165px;
+                transform: translateY(-50%) rotateZ(8deg);
+            }
+
+            .download-button {
+                display: flex;
+                width: 100%;
+                padding: 18px 24px;
+                font-size: 1.1rem;
+            }
+
+            .footer-section {
+                padding: 3rem 1rem 1.5rem;
             }
 
             .footer-links {
                 flex-direction: column;
-                gap: 12px;
+                gap: 0.75rem;
             }
         }
 
         @media (max-width: 480px) {
-            .gallery-section h2 {
+            .project-header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
                 font-size: 1.8rem;
             }
+
+            .gallery-carousel {
+                height: 350px;
+            }
+
+            .image-wrapper {
+                width: 160px;
+                height: 240px;
+            }
+
+            .pos-3 { transform: translateX(-250px) scale(0.65); }
+            .pos-2 { transform: translateX(-160px) scale(0.75); }
+            .pos-1 { transform: translateX(-80px) scale(0.88); }
+            .pos0 { transform: translateX(0) scale(1.0); }
+            .pos1 { transform: translateX(80px) scale(0.88); }
+            .pos2 { transform: translateX(160px) scale(0.75); }
+            .pos3 { transform: translateX(250px) scale(0.65); }
 
             .text-content h2 {
                 font-size: 1.8rem;
@@ -1212,166 +883,349 @@
     </style>
 </head>
 <body>
-    <p id="status-message" class="status loading">Loading Project...</p>
-
-    <div id="main-content" style="display: none;">
-        <header class="header">
-            <div class="header-container">
-                <nav class="nav">
-                    <div class="nav-left">
-                        <a href="/">
-                            <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
-                        </a>
-                        <div class="nav-links">
-                            <a class="nav-link" href="/home">Home</a>
-                            <a class="nav-link" href="/about">About</a>
-                            <a class="nav-link" href="/services">Services</a>
-                            <a class="nav-link" href="/gallery">Gallery</a>
-                            <a class="nav-link" href="/contact">Contact</a>
-                        </div>
-                    </div>
-                    <div class="nav-right">
-                        <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
-                        
-                        <button class="menu-button" id="mobileMenuButton">
-                            <svg width="24" height="24" viewBox="0 0 24" fill="none">
-                                <path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                            </svg>
-                        </button>
-                        
-                        <div class="auth-buttons">
-                            <a class="auth-button submit" href="/book-us">Book Us</a>
-                        </div>
-                    </div>
-                </nav>
-                <div id="mobileMenu">
-                    <div class="mobile-menu-close" id="mobileMenuClose">
-                        <svg viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </div>
-                    <div class="mobile-menu-content">
-                        <div class="mobile-nav-links">
-                            <a href="/home" class="mobile-nav-link">Home</a>
-                            <a href="/about" class="mobile-nav-link">About</a>
-                            <a href="/services" class="mobile-nav-link">Services</a>
-                            <a href="/gallery" class="mobile-nav-link">Gallery</a>
-                            <a href="/contact" class="mobile-nav-link">Contact</a>
-                        </div>
-                    </div>
-                    <div class="mobile-menu-auth">
-                        <div class="mobile-menu-auth-buttons">
-                            <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
-                        </div>
-                    </div>
-                </div>
-                <div id="menuOverlay"></div>
-                <div class="divider"></div>
-            </div>
-        </header>
-
-        <section class="gallery-section">
-            <h2>Explore Your <span class="serif">Gallery</span></h2>
-
-            <div class="gallery-carousel" id="carousel-container">
-                <div class="carousel-track" id="track"></div>
-                <button id="prev-btn" class="nav-btn">&#10094;</button>
-                <button id="next-btn" class="nav-btn">&#10095;</button>
-            </div>
-
-            <div class="dots" id="dots"></div>
-        </section>
-
-        <section class="download-section">
-            <div class="download-container">
-                <div class="text-content">
-                    <p class="eyebrow-text">Your Memories, Delivered</p>
-                    <h2>Your Gallery is <span class="serif">Ready!</span></h2>
-                    <p>
-                        We've put the finishing touches on your collection. Each image has been professionally edited and is now available in high-resolution, ready to be shared and cherished.
-                    </p>
-                    <a href="#" class="download-button" download>
-                        Download Your Album
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    <!-- Navbar -->
+    <header class="header">
+        <div class="header-container">
+            <nav class="nav">
+                <div class="nav-left">
+                    <a href="/">
+                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
                     </a>
+                    <div class="nav-links">
+                        <a class="nav-link" href="/home">Home</a>
+                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/services">Services</a>
+                        <a class="nav-link" href="/gallery">Gallery</a>
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </div>
                 </div>
-                <div class="image-stack-container">
-                    <!-- Dynamic images will be inserted here -->
+                <div class="nav-right">
+                    <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
+                    <button class="menu-button" id="mobileMenuButton">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <div class="auth-buttons">
+                        <a class="auth-button submit" href="/book-us">Book Us</a>
+                    </div>
                 </div>
-            </div>
-        </section>
-
-        <footer class="footer-section">
-            <div class="footer-content">
-                <div class="footer-logo-area">
-                    <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
-                    <p class="logo-tagline">Capturing Life's Timeless Moments with Professional Photography Services</p>
+            </nav>
+            <div id="mobileMenu">
+                <button class="mobile-menu-close" id="mobileMenuClose">
+                    <i class='bx bx-x'></i>
+                </button>
+                <div class="mobile-nav-links">
+                    <a href="/home" class="mobile-nav-link">Home</a>
+                    <a href="/about" class="mobile-nav-link">About</a>
+                    <a href="/services" class="mobile-nav-link">Services</a>
+                    <a href="/gallery" class="mobile-nav-link">Gallery</a>
+                    <a href="/contact" class="mobile-nav-link">Contact</a>
                 </div>
-                
-                <div class="footer-cta">
-                    <a href="/book-us" class="footer-cta-button">
-                        Book Your Session Now
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14"></path>
-                            <path d="m12 5 7 7-7 7"></path>
-                        </svg>
-                    </a>
-                </div>
-                
-                <div class="footer-bottom">
-                    <p class="copyright-text">&copy; 2024 HV Photography. All rights reserved.</p>
-                    <div class="footer-links">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Contact Us</a>
+                <div class="mobile-menu-auth">
+                    <div class="mobile-menu-auth-buttons">
+                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
                     </div>
                 </div>
             </div>
-        </footer>
-    </div>
+            <div id="menuOverlay"></div>
+            <div class="divider"></div>
+        </div>
+    </header>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuClose = document.getElementById('mobileMenuClose');
-            const menuOverlay = document.getElementById('menuOverlay');
+    <!-- Project Header -->
+    <section class="project-header">
+        <h1 id="project-name">Project <span class="serif">Gallery</span></h1>
+    </section>
 
-            const openMenu = () => {
-                mobileMenu.classList.add('active');
-                menuOverlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            };
+    <!-- Status Message -->
+    <div id="status-message" class="status-message">Loading your project gallery...</div>
 
-            const closeMenu = () => {
-                mobileMenu.classList.remove('active');
-                menuOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            };
+    <!-- Gallery Section -->
+    <section id="gallery-section" class="gallery-section hidden">
+        <h2 class="section-title">Explore Your <span class="serif">Gallery</span></h2>
+        
+        <div class="gallery-carousel" id="carousel-container">
+            <div class="carousel-track" id="track">
+                <!-- Carousel images will be dynamically inserted here -->
+            </div>
+            <button id="prev-btn" class="nav-btn">&#10094;</button>
+            <button id="next-btn" class="nav-btn">&#10095;</button>
+        </div>
 
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', openMenu);
-            }
+        <div class="dots" id="dots"></div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download-section" class="download-section hidden">
+        <div class="download-container">
+            <div class="text-content">
+                <p class="eyebrow-text">Your Memories, Delivered</p>
+                <h2>Your Gallery is <span class="serif">Ready!</span></h2>
+                <p>
+                    We've put the finishing touches on your collection. Each image has been professionally edited and is now available in high-resolution, ready to be shared and cherished.
+                </p>
+                <a href="#" class="download-button" id="download-button" download>
+                    Download Your Album
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </a>
+            </div>
+            <div class="image-stack-container">
+                <!-- Extra images will be dynamically inserted here -->
+                <img id="gallery-img-1" class="image-stack-item hidden" data-speed="0.08" alt="Gallery image">
+                <img id="gallery-img-2" class="image-stack-item hidden" data-speed="0.03" alt="Gallery image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="footer-content">
+            <div class="footer-logo-area">
+                <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
+                <p class="logo-tagline">Capturing Life's Timeless Moments with Professional Photography Services</p>
+            </div>
             
-            if (mobileMenuClose) {
-                mobileMenuClose.addEventListener('click', closeMenu);
-            }
+            <div class="footer-cta">
+                <a href="/book-us" class="footer-cta-button">
+                    Book Your Session Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
             
-            if (menuOverlay) {
-                menuOverlay.addEventListener('click', closeMenu);
-            }
+            <div class="footer-bottom">
+                <p class="copyright-text">&copy; 2024 HV Photography. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase and Application Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // UI Elements
+        const projectNameTitle = document.getElementById('project-name');
+        const statusMessage = document.getElementById('status-message');
+        const gallerySection = document.getElementById('gallery-section');
+        const downloadSection = document.getElementById('download-section');
+        const downloadButton = document.getElementById('download-button');
+        const carouselTrack = document.getElementById('track');
+        const galleryImg1 = document.getElementById('gallery-img-1');
+        const galleryImg2 = document.getElementById('gallery-img-2');
+
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        const openMenu = () => {
+            mobileMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeMenu = () => {
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        mobileMenuButton.addEventListener('click', openMenu);
+        mobileMenuClose.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Close menu when clicking on menu links
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
+
+        // Gallery Carousel Functionality
+        let currentIndex = 0;
+        let autoPlayInterval;
+
+        function initializeCarousel(images) {
+            // Clear existing content
+            carouselTrack.innerHTML = '';
             
-            const mobileMenuLinks = document.querySelectorAll('#mobileMenu a');
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', closeMenu);
+            // Create image wrappers
+            images.forEach((imageUrl, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-wrapper';
+                wrapper.innerHTML = `<img src="${imageUrl}" alt="Project image ${index + 1}" loading="lazy">`;
+                carouselTrack.appendChild(wrapper);
             });
+
+            // Initialize dots
+            const dotsContainer = document.getElementById('dots');
+            dotsContainer.innerHTML = '';
             
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeMenu();
+            images.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.dataset.index = index;
+                dotsContainer.appendChild(dot);
+            });
+
+            updateCarousel();
+
+            // Set up navigation
+            document.getElementById('prev-btn').addEventListener('click', () => navigateCarousel(-1));
+            document.getElementById('next-btn').addEventListener('click', () => navigateCarousel(1));
+
+            // Dot navigation
+            dotsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('dot')) {
+                    const index = parseInt(e.target.dataset.index);
+                    goToSlide(index);
                 }
             });
+
+            // Auto-play
+            startAutoPlay();
+            
+            // Pause on hover
+            const carouselContainer = document.getElementById('carousel-container');
+            carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+            carouselContainer.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        function updateCarousel() {
+            const wrappers = document.querySelectorAll('.image-wrapper');
+            const dots = document.querySelectorAll('.dot');
+            const positions = ['pos-3', 'pos-2', 'pos-1', 'pos0', 'pos1', 'pos2', 'pos3'];
+
+            wrappers.forEach((wrapper, index) => {
+                const positionIndex = (index - currentIndex + 3 + wrappers.length) % wrappers.length;
+                wrapper.className = `image-wrapper ${positions[positionIndex] || 'hidden'}`;
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function navigateCarousel(direction) {
+            const wrappers = document.querySelectorAll('.image-wrapper');
+            currentIndex = (currentIndex + direction + wrappers.length) % wrappers.length;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        function startAutoPlay() {
+            stopAutoPlay();
+            autoPlayInterval = setInterval(() => navigateCarousel(1), 4000);
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+            }
+        }
+
+        // Main Application Logic
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('id');
+
+            if (!projectId) {
+                showError('No project ID provided. The link is invalid.');
+                return;
+            }
+
+            try {
+                const projectRef = doc(db, 'projects', projectId);
+                const docSnap = await getDoc(projectRef);
+
+                if (docSnap.exists()) {
+                    const projectData = docSnap.data();
+                    
+                    // Update page content
+                    projectNameTitle.innerHTML = `${projectData.name} <span class="serif">Gallery</span>`;
+                    document.title = `${projectData.name} - HV Photography`;
+
+                    if (projectData.imageURLs && projectData.imageURLs.length > 0) {
+                        const images = projectData.imageURLs;
+                        
+                        // Show first 7 images in carousel
+                        const carouselImages = images.slice(0, 7);
+                        if (carouselImages.length > 0) {
+                            initializeCarousel(carouselImages);
+                            gallerySection.classList.remove('hidden');
+                        }
+
+                        // Show extra images in download section (images 8 and 9)
+                        const extraImages = images.slice(7, 9);
+                        if (extraImages.length > 0) {
+                            downloadSection.classList.remove('hidden');
+                            
+                            if (extraImages[0]) {
+                                galleryImg1.src = extraImages[0];
+                                galleryImg1.classList.remove('hidden');
+                            }
+                            if (extraImages[1]) {
+                                galleryImg2.src = extraImages[1];
+                                galleryImg2.classList.remove('hidden');
+                            }
+                        }
+
+                        // Set up download button
+                        if (projectData.link) {
+                            downloadButton.href = projectData.link;
+                            downloadButton.target = '_blank';
+                            downloadButton.rel = 'noopener noreferrer';
+                        }
+
+                        statusMessage.classList.add('hidden');
+                    } else {
+                        showError('This project has no images.');
+                    }
+                } else {
+                    showError('Project not found. It may have been deleted.');
+                }
+            } catch (error) {
+                console.error("Error fetching project:", error);
+                showError('An error occurred while loading the project.');
+            }
         });
+
+        function showError(message) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message status-error';
+        }
     </script>
 </body>
 </html>
