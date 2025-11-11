@@ -48,34 +48,6 @@
             color: var(--text-primary);
         }
 
-        /* --- Loading Screen --- */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--secondary-bg);
-            border-top: 4px solid var(--color-dark-teal);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         /* --- Header Styles --- */
         .header {
             position: fixed;
@@ -267,14 +239,14 @@
             display: block;
         }
 
-        .mobile-menu-close {
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            align-self: flex-end;
-            margin-bottom: 24px;
-            cursor: pointer;
+        /* Increased mobile menu button sizes */
+        .menu-button, .mobile-menu-close {
+            font-size: 24px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .mobile-nav-links {
@@ -302,45 +274,6 @@
             flex-shrink: 0;
             padding-top: 20px;
             border-top: 1px solid #e5e7eb;
-            margin-top: auto;
-        }
-
-        .user-profile-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 12px;
-            background: var(--secondary-bg);
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--color-dark-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .user-email {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
         }
 
         .mobile-menu-auth-buttons {
@@ -364,10 +297,41 @@
             color: var(--color-white);
         }
 
-        .mobile-menu-auth-button.logout {
-            background: transparent;
-            color: #dc2626;
-            border: 1px solid #dc2626;
+        /* User Profile in Mobile Menu */
+        .mobile-user-profile {
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mobile-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--color-dark-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .mobile-user-info {
+            flex: 1;
+        }
+
+        .mobile-user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .mobile-user-email {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         .divider {
@@ -375,55 +339,42 @@
             background-color: #e5e7eb;
         }
 
-        /* --- Login Screen --- */
-        .login-screen {
-            display: none;
-            min-height: 80vh;
-            padding: 4rem 1rem;
-            background: var(--primary-bg);
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
         }
 
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
-            text-align: center;
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary-bg);
+            border-top: 4px solid var(--color-dark-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .login-icon {
-            font-size: 4rem;
-            color: var(--color-dark-teal);
-            margin-bottom: 2rem;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .login-title {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .login-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        /* --- Main Content --- */
-        .main-content {
-            display: none;
-            padding: 2rem 1rem;
+        /* Main Content */
+        .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 2rem 1rem;
         }
 
         .page-title {
             font-family: var(--font-serif);
             font-size: 2.5rem;
             font-weight: 600;
+            text-align: center;
             margin-bottom: 2rem;
             color: var(--text-primary);
-            text-align: center;
         }
 
         .page-title .serif {
@@ -431,20 +382,69 @@
             color: var(--color-dark-teal);
         }
 
+        /* Auth Container */
+        #auth-container {
+            background: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .auth-content {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .auth-title {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .btn-google {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #ffffff;
+            color: #333;
+            border: 1px solid var(--border-color);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: var(--color-dark-teal);
+        }
+
         /* Form Styles */
         .form-wrapper {
-            background-color: var(--widget-bg);
+            background: var(--secondary-bg);
             border-radius: 16px;
-            border: 1px solid var(--border-color);
             padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
         }
 
         .form-title {
             font-family: var(--font-serif);
             font-size: 1.8rem;
-            font-weight: 600;
             margin-bottom: 1.5rem;
             color: var(--text-primary);
         }
@@ -453,16 +453,16 @@
             margin-bottom: 1.5rem;
         }
 
-        label {
+        .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--text-primary);
         }
 
-        input[type="text"], input[type="search"] {
+        .form-input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 12px 16px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
@@ -471,26 +471,162 @@
             transition: var(--transition);
         }
 
-        input[type="text"]:focus, input[type="search"]:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--color-dark-teal);
             box-shadow: 0 0 0 3px rgba(1, 39, 38, 0.1);
         }
 
-        /* Button Styles */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
+        /* Drop Area */
+        .drop-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
             transition: var(--transition);
+            background-color: var(--primary-bg);
+            margin-bottom: 1rem;
+        }
+
+        .drop-area:hover, .drop-area.drag-over {
+            border-color: var(--color-dark-teal);
+            background-color: rgba(1, 39, 38, 0.02);
+        }
+
+        .drop-area i {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .drop-area p {
+            color: var(--text-secondary);
+        }
+
+        .drop-area strong {
+            color: var(--color-dark-teal);
+        }
+
+        /* Image Preview - Fixed for mobile */
+        #image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview-card {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 0; /* This is important for text truncation */
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0; /* This is important for text truncation */
+        }
+
+        .status-and-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .status-icon.success {
+            background-color: #10B981;
+        }
+
+        .status-icon.danger {
+            background-color: #EF4444;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .delete-btn:hover {
+            color: #EF4444;
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--color-dark-teal);
+            transition: width 0.3s ease;
+        }
+
+        .no-images {
+            color: var(--text-secondary);
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 2rem;
+        }
+
+        /* Form Buttons */
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
         }
 
         .btn-primary {
@@ -500,110 +636,30 @@
 
         .btn-primary:hover {
             background-color: var(--color-teal-hover);
-            transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background-color: var(--text-secondary);
-            color: white;
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
         }
 
-        .btn-danger {
-            background-color: #dc2626;
-            color: white;
-        }
-
-        .btn-info {
-            background-color: var(--color-vibrant-teal);
-            color: white;
+        .btn-secondary:hover {
+            background-color: var(--secondary-bg);
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none !important;
         }
 
-        /* File Upload Styles */
-        #drop-area {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 2.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            background-color: var(--secondary-bg);
-        }
-
-        #drop-area:hover, #drop-area.drag-over {
-            border-color: var(--color-dark-teal);
-            background-color: rgba(1, 39, 38, 0.05);
-        }
-
-        #drop-area i {
-            font-size: 3rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        #file-input {
-            display: none;
-        }
-
-        /* Image Preview */
-        #image-preview-container {
-            margin-top: 1.5rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .image-preview-card {
-            background: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-        }
-
-        .file-name {
-            font-weight: 500;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .status-and-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .delete-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            padding: 0.25rem;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-
-        .delete-btn:hover {
-            color: #dc2626;
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        .no-images {
-            color: var(--text-secondary);
-            text-align: center;
-            grid-column: 1 / -1;
-            padding: 2rem;
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         /* Projects List */
@@ -618,84 +674,104 @@
 
         .list-title {
             font-family: var(--font-serif);
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 1.8rem;
             color: var(--text-primary);
-            margin: 0;
         }
 
         .search-input {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
             max-width: 300px;
-            flex: 1;
+            background-color: var(--primary-bg);
         }
 
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-dark-teal);
+        }
+
+        /* Projects Container - Reduced height */
         #projects-container {
-            display: grid;
-            gap: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .project-card {
-            background-color: var(--primary-bg);
-            border-radius: 12px;
+            background: var(--secondary-bg);
             border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .project-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .project-header {
+            border-radius: 12px;
+            padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            transition: var(--transition);
+            min-height: 60px; /* Further reduced height */
+        }
+
+        .project-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 0; /* Prevents flex item from overflowing */
         }
 
         .project-name {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
+
+        /* Removed project-meta class entirely */
 
         .project-actions {
             display: flex;
             gap: 0.5rem;
+            flex-shrink: 0;
         }
 
-        .project-actions .btn {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        /* Messages and Notifications */
-        .message {
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
             border-radius: 8px;
-            display: none;
-            border: 1px solid transparent;
-            text-align: center;
-            font-weight: 500;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
         }
 
-        .message.success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border-color: #a7f3d0;
+        .action-btn:hover {
+            background-color: var(--primary-bg);
         }
 
-        .message.error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-color: #fecaca;
+        .action-btn.share:hover {
+            color: var(--color-dark-teal);
         }
 
-        .toast {
+        .action-btn.edit:hover {
+            color: #3B82F6;
+        }
+
+        .action-btn.delete:hover {
+            color: #EF4444;
+        }
+
+        /* Toast Notification */
+        #toast-notification {
             position: fixed;
             top: 100px;
             right: 20px;
@@ -706,23 +782,24 @@
             visibility: hidden;
             opacity: 0;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
+            max-width: 300px;
         }
 
-        .toast.show {
+        #toast-notification.show {
             visibility: visible;
             opacity: 1;
         }
 
-        .toast.success {
-            background-color: var(--color-dark-teal);
+        #toast-notification.success {
+            background-color: #10B981;
         }
 
-        .toast.error {
-            background-color: #dc2626;
+        #toast-notification.error {
+            background-color: #EF4444;
         }
 
-        /* Footer Section */
+        /* Footer */
         .footer-section {
             background-color: var(--color-dark-teal);
             padding: 4rem 2rem 2rem;
@@ -818,14 +895,19 @@
             color: #ffffff;
         }
 
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
                 padding-top: 70px;
             }
 
-            .main-content {
-                padding: 1rem;
+            .container {
+                padding: 1.5rem 1rem;
             }
 
             .page-title {
@@ -840,23 +922,46 @@
                 font-size: 1.5rem;
             }
 
+            .project-card {
+                padding: 1rem;
+                flex-direction: row;
+                align-items: center;
+                gap: 1rem;
+                min-height: 60px; /* Consistent height */
+            }
+
+            .project-info {
+                width: 100%;
+            }
+
+            .project-actions {
+                width: auto;
+                justify-content: flex-end;
+            }
+
+            .project-name {
+                font-size: 1.1rem;
+            }
+
             .list-header {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: flex-start;
             }
 
             .search-input {
                 max-width: 100%;
             }
 
-            .project-header {
+            .form-buttons {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
             }
 
-            .project-actions {
-                align-self: flex-end;
+            .btn {
+                width: 100%;
+            }
+
+            #image-preview-container {
+                grid-template-columns: 1fr;
             }
 
             .footer-section {
@@ -867,19 +972,58 @@
                 flex-direction: column;
                 gap: 0.75rem;
             }
+
+            /* Mobile image preview improvements - Fixed layout */
+            .image-preview-card {
+                flex-direction: row;
+                align-items: center;
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+
+            .file-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .file-name {
+                font-size: 0.85rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .status-and-actions {
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
         }
 
-        .hidden {
-            display: none !important;
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .auth-title {
+                font-size: 1.5rem;
+            }
+
+            .form-title, .list-title {
+                font-size: 1.3rem;
+            }
+
+            /* Further increase mobile menu button sizes */
+            .menu-button, .mobile-menu-close {
+                font-size: 28px;
+                width: 52px;
+                height: 52px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-spinner"></div>
-    </div>
-
     <!-- Navbar -->
     <header class="header">
         <div class="header-container">
@@ -893,7 +1037,6 @@
                         <a class="nav-link" href="/about">About</a>
                         <a class="nav-link" href="/services">Services</a>
                         <a class="nav-link" href="/gallery">Gallery</a>
-                        <a class="nav-link" href="/projects" style="color: var(--color-dark-teal);">Projects</a>
                         <a class="nav-link" href="/contact">Contact</a>
                     </div>
                 </div>
@@ -907,33 +1050,31 @@
                     </div>
                 </div>
             </nav>
-            
-            <!-- Mobile Menu -->
             <div id="mobileMenu">
                 <button class="mobile-menu-close" id="mobileMenuClose">
                     <i class='bx bx-x'></i>
                 </button>
+                
+                <!-- User Profile Section -->
+                <div class="mobile-user-profile hidden" id="mobileUserProfile">
+                    <div class="mobile-user-avatar" id="mobileUserAvatar">U</div>
+                    <div class="mobile-user-info">
+                        <div class="mobile-user-name" id="mobileUserName">User Name</div>
+                        <div class="mobile-user-email" id="mobileUserEmail">user@example.com</div>
+                    </div>
+                </div>
+                
                 <div class="mobile-nav-links">
                     <a href="/home" class="mobile-nav-link">Home</a>
                     <a href="/about" class="mobile-nav-link">About</a>
                     <a href="/services" class="mobile-nav-link">Services</a>
                     <a href="/gallery" class="mobile-nav-link">Gallery</a>
-                    <a href="/projects" class="mobile-nav-link" style="color: var(--color-dark-teal); background-color: #f0f7f7;">Projects</a>
                     <a href="/contact" class="mobile-nav-link">Contact</a>
                 </div>
                 <div class="mobile-menu-auth">
-                    <div class="user-profile-section hidden" id="mobileUserProfile">
-                        <div class="user-avatar" id="userAvatar">U</div>
-                        <div class="user-info">
-                            <div class="user-name" id="userName">User Name</div>
-                            <div class="user-email" id="userEmail">user@example.com</div>
-                        </div>
-                    </div>
                     <div class="mobile-menu-auth-buttons">
-                        <button id="mobileLoginBtn" class="mobile-menu-auth-button submit">
-                            <i class='bx bxl-google'></i> Sign In with Google
-                        </button>
-                        <button id="mobileLogoutBtn" class="mobile-menu-auth-button logout hidden">
+                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
+                        <button class="mobile-menu-auth-button" id="mobileLogoutBtn" style="display: none;">
                             <i class='bx bx-log-out'></i> Sign Out
                         </button>
                     </div>
@@ -944,70 +1085,77 @@
         </div>
     </header>
 
-    <!-- Login Screen -->
-    <section class="login-screen" id="loginScreen">
-        <div class="login-container">
-            <div class="login-icon">
-                <i class='bx bx-camera'></i>
-            </div>
-            <h1 class="login-title">Project Manager</h1>
-            <p class="login-subtitle">Sign in to manage your photography projects</p>
-            <button id="login-btn" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
-                <i class='bx bxl-google'></i> Sign In with Google
-            </button>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-        <h1 class="page-title">Manage Your <span class="serif">Projects</span></h1>
-        
-        <div class="form-wrapper">
-            <h2 class="form-title" id="form-title">Create a New Project</h2>
-            <div class="message" id="form-message"></div>
-            <form id="project-form">
-                <div class="form-group">
-                    <label for="project-name">Project Name</label>
-                    <input type="text" id="project-name" required placeholder="Enter project name">
-                </div>
-                <div class="form-group">
-                    <label for="drive-link">Google Drive Link</label>
-                    <input type="text" id="drive-link" required placeholder="https://drive.google.com/...">
-                </div>
-                <div class="form-group">
-                    <label>Project Images (Requires exactly 7 or 9 images)</label>
-                    <div id="drop-area">
-                        <input type="file" id="file-input" accept="image/*" multiple>
-                        <i class='bx bx-cloud-upload'></i>
-                        <p>Drop images here, or <strong>browse</strong></p>
-                    </div>
-                    <div id="image-preview-container">
-                        <p class="no-images">No images selected.</p>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button type="submit" id="submit-btn" class="btn btn-primary">
-                        Add Project
-                        <div class="loading-spinner" id="submit-spinner" style="display: none; width: 20px; height: 20px; border-width: 2px;"></div>
-                    </button>
-                    <button type="button" id="cancel-edit-btn" class="btn btn-secondary" style="display: none;">Cancel</button>
-                </div>
-            </form>
-        </div>
-        
-        <div id="projects-list">
-            <div class="list-header">
-                <h2 class="list-title">My Projects</h2>
-                <input type="search" id="search-input" class="search-input" placeholder="Search projects by name...">
-            </div>
-            <div id="projects-container">
-                <p>Loading your projects...</p>
-            </div>
-        </div>
-    </main>
+    <!-- Loading Spinner -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+    </div>
 
     <!-- Toast Notification -->
-    <div class="toast" id="toast-notification"></div>
+    <div id="toast-notification"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">Project <span class="serif">Manager</span></h1>
+
+        <!-- Auth Container (Shown when not logged in) -->
+        <div id="auth-container" class="hidden">
+            <div class="auth-content">
+                <h2 class="auth-title">Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to manage your photography projects</p>
+                <button id="login-btn" class="btn-google">
+                    <i class='bx bxl-google'></i> Sign In with Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content (Shown when logged in) -->
+        <div id="main-content" class="hidden">
+            <!-- Project Form -->
+            <div class="form-wrapper">
+                <h2 class="form-title" id="form-title">Create a New Project</h2>
+                <div id="form-message" class="hidden"></div>
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-name" class="form-label">Project Name</label>
+                        <input type="text" id="project-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="drive-link" class="form-label">Google Drive Link</label>
+                        <input type="text" id="drive-link" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Project Images (Requires exactly 7 or 9)</label>
+                        <div id="drop-area" class="drop-area">
+                            <input type="file" id="file-input" accept="image/*" multiple class="hidden">
+                            <i class='bx bx-cloud-upload'></i>
+                            <p>Drop images here, or <strong>browse</strong></p>
+                        </div>
+                        <div id="image-preview-container">
+                            <p class="no-images">No images selected.</p>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" id="submit-btn" class="btn btn-primary">
+                            Add Project
+                            <div class="spinner hidden" id="submit-spinner"></div>
+                        </button>
+                        <button type="button" id="cancel-edit-btn" class="btn btn-secondary hidden">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Projects List -->
+            <div id="projects-list">
+                <div class="list-header">
+                    <h2 class="list-title">My Projects</h2>
+                    <input type="search" id="search-input" class="search-input" placeholder="Search projects by name...">
+                </div>
+                <div id="projects-container">
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer Section -->
     <footer class="footer-section">
@@ -1068,17 +1216,12 @@
         let firestoreUnsubscribe = null; 
 
         // --- UI ELEMENTS ---
-        const loadingScreen = document.getElementById('loadingScreen');
-        const loginScreen = document.getElementById('loginScreen');
-        const mainContent = document.getElementById('mainContent');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const mainContent = document.getElementById('main-content');
+        const authContainer = document.getElementById('auth-container');
         const loginBtn = document.getElementById('login-btn');
-        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-        const mobileUserProfile = document.getElementById('mobileUserProfile');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
+        const logoutBtn = document.getElementById('mobileLogoutBtn');
+        const userDisplay = document.getElementById('user-display');
         
         const projectForm = document.getElementById('project-form');
         const formTitle = document.getElementById('form-title');
@@ -1098,64 +1241,36 @@
         const projectsContainer = document.getElementById('projects-container');
         const searchInput = document.getElementById('search-input');
 
-        // Mobile Menu Functionality
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const menuOverlay = document.getElementById('menuOverlay');
-
-        const openMenu = () => {
-            mobileMenu.classList.add('active');
-            menuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        const closeMenu = () => {
-            mobileMenu.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-
-        mobileMenuButton.addEventListener('click', openMenu);
-        mobileMenuClose.addEventListener('click', closeMenu);
-        menuOverlay.addEventListener('click', closeMenu);
-
-        // Close menu when clicking on menu links
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        // Close menu when pressing Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMenu();
-        });
+        // Mobile Menu Elements
+        const mobileUserProfile = document.getElementById('mobileUserProfile');
+        const mobileUserAvatar = document.getElementById('mobileUserAvatar');
+        const mobileUserName = document.getElementById('mobileUserName');
+        const mobileUserEmail = document.getElementById('mobileUserEmail');
 
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, user => {
-            loadingScreen.style.display = 'none';
+            loadingContainer.classList.add('hidden');
             
             if (user) {
                 currentUser = user;
-                loginScreen.style.display = 'none';
-                mainContent.style.display = 'block';
+                authContainer.classList.add('hidden');
+                mainContent.classList.remove('hidden');
                 
                 // Update mobile menu user profile
                 mobileUserProfile.classList.remove('hidden');
-                userAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
-                userName.textContent = user.displayName || 'User';
-                userEmail.textContent = user.email;
-                mobileLoginBtn.classList.add('hidden');
-                mobileLogoutBtn.classList.remove('hidden');
+                mobileUserName.textContent = user.displayName || 'User';
+                mobileUserEmail.textContent = user.email || '';
+                mobileUserAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                logoutBtn.style.display = 'block';
                 
                 fetchUserProjects(user.uid);
             } else {
                 currentUser = null;
                 allUserProjects = [];
-                loginScreen.style.display = 'block';
-                mainContent.style.display = 'none';
+                authContainer.classList.remove('hidden');
+                mainContent.classList.add('hidden');
                 mobileUserProfile.classList.add('hidden');
-                mobileLoginBtn.classList.remove('hidden');
-                mobileLogoutBtn.classList.add('hidden');
+                logoutBtn.style.display = 'none';
                 projectsContainer.innerHTML = '<p>Please sign in to see your projects.</p>';
                 if (firestoreUnsubscribe) firestoreUnsubscribe();
             }
@@ -1213,14 +1328,17 @@
                 const card = document.createElement('div');
                 card.className = 'image-preview-card';
                 let statusIcon = '';
-                if(file.status === 'completed') statusIcon = `<div style="color: var(--color-dark-teal);"><i class='bx bx-check'></i></div>`;
-                if(file.status === 'failed') statusIcon = `<div style="color: #dc2626;"><i class='bx bx-error'></i></div>`;
+                if(file.status === 'completed') statusIcon = `<div class="status-icon success"><i class='bx bx-check'></i></div>`;
+                if(file.status === 'failed') statusIcon = `<div class="status-icon danger"><i class='bx bx-error'></i></div>`;
                 card.innerHTML = `
-                    <div class="file-info"><span class="file-name">${file.fileName}</span></div>
+                    <div class="file-info">
+                        <span class="file-name">${file.fileName}</span>
+                    </div>
                     <div class="status-and-actions">
                         ${statusIcon}
                         <button type="button" class="delete-btn" data-id="${file.id}"><i class='bx bx-x'></i></button>
                     </div>
+                    ${file.status === 'uploading' ? `<div class="progress-bar-wrapper"><div class="progress-bar" style="width: ${file.progress}%"></div></div>` : ''}
                 `;
                 imagePreviewContainer.appendChild(card);
             });
@@ -1242,7 +1360,7 @@
         const renderProjects = (projectsToRender) => {
             projectsContainer.innerHTML = '';
             if (projectsToRender.length === 0) {
-                projectsContainer.innerHTML = '<p>No projects found. Create your first project above!</p>';
+                projectsContainer.innerHTML = '<p>No projects found.</p>';
                 return;
             }
             projectsToRender.forEach(project => {
@@ -1250,24 +1368,20 @@
                 projectCard.className = 'project-card';
                 
                 projectCard.innerHTML = `
-                    <div class="project-header">
-                        <h3 class="project-name">${project.name}</h3>
-                        <div class="project-actions">
-                            <button class="btn btn-info" data-id="${project.id}" data-action="share" title="Share">
-                                <i class='bx bx-share-alt'></i>
-                            </button>
-                            <button class="btn btn-secondary" data-id="${project.id}" data-action="edit" title="Edit">
-                                <i class='bx bx-pencil'></i>
-                            </button>
-                            <button class="btn btn-danger" data-id="${project.id}" data-action="delete" title="Delete Project">
-                                <i class='bx bx-trash'></i>
-                            </button>
-                        </div>
+                    <div class="project-info">
+                        <div class="project-name">${project.name}</div>
                     </div>
-                    <div style="color: var(--text-secondary); font-size: 0.9rem;">
-                        ${project.imageURLs ? `${project.imageURLs.length} images` : 'No images'}
-                    </div>
-                `;
+                    <div class="project-actions">
+                        <button class="action-btn share" data-id="${project.id}" data-action="share" title="Share">
+                            <i class='bx bx-share-alt'></i>
+                        </button>
+                        <button class="action-btn edit" data-id="${project.id}" data-action="edit" title="Edit">
+                            <i class='bx bx-pencil'></i>
+                        </button>
+                        <button class="action-btn delete" data-id="${project.id}" data-action="delete" title="Delete Project">
+                            <i class='bx bx-trash'></i>
+                        </button>
+                    </div>`;
                 projectsContainer.appendChild(projectCard);
             });
         };
@@ -1294,7 +1408,7 @@
             if (action === 'share') {
                 const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
                 const shareLink = `${currentUrl}/player.html?id=${projectId}`;
-                navigator.clipboard.writeText(shareLink).then(() => showToast('Share link copied to clipboard!'));
+                navigator.clipboard.writeText(shareLink).then(() => showToast('Share link copied!'));
             }
         };
 
@@ -1311,7 +1425,7 @@
             editingProjectId = id;
             formTitle.textContent = 'Edit Project';
             submitBtn.textContent = 'Save Changes';
-            cancelBtn.style.display = 'inline-block';
+            cancelBtn.classList.remove('hidden');
             projectNameInput.value = data.name;
             driveLinkInput.value = data.link;
             projectFiles = (data.imageURLs || []).map(url => {
@@ -1329,7 +1443,7 @@
             projectForm.reset();
             formTitle.textContent = 'Create a New Project';
             submitBtn.textContent = 'Add Project';
-            cancelBtn.style.display = 'none';
+            cancelBtn.classList.add('hidden');
             renderImagePreviews();
         };
 
@@ -1387,28 +1501,47 @@
         const showMessage = (msg, isSuccess) => {
             formMessage.textContent = msg;
             formMessage.className = isSuccess ? 'message success' : 'message error';
-            formMessage.style.display = 'block';
-            setTimeout(() => { formMessage.style.display = 'none'; }, 5000);
+            formMessage.classList.remove('hidden');
+            setTimeout(() => { formMessage.classList.add('hidden'); }, 5000);
         };
-        
         const showToast = (msg, isSuccess = true) => {
             toastNotification.textContent = msg;
             toastNotification.className = isSuccess ? 'toast show success' : 'toast show error';
             setTimeout(() => { toastNotification.classList.remove('show'); }, 3000);
         };
-        
         const showSpinner = (show) => {
-            submitSpinner.style.display = show ? 'inline-block' : 'none';
+            submitSpinner.classList.toggle('hidden', !show);
             submitBtn.disabled = show;
         };
         
         const signInWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(err => console.error(err));
         const doSignOut = () => signOut(auth).catch(err => console.error(err));
         
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        const openMenu = () => {
+            mobileMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeMenu = () => {
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        mobileMenuButton.addEventListener('click', openMenu);
+        mobileMenuClose.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Event Listeners
         loginBtn.addEventListener('click', signInWithGoogle);
-        mobileLoginBtn.addEventListener('click', signInWithGoogle);
-        mobileLogoutBtn.addEventListener('click', doSignOut);
-        
+        logoutBtn.addEventListener('click', doSignOut);
         projectForm.addEventListener('submit', handleFormSubmit);
         cancelBtn.addEventListener('click', resetForm);
         projectsContainer.addEventListener('click', handleProjectAction);
@@ -1431,8 +1564,15 @@
             if (deleteButton) deleteImage(deleteButton.dataset.id);
         });
 
-        // Initialize the app
-        resetForm();
+        // Close menu when clicking on menu links
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu when pressing Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
     </script>
 </body>
 </html>
