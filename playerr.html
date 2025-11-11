@@ -3,14 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Gallery - HV Photography</title>
+    <title>Project Gallery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get('id');
+            const statusMessage = document.getElementById('status-message');
+            const mainContent = document.getElementById('main-content');
+
+            if (!projectId) {
+                statusMessage.textContent = 'Error: No project ID provided';
+                statusMessage.className = 'status error';
+                mainContent.style.display = 'none';
+                return;
+            }
+
+            try {
+                const projectRef = doc(db, 'projects', projectId);
+                const docSnap = await getDoc(projectRef);
+
+                if (docSnap.exists()) {
+                    const projectData = docSnap.data();
+                    const imageURLs = projectData.imageURLs || [];
+                    
+                    document.getElementById('project-name').textContent = projectData.name;
+                    document.title = projectData.name;
+
+                    if (imageURLs.length === 0) {
+                        statusMessage.textContent = 'This project has no images';
+                        statusMessage.className = 'status';
+                        mainContent.style.display = 'none';
+                        return;
+                    }
+
+                    const carouselImages = imageURLs.slice(0, 7);
+                    const extraImages = imageURLs.slice(7, 9);
+                    
+                    initializeGalleryCarousel(carouselImages, projectData.name);
+                    
+                    if (extraImages.length > 0) {
+                        initializeDownloadSection(extraImages, projectData);
+                    } else {
+                        document.querySelector('.download-section').style.display = 'none';
+                    }
+
+                    statusMessage.style.display = 'none';
+                    mainContent.style.display = 'block';
+
+                } else {
+                    statusMessage.textContent = 'Error: Project not found';
+                    statusMessage.className = 'status error';
+                    mainContent.style.display = 'none';
+                }
+            } catch (error) {
+                console.error("Error fetching project:", error);
+                statusMessage.textContent = 'Error loading project';
+                statusMessage.className = 'status error';
+                mainContent.style.display = 'none';
+            }
+        });
+
+        function initializeGalleryCarousel(imageURLs, projectName) {
+            const track = document.getElementById('track');
+            const dotsContainer = document.getElementById('dots');
+            
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            imageURLs.forEach((url, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'image-wrapper';
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `${projectName} - Image ${index + 1}`;
+                img.loading = 'lazy';
+                wrapper.appendChild(img);
+                track.appendChild(wrapper);
+
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.dataset.idx = index;
+                dotsContainer.appendChild(dot);
+            });
+
+            initializeCarouselLogic(imageURLs.length);
+        }
+
+        function initializeDownloadSection(extraImages, projectData) {
+            const imageStackContainer = document.querySelector('.image-stack-container');
+            imageStackContainer.innerHTML = '';
+
+            extraImages.forEach((url, index) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = `${projectData.name} - Extra Image ${index + 1}`;
+                img.className = 'image-stack-item';
+                img.id = `gallery-img-${index + 1}`;
+                img.loading = 'lazy';
+                imageStackContainer.appendChild(img);
+            });
+
+            const downloadButton = document.querySelector('.download-button');
+            if (projectData.link) {
+                downloadButton.href = projectData.link;
+                downloadButton.target = '_blank';
+            }
+
+            initializeScrollAnimations();
+        }
+
+        function initializeCarouselLogic(total) {
+            const imageWrappers = document.querySelectorAll('.gallery-carousel .image-wrapper');
+            const dots = document.querySelectorAll('.dot');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
+            const offsetByClass = { 'pos-3':-3, 'pos-2':-2, 'pos-1':-1, 'pos0':0, 'pos1':1, 'pos2':2, 'pos3':3 };
+
+            let idx = 0, auto = null;
+
+            function update() {
+                for (let i = 0; i < positions.length; i++) {
+                    const wrapperIdx = (idx + i - 3 + total) % total;
+                    if (imageWrappers[wrapperIdx]) {
+                        imageWrappers[wrapperIdx].className = 'image-wrapper ' + positions[i];
+                    }
+                }
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+
+            function go(dir) {
+                idx = (idx + dir + total) % total;
+                update();
+            }
+
+            function startAuto(){ auto = setInterval(() => go(1), 3000); }
+            function stopAuto(){ clearInterval(auto); }
+
+            prevBtn.addEventListener('click', () => { stopAuto(); go(-1); startAuto(); });
+            nextBtn.addEventListener('click', () => { stopAuto(); go(1); startAuto(); });
+
+            const carouselContainer = document.getElementById('carousel-container');
+            let startX = 0, lastX = 0;
+
+            carouselContainer.addEventListener('touchstart', e => {
+                stopAuto();
+                startX = e.touches[0].clientX;
+                lastX = startX;
+            });
+
+            carouselContainer.addEventListener('touchend', () => {
+                const distance = lastX - startX;
+                if (Math.abs(distance) > 40) {
+                    go(distance < 0 ? 1 : -1);
+                }
+                startAuto();
+            });
+
+            dots.forEach(d => d.addEventListener('click', () => {
+                stopAuto();
+                idx = +d.dataset.idx;
+                update();
+                startAuto();
+            }));
+
+            carouselContainer.addEventListener('mouseenter', stopAuto);
+            carouselContainer.addEventListener('mouseleave', startAuto);
+
+            update();
+            startAuto();
+        }
+
+        function initializeScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            const downloadContainer = document.querySelector('.download-container');
+            if (downloadContainer) {
+                observer.observe(downloadContainer);
+            }
+        }
+    </script>
 
     <style>
-        /* --- Google Font Import & Variables --- */
         :root {
             --primary-bg: #fefefe;
             --secondary-bg: #f8f8f8;
@@ -22,17 +224,14 @@
             --transition: all 0.3s ease;
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --radius: 12px;
-            
-            --color-white: #fff;
-            --color-black: #000;
             --color-dark-teal: #012726;
             --color-teal-hover: #004D4B;
             --color-vibrant-teal: #005F5C;
+            --color-white: #fff;
             --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
             --font-serif: 'Playfair Display', serif;
         }
 
-        /* --- Universal Reset & Base Styles --- */
         * {
             margin: 0;
             padding: 0;
@@ -42,279 +241,46 @@
         body {
             font-family: var(--font-sans);
             line-height: 1.6;
-            padding-top: 80px;
             background-color: var(--primary-bg);
-            overflow-x: hidden;
             color: var(--text-primary);
+            padding-top: 0;
         }
 
-        /* --- Header Styles --- */
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 50;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .header-container {
-            width: 90%;
-            margin: 0 auto;
+        .container {
             max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        .nav {
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .logo {
-            height: 40px;
-            width: auto;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .nav-links {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .nav-links {
-                display: flex;
-            }
-        }
-
-        .nav-link {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 6px;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 8px;
-            left: 50%;
-            background-color: var(--color-dark-teal);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover {
-            color: var(--color-dark-teal);
-        }
-
-        .nav-link:hover:after {
-            width: 70%;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .menu-button {
-            display: flex;
-            padding: 0.5rem;
-            border: 1px solid var(--color-dark-teal);
-            border-radius: 6px;
-            color: var(--color-dark-teal);
-            background-color: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .menu-button:hover {
-            background-color: var(--color-dark-teal);
-            color: white;
-        }
-
-        @media (min-width: 768px) {
-            .menu-button {
-                display: none;
-            }
-        }
-
-        .auth-button {
-            padding: 0.5rem 1.25rem;
-            font-size: 1rem;
-            font-weight: 500;
-            border: 1px solid var(--color-dark-teal);
-            border-radius: 6px;
-            color: var(--color-dark-teal);
-            transition: var(--transition);
-            text-decoration: none;
-            background-color: transparent;
-        }
-
-        .auth-button.submit {
-            background-color: var(--color-dark-teal);
-            color: var(--color-white);
-            border: none;
-        }
-
-        .auth-button:hover {
-            color: var(--color-white);
-            background-color: var(--color-teal-hover);
-        }
-
-        .mobile-auth-button {
-            display: inline-block;
-        }
-        
-        @media (min-width: 768px) {
-            .mobile-auth-button {
-                display: none;
-            }
-            .auth-buttons {
-                display: flex;
-            }
-        }
-
-        .auth-buttons {
-            display: none;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        /* Mobile Menu */
-        #mobileMenu {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 85vw;
-            max-width: 320px;
-            height: 100vh;
-            background: #ffffff;
-            padding: 24px 16px;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        #mobileMenu.active {
-            transform: translateX(0);
-        }
-
-        #menuOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+        #main-content {
             display: none;
         }
 
-        #menuOverlay.active {
-            display: block;
-        }
-
-        .mobile-menu-close {
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            align-self: flex-end;
-            margin-bottom: 24px;
-            cursor: pointer;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .mobile-nav-link {
-            display: block;
-            padding: 16px 12px;
-            font-size: 18px;
-            font-weight: 500;
-            color: #2d3436;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.2s ease;
-        }
-
-        .mobile-nav-link:hover {
-            background-color: #f8f9fa;
-        }
-
-        .mobile-menu-auth {
-            flex-shrink: 0;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .mobile-menu-auth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .mobile-menu-auth-button {
-            padding: 14px;
+        .status {
             text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background 0.2s ease;
-            font-weight: 600;
-            font-size: 16px;
+            font-size: 1.2rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            border-radius: 12px;
         }
 
-        .mobile-menu-auth-button.submit {
-            background: var(--color-dark-teal);
-            color: var(--color-white);
+        .status.error {
+            background-color: #FEE2E2;
+            color: #991B1B;
         }
 
-        .divider {
-            height: 1px;
-            background-color: #e5e7eb;
-        }
-
-        /* --- Project Header --- */
         .project-header {
             text-align: center;
-            padding: 3rem 1rem;
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
+            margin-bottom: 3rem;
         }
 
         .project-header h1 {
             font-family: var(--font-serif);
             font-size: 3.5rem;
             font-weight: 600;
-            margin-bottom: 1rem;
             color: var(--text-primary);
+            margin-bottom: 1rem;
         }
 
         .project-header .serif {
@@ -322,29 +288,13 @@
             color: var(--color-dark-teal);
         }
 
-        /* --- Gallery Section --- */
         .gallery-section {
             width: 100%;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 1rem;
+            margin: 0 auto 5rem;
             text-align: center;
         }
 
-        .section-title {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 3rem;
-            color: var(--text-primary);
-        }
-
-        .section-title .serif {
-            font-style: italic;
-            color: var(--color-dark-teal);
-        }
-
-        /* Carousel Styles */
         .gallery-carousel {
             position: relative;
             width: 100%;
@@ -362,62 +312,78 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: transform .9s cubic-bezier(.25,.8,.25,1);
             will-change: transform;
         }
 
-        .image-wrapper {
+        .gallery-carousel .image-wrapper {
             position: absolute;
             width: 280px;
             height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border-radius: 16px;
             box-shadow: var(--shadow);
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all .8s cubic-bezier(.25,.8,.25,1);
             transform-style: preserve-3d;
             background-color: var(--secondary-bg);
             overflow: hidden;
             cursor: pointer;
         }
 
-        .image-wrapper img {
+        .gallery-carousel img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 16px;
-            transition: transform 0.3s ease;
+            background-color: var(--secondary-bg);
+            -webkit-user-drag: none;
         }
 
-        .image-wrapper:hover img {
-            transform: scale(1.05);
-        }
-
-        /* Carousel Positions */
-        .pos-3 { transform: translateX(-500px) scale(0.75) rotateY(30deg); z-index: 1; }
-        .pos-2 { transform: translateX(-350px) scale(0.85) rotateY(20deg); z-index: 2; }
-        .pos-1 { transform: translateX(-180px) scale(0.95) rotateY(10deg); z-index: 3; }
+        .pos-3 { transform: translateX(-500px) scale(.75) rotateY(30deg); z-index: 1; }
+        .pos-2 { transform: translateX(-350px) scale(.85) rotateY(20deg); z-index: 2; }
+        .pos-1 { transform: translateX(-180px) scale(.95) rotateY(10deg); z-index: 3; }
         .pos0 { transform: translateX(0) scale(1.1); z-index: 5; }
-        .pos1 { transform: translateX(180px) scale(0.95) rotateY(-10deg); z-index: 3; }
-        .pos2 { transform: translateX(350px) scale(0.85) rotateY(-20deg); z-index: 2; }
-        .pos3 { transform: translateX(500px) scale(0.75) rotateY(-30deg); z-index: 1; }
+        .pos1 { transform: translateX(180px) scale(.95) rotateY(-10deg); z-index: 3; }
+        .pos2 { transform: translateX(350px) scale(.85) rotateY(-20deg); z-index: 2; }
+        .pos3 { transform: translateX(500px) scale(.75) rotateY(-30deg); z-index: 1; }
 
-        .image-wrapper:not(.pos0) {
-            pointer-events: none;
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
         }
 
-        /* Navigation */
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 50%;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--color-dark-teal);
+            transform: scale(1.3);
+        }
+
         .nav-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.6);
             color: white;
             border: none;
             padding: 12px;
             cursor: pointer;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             font-size: 20px;
+            line-height: 1;
             z-index: 10;
             display: flex;
             justify-content: center;
@@ -427,46 +393,24 @@
 
         .nav-btn:hover {
             background-color: var(--color-dark-teal);
-            transform: translateY(-50%) scale(1.1);
         }
 
         #prev-btn { left: 20px; }
         #next-btn { right: 20px; }
 
-        .dots {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 2rem;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            background: #ddd;
-            border-radius: 50%;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            background: var(--color-dark-teal);
-            transform: scale(1.3);
-        }
-
-        /* --- Download Section --- */
         .download-section {
             width: 100%;
-            padding: 4rem 1rem;
+            padding: 100px 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--secondary-bg);
+            overflow: hidden;
+            background-color: var(--primary-bg);
         }
 
         .download-container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -476,7 +420,7 @@
             width: 45%;
             z-index: 2;
         }
-        
+
         .eyebrow-text {
             color: var(--color-vibrant-teal);
             font-size: 0.9rem;
@@ -488,13 +432,13 @@
 
         .text-content h2 {
             font-family: var(--font-serif);
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 600;
             line-height: 1.2;
             color: var(--text-primary);
             margin-bottom: 1.5rem;
         }
-        
+
         .text-content h2 .serif {
             font-style: italic;
             color: var(--color-dark-teal);
@@ -511,7 +455,7 @@
         .image-stack-container {
             width: 50%;
             position: relative;
-            height: 450px;
+            height: 500px;
             perspective: 1000px;
         }
 
@@ -522,11 +466,11 @@
             object-fit: cover;
             border: 5px solid white;
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 100%;
+            height: 100%;
         }
 
         #gallery-img-1 {
-            width: 300px;
-            height: 420px;
             top: 50%;
             left: 0;
             transform: translateY(-50%) rotateZ(-5deg);
@@ -534,20 +478,10 @@
         }
 
         #gallery-img-2 {
-            width: 320px;
-            height: 240px;
             top: 50%;
             right: 0;
             transform: translateY(-50%) rotateZ(5deg);
             z-index: 3;
-        }
-
-        .image-stack-container:hover #gallery-img-1 {
-            transform: translateY(-55%) rotateZ(-8deg) scale(1.03);
-        }
-
-        .image-stack-container:hover #gallery-img-2 {
-            transform: translateY(-45%) rotateZ(8deg) scale(1.03);
         }
 
         .download-button {
@@ -611,621 +545,219 @@
             100% { background-position: 100% 50%; }
         }
 
-        /* --- Footer Section --- */
-        .footer-section {
-            background-color: var(--color-dark-teal);
-            padding: 4rem 2rem 2rem;
-            color: #ffffff;
+        .text-content > *, .image-stack-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 2rem;
+        .download-container.is-visible .text-content > *,
+        .download-container.is-visible .image-stack-item {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .footer-logo-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
+        .download-container.is-visible .eyebrow-text { transition-delay: 0.1s; }
+        .download-container.is-visible h2 { transition-delay: 0.2s; }
+        .download-container.is-visible p { transition-delay: 0.3s; }
+        .download-container.is-visible .download-button { transition-delay: 0.4s; }
+        .download-container.is-visible #gallery-img-1 { transition-delay: 0.2s; }
+        .download-container.is-visible #gallery-img-2 { transition-delay: 0.4s; }
 
-        .footer-logo-img {
-            max-width: 140px;
-            filter: brightness(0) invert(1);
-            opacity: 0.9;
-        }
-
-        .logo-tagline {
-            font-size: 1rem;
-            color: #d1d5db;
-            max-width: 400px;
-        }
-
-        .footer-cta {
-            margin: 1rem 0;
-        }
-
-        .footer-cta-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: #ffffff;
-            color: var(--color-dark-teal);
-            border: none;
-            padding: 18px 40px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .footer-cta-button:hover {
-            background: #f0f0f0;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer-bottom {
-            width: 100%;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .copyright-text {
-            color: #d1d5db;
-            font-size: 0.9rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .footer-links a {
-            text-decoration: none;
-            color: #d1d5db;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-links a:hover {
-            color: #ffffff;
-        }
-
-        /* --- Status Messages --- */
-        .status-message {
-            text-align: center;
-            padding: 3rem 1rem;
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-        }
-
-        .status-error {
-            color: #dc2626;
-            background-color: #fef2f2;
-            border-radius: 12px;
-            margin: 2rem auto;
-            max-width: 600px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* --- Responsive Design --- */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .project-header h1 {
                 font-size: 3rem;
             }
-
+            
+            .text-content h2 {
+                font-size: 2.5rem;
+            }
+            
             .gallery-carousel {
                 height: 450px;
             }
-
-            .image-wrapper {
+            
+            .gallery-carousel .image-wrapper {
                 width: 240px;
                 height: 360px;
             }
-
-            .pos-3 { transform: translateX(-420px) scale(0.75) rotateY(30deg); }
-            .pos-2 { transform: translateX(-280px) scale(0.85) rotateY(20deg); }
-            .pos-1 { transform: translateX(-140px) scale(0.95) rotateY(10deg); }
-            .pos1 { transform: translateX(140px) scale(0.95) rotateY(-10deg); }
-            .pos2 { transform: translateX(280px) scale(0.85) rotateY(-20deg); }
-            .pos3 { transform: translateX(420px) scale(0.75) rotateY(-30deg); }
+            
+            .pos-3 { transform: translateX(-420px) scale(.75) rotateY(30deg); }
+            .pos-2 { transform: translateX(-280px) scale(.85) rotateY(20deg); }
+            .pos-1 { transform: translateX(-140px) scale(.95) rotateY(10deg); }
+            .pos1 { transform: translateX(140px) scale(.95) rotateY(-10deg); }
+            .pos2 { transform: translateX(280px) scale(.85) rotateY(-20deg); }
+            .pos3 { transform: translateX(420px) scale(.75) rotateY(-30deg); }
         }
 
-        @media (max-width: 768px) {
-            body {
-                padding-top: 70px;
+        @media (max-width: 900px) {
+            .container {
+                padding: 1rem;
             }
-
+            
             .project-header {
-                padding: 2rem 1rem;
+                margin-bottom: 2rem;
             }
-
+            
             .project-header h1 {
                 font-size: 2.5rem;
             }
-
+            
             .gallery-section {
-                padding: 3rem 1rem;
+                margin-bottom: 3rem;
             }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
+            
             .gallery-carousel {
-                height: 400px;
+                height: 380px;
             }
-
-            .image-wrapper {
+            
+            .gallery-carousel .image-wrapper {
                 width: 200px;
                 height: 300px;
             }
-
-            .pos-3 { transform: translateX(-320px) scale(0.7) rotateY(35deg); }
-            .pos-2 { transform: translateX(-200px) scale(0.8) rotateY(25deg); }
-            .pos-1 { transform: translateX(-100px) scale(0.9) rotateY(12deg); }
+            
+            .pos-3 { transform: translateX(-320px) scale(.70) rotateY(35deg); }
+            .pos-2 { transform: translateX(-210px) scale(.80) rotateY(25deg); }
+            .pos-1 { transform: translateX(-105px) scale(.90) rotateY(12deg); }
             .pos0 { transform: translateX(0) scale(1.05); }
-            .pos1 { transform: translateX(100px) scale(0.9) rotateY(-12deg); }
-            .pos2 { transform: translateX(200px) scale(0.8) rotateY(-25deg); }
-            .pos3 { transform: translateX(320px) scale(0.7) rotateY(-35deg); }
-
-            .nav-btn {
-                width: 40px;
-                height: 40px;
-                padding: 8px;
-            }
-
-            #prev-btn { left: 10px; }
-            #next-btn { right: 10px; }
-
+            .pos1 { transform: translateX(105px) scale(.90) rotateY(-12deg); }
+            .pos2 { transform: translateX(210px) scale(.80) rotateY(-25deg); }
+            .pos3 { transform: translateX(320px) scale(.70) rotateY(-35deg); }
+            
             .download-section {
-                padding: 3rem 1rem;
+                padding: 60px 24px;
             }
-
+            
             .download-container {
                 flex-direction: column;
             }
-
+            
             .text-content, .image-stack-container {
                 width: 100%;
             }
-
+            
             .text-content {
-                text-align: left;
-                margin-bottom: 3rem;
+                text-align: center;
+                margin-bottom: 50px;
             }
-
+            
             .text-content h2 {
+                font-size: 2.2rem;
+            }
+            
+            .image-stack-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-header h1 {
                 font-size: 2rem;
             }
-
-            .image-stack-container {
-                height: 350px;
+            
+            .gallery-carousel {
+                height: 320px;
             }
-
-            #gallery-img-1 {
-                width: 200px;
-                height: 280px;
-                transform: translateY(-50%) rotateZ(-8deg);
+            
+            .gallery-carousel .image-wrapper {
+                width: 160px;
+                height: 240px;
             }
-
-            #gallery-img-2 {
-                width: 220px;
-                height: 165px;
-                transform: translateY(-50%) rotateZ(8deg);
+            
+            .pos-3 { transform: translateX(-240px) scale(.65); }
+            .pos-2 { transform: translateX(-160px) scale(.75); }
+            .pos-1 { transform: translateX(-80px) scale(.88); }
+            .pos0 { transform: translateX(0) scale(1.0); }
+            .pos1 { transform: translateX(80px) scale(.88); }
+            .pos2 { transform: translateX(160px) scale(.75); }
+            .pos3 { transform: translateX(240px) scale(.65); }
+            
+            .nav-btn {
+                width: 36px;
+                height: 36px;
+                padding: 8px;
+                font-size: 16px;
             }
-
+            
+            #prev-btn { left: 10px; }
+            #next-btn { right: 10px; }
+            
+            .text-content h2 {
+                font-size: 1.8rem;
+            }
+            
             .download-button {
-                display: flex;
                 width: 100%;
-                padding: 18px 24px;
-                font-size: 1.1rem;
-            }
-
-            .footer-section {
-                padding: 3rem 1rem 1.5rem;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 0.75rem;
+                padding: 16px 24px;
             }
         }
 
         @media (max-width: 480px) {
             .project-header h1 {
-                font-size: 2rem;
-            }
-
-            .section-title {
                 font-size: 1.8rem;
             }
-
+            
             .gallery-carousel {
-                height: 350px;
+                height: 280px;
             }
-
-            .image-wrapper {
-                width: 160px;
-                height: 240px;
+            
+            .gallery-carousel .image-wrapper {
+                width: 140px;
+                height: 210px;
             }
-
-            .pos-3 { transform: translateX(-250px) scale(0.65); }
-            .pos-2 { transform: translateX(-160px) scale(0.75); }
-            .pos-1 { transform: translateX(-80px) scale(0.88); }
-            .pos0 { transform: translateX(0) scale(1.0); }
-            .pos1 { transform: translateX(80px) scale(0.88); }
-            .pos2 { transform: translateX(160px) scale(0.75); }
-            .pos3 { transform: translateX(250px) scale(0.65); }
-
-            .text-content h2 {
-                font-size: 1.8rem;
+            
+            .pos-3 { transform: translateX(-200px) scale(.60); }
+            .pos-2 { transform: translateX(-130px) scale(.70); }
+            .pos-1 { transform: translateX(-65px) scale(.85); }
+            .pos1 { transform: translateX(65px) scale(.85); }
+            .pos2 { transform: translateX(130px) scale(.70); }
+            .pos3 { transform: translateX(200px) scale(.60); }
+            
+            .image-stack-container {
+                height: 300px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <header class="header">
-        <div class="header-container">
-            <nav class="nav">
-                <div class="nav-left">
-                    <a href="/">
-                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
-                    </a>
-                    <div class="nav-links">
-                        <a class="nav-link" href="/home">Home</a>
-                        <a class="nav-link" href="/about">About</a>
-                        <a class="nav-link" href="/services">Services</a>
-                        <a class="nav-link" href="/gallery">Gallery</a>
-                        <a class="nav-link" href="/contact">Contact</a>
+    <div class="container">
+        <p id="status-message" class="status">Loading Project...</p>
+
+        <div id="main-content">
+            <div class="project-header">
+                <h1>Explore Your <span class="serif">Gallery</span></h1>
+            </div>
+
+            <section class="gallery-section">
+                <div class="gallery-carousel" id="carousel-container">
+                    <div class="carousel-track" id="track"></div>
+                    <button id="prev-btn" class="nav-btn">&#10094;</button>
+                    <button id="next-btn" class="nav-btn">&#10095;</button>
+                </div>
+                <div class="dots" id="dots"></div>
+            </section>
+
+            <section class="download-section">
+                <div class="download-container">
+                    <div class="text-content">
+                        <p class="eyebrow-text">Your Memories, Delivered</p>
+                        <h2>Your Gallery is <span class="serif">Ready!</span></h2>
+                        <p>
+                            We've put the finishing touches on your collection. Each image has been professionally edited and is now available in high-resolution, ready to be shared and cherished.
+                        </p>
+                        <a href="#" class="download-button">
+                            Download Your Album
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
+                    <div class="image-stack-container"></div>
                 </div>
-                <div class="nav-right">
-                    <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
-                    <button class="menu-button" id="mobileMenuButton">
-                        <i class='bx bx-menu'></i>
-                    </button>
-                    <div class="auth-buttons">
-                        <a class="auth-button submit" href="/book-us">Book Us</a>
-                    </div>
-                </div>
-            </nav>
-            <div id="mobileMenu">
-                <button class="mobile-menu-close" id="mobileMenuClose">
-                    <i class='bx bx-x'></i>
-                </button>
-                <div class="mobile-nav-links">
-                    <a href="/home" class="mobile-nav-link">Home</a>
-                    <a href="/about" class="mobile-nav-link">About</a>
-                    <a href="/services" class="mobile-nav-link">Services</a>
-                    <a href="/gallery" class="mobile-nav-link">Gallery</a>
-                    <a href="/contact" class="mobile-nav-link">Contact</a>
-                </div>
-                <div class="mobile-menu-auth">
-                    <div class="mobile-menu-auth-buttons">
-                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
-                    </div>
-                </div>
-            </div>
-            <div id="menuOverlay"></div>
-            <div class="divider"></div>
+            </section>
         </div>
-    </header>
-
-    <!-- Project Header -->
-    <section class="project-header">
-        <h1 id="project-name">Project <span class="serif">Gallery</span></h1>
-    </section>
-
-    <!-- Status Message -->
-    <div id="status-message" class="status-message">Loading your project gallery...</div>
-
-    <!-- Gallery Section -->
-    <section id="gallery-section" class="gallery-section hidden">
-        <h2 class="section-title">Explore Your <span class="serif">Gallery</span></h2>
-        
-        <div class="gallery-carousel" id="carousel-container">
-            <div class="carousel-track" id="track">
-                <!-- Carousel images will be dynamically inserted here -->
-            </div>
-            <button id="prev-btn" class="nav-btn">&#10094;</button>
-            <button id="next-btn" class="nav-btn">&#10095;</button>
-        </div>
-
-        <div class="dots" id="dots"></div>
-    </section>
-
-    <!-- Download Section -->
-    <section id="download-section" class="download-section hidden">
-        <div class="download-container">
-            <div class="text-content">
-                <p class="eyebrow-text">Your Memories, Delivered</p>
-                <h2>Your Gallery is <span class="serif">Ready!</span></h2>
-                <p>
-                    We've put the finishing touches on your collection. Each image has been professionally edited and is now available in high-resolution, ready to be shared and cherished.
-                </p>
-                <a href="#" class="download-button" id="download-button" download>
-                    Download Your Album
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                </a>
-            </div>
-            <div class="image-stack-container">
-                <!-- Extra images will be dynamically inserted here -->
-                <img id="gallery-img-1" class="image-stack-item hidden" data-speed="0.08" alt="Gallery image">
-                <img id="gallery-img-2" class="image-stack-item hidden" data-speed="0.03" alt="Gallery image">
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer Section -->
-    <footer class="footer-section">
-        <div class="footer-content">
-            <div class="footer-logo-area">
-                <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
-                <p class="logo-tagline">Capturing Life's Timeless Moments with Professional Photography Services</p>
-            </div>
-            
-            <div class="footer-cta">
-                <a href="/book-us" class="footer-cta-button">
-                    Book Your Session Now
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"></path>
-                        <path d="m12 5 7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-            
-            <div class="footer-bottom">
-                <p class="copyright-text">&copy; 2024 HV Photography. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Contact Us</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Firebase and Application Script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-            authDomain: "harsha-demo01.firebaseapp.com",
-            projectId: "harsha-demo01",
-            storageBucket: "harsha-demo01.firebasestorage.app",
-            messagingSenderId: "676891713475",
-            appId: "1:676891713475:web:a57e93657253e27a382776",
-            measurementId: "G-B211571YB4"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // UI Elements
-        const projectNameTitle = document.getElementById('project-name');
-        const statusMessage = document.getElementById('status-message');
-        const gallerySection = document.getElementById('gallery-section');
-        const downloadSection = document.getElementById('download-section');
-        const downloadButton = document.getElementById('download-button');
-        const carouselTrack = document.getElementById('track');
-        const galleryImg1 = document.getElementById('gallery-img-1');
-        const galleryImg2 = document.getElementById('gallery-img-2');
-
-        // Mobile Menu Functionality
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const menuOverlay = document.getElementById('menuOverlay');
-
-        const openMenu = () => {
-            mobileMenu.classList.add('active');
-            menuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        const closeMenu = () => {
-            mobileMenu.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-
-        mobileMenuButton.addEventListener('click', openMenu);
-        mobileMenuClose.addEventListener('click', closeMenu);
-        menuOverlay.addEventListener('click', closeMenu);
-
-        // Close menu when clicking on menu links
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-
-        // Close menu when pressing Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMenu();
-        });
-
-        // Gallery Carousel Functionality
-        let currentIndex = 0;
-        let autoPlayInterval;
-
-        function initializeCarousel(images) {
-            // Clear existing content
-            carouselTrack.innerHTML = '';
-            
-            // Create image wrappers
-            images.forEach((imageUrl, index) => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'image-wrapper';
-                wrapper.innerHTML = `<img src="${imageUrl}" alt="Project image ${index + 1}" loading="lazy">`;
-                carouselTrack.appendChild(wrapper);
-            });
-
-            // Initialize dots
-            const dotsContainer = document.getElementById('dots');
-            dotsContainer.innerHTML = '';
-            
-            images.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.dataset.index = index;
-                dotsContainer.appendChild(dot);
-            });
-
-            updateCarousel();
-
-            // Set up navigation
-            document.getElementById('prev-btn').addEventListener('click', () => navigateCarousel(-1));
-            document.getElementById('next-btn').addEventListener('click', () => navigateCarousel(1));
-
-            // Dot navigation
-            dotsContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('dot')) {
-                    const index = parseInt(e.target.dataset.index);
-                    goToSlide(index);
-                }
-            });
-
-            // Auto-play
-            startAutoPlay();
-            
-            // Pause on hover
-            const carouselContainer = document.getElementById('carousel-container');
-            carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-            carouselContainer.addEventListener('mouseleave', startAutoPlay);
-        }
-
-        function updateCarousel() {
-            const wrappers = document.querySelectorAll('.image-wrapper');
-            const dots = document.querySelectorAll('.dot');
-            const positions = ['pos-3', 'pos-2', 'pos-1', 'pos0', 'pos1', 'pos2', 'pos3'];
-
-            wrappers.forEach((wrapper, index) => {
-                const positionIndex = (index - currentIndex + 3 + wrappers.length) % wrappers.length;
-                wrapper.className = `image-wrapper ${positions[positionIndex] || 'hidden'}`;
-            });
-
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-        }
-
-        function navigateCarousel(direction) {
-            const wrappers = document.querySelectorAll('.image-wrapper');
-            currentIndex = (currentIndex + direction + wrappers.length) % wrappers.length;
-            updateCarousel();
-        }
-
-        function goToSlide(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
-
-        function startAutoPlay() {
-            stopAutoPlay();
-            autoPlayInterval = setInterval(() => navigateCarousel(1), 4000);
-        }
-
-        function stopAutoPlay() {
-            if (autoPlayInterval) {
-                clearInterval(autoPlayInterval);
-            }
-        }
-
-        // Main Application Logic
-        document.addEventListener('DOMContentLoaded', async () => {
-            const params = new URLSearchParams(window.location.search);
-            const projectId = params.get('id');
-
-            if (!projectId) {
-                showError('No project ID provided. The link is invalid.');
-                return;
-            }
-
-            try {
-                const projectRef = doc(db, 'projects', projectId);
-                const docSnap = await getDoc(projectRef);
-
-                if (docSnap.exists()) {
-                    const projectData = docSnap.data();
-                    
-                    // Update page content
-                    projectNameTitle.innerHTML = `${projectData.name} <span class="serif">Gallery</span>`;
-                    document.title = `${projectData.name} - HV Photography`;
-
-                    if (projectData.imageURLs && projectData.imageURLs.length > 0) {
-                        const images = projectData.imageURLs;
-                        
-                        // Show first 7 images in carousel
-                        const carouselImages = images.slice(0, 7);
-                        if (carouselImages.length > 0) {
-                            initializeCarousel(carouselImages);
-                            gallerySection.classList.remove('hidden');
-                        }
-
-                        // Show extra images in download section (images 8 and 9)
-                        const extraImages = images.slice(7, 9);
-                        if (extraImages.length > 0) {
-                            downloadSection.classList.remove('hidden');
-                            
-                            if (extraImages[0]) {
-                                galleryImg1.src = extraImages[0];
-                                galleryImg1.classList.remove('hidden');
-                            }
-                            if (extraImages[1]) {
-                                galleryImg2.src = extraImages[1];
-                                galleryImg2.classList.remove('hidden');
-                            }
-                        }
-
-                        // Set up download button
-                        if (projectData.link) {
-                            downloadButton.href = projectData.link;
-                            downloadButton.target = '_blank';
-                            downloadButton.rel = 'noopener noreferrer';
-                        }
-
-                        statusMessage.classList.add('hidden');
-                    } else {
-                        showError('This project has no images.');
-                    }
-                } else {
-                    showError('Project not found. It may have been deleted.');
-                }
-            } catch (error) {
-                console.error("Error fetching project:", error);
-                showError('An error occurred while loading the project.');
-            }
-        });
-
-        function showError(message) {
-            statusMessage.textContent = message;
-            statusMessage.className = 'status-message status-error';
-        }
-    </script>
+    </div>
 </body>
 </html>
