@@ -7,8 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
     <style>
         /* --- Universal box-sizing --- */
         * {
@@ -72,18 +70,11 @@
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         }
 
-        /* Container */
         .header-container {
             width: 90%;
             margin-left: auto;
             margin-right: auto;
             max-width: 1400px;
-        }
-
-        @media (min-width: 48rem) {
-            .header-container {
-                width: 90%;
-            }
         }
 
         @media (max-width: 768px) {
@@ -92,20 +83,11 @@
                 padding-right: 16px;
                 width: 100%;
             }
-            .nav-left, .nav-right {
-                margin: 0;
-                padding: 0;
-            }
-            .logo, .menu-button {
-                margin: 0;
-                padding: 0;
-            }
             body {
                 padding-top: 70px;
             }
         }
 
-        /* Navigation */
         .nav {
             padding-top: calc(var(--spacing) * 3);
             padding-bottom: calc(var(--spacing) * 3);
@@ -114,7 +96,6 @@
             justify-content: space-between;
         }
 
-        /* Logo and nav links container */
         .nav-left {
             display: flex;
             align-items: center;
@@ -128,7 +109,6 @@
             }
         }
         
-        /* Logo image */
         .logo {
             margin-right: calc(var(--spacing) * 6);
             height: 40px;
@@ -140,7 +120,6 @@
             transform: scale(1.05);
         }
 
-        /* Nav links (hidden on mobile, flex on md) */
         .nav-links {
             display: none;
             align-items: center;
@@ -153,7 +132,6 @@
             }
         }
 
-        /* Nav link hover effect */
         .nav-link {
             padding-left: calc(var(--spacing) * 4);
             padding-right: calc(var(--spacing) * 4);
@@ -194,14 +172,12 @@
             }
         }
 
-        /* Right-side buttons container */
         .nav-right {
             display: flex;
             align-items: center;
             gap: calc(var(--spacing) * 4);
         }
 
-        /* Mobile menu button */
         .menu-button {
             display: flex;
             padding: calc(var(--spacing) * 1.5);
@@ -224,7 +200,6 @@
             }
         }
 
-        /* Mobile menu styles */
         #mobileMenu {
             position: fixed;
             top: 0;
@@ -332,7 +307,12 @@
             color: var(--color-white);
         }
 
-        /* Auth buttons container */
+        @media (hover: hover) {
+            .mobile-menu-auth-button.submit:hover {
+                background: var(--color-teal-hover);
+            }
+        }
+
         .auth-buttons {
             display: none;
             align-items: center;
@@ -345,7 +325,6 @@
             }
         }
 
-        /* Auth button */
         .auth-button {
             padding-left: calc(var(--spacing) * 5);
             padding-right: calc(var(--spacing) * 5);
@@ -380,7 +359,6 @@
             }
         }
 
-        /* Mobile-only "BOOK US" button */
         .mobile-auth-button {
             display: inline-block;
         }
@@ -391,7 +369,6 @@
             }
         }
 
-        /* Divider */
         .divider {
             height: 1px;
             background-color: var(--color-gray-200);
@@ -410,7 +387,7 @@
             width: 100%;
             max-width: 1100px;
             text-align: center;
-            padding: 80px 20px;
+            padding: 80px 0;
             margin: 0 auto;
         }
 
@@ -555,7 +532,7 @@
         /* --- Download Section Styles --- */
         .download-section {
             width: 100%;
-            padding: 80px 20px;
+            padding: 140px 40px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -571,11 +548,6 @@
             align-items: center;
         }
 
-        .download-section.hidden {
-            display: none;
-        }
-
-        /* --- Left Side: Text Content --- */
         .text-content {
             width: 45%;
             z-index: 2;
@@ -608,16 +580,11 @@
             max-width: 480px;
         }
 
-        /* --- Right Side: Interactive Image Stack --- */
         .image-stack-container {
             width: 50%;
             position: relative;
             height: 450px;
             perspective: 1000px;
-        }
-
-        .image-stack-container.hidden {
-            display: none;
         }
 
         .image-stack-item {
@@ -652,6 +619,27 @@
                 transform: translateY(-45%) rotateZ(8deg) scale(1.03);
             }
         }
+
+        /* Scroll-Triggered Entry Animations */
+        .text-content > *, .image-stack-item {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .download-container.is-visible .text-content > *,
+        .download-container.is-visible .image-stack-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Staggered animation delays */
+        .download-container.is-visible .eyebrow-text { transition-delay: 0.1s; }
+        .download-container.is-visible h2 { transition-delay: 0.2s; }
+        .download-container.is-visible p { transition-delay: 0.3s; }
+        .download-container.is-visible .download-button { transition-delay: 0.4s; }
+        .download-container.is-visible #gallery-img-1 { transition-delay: 0.2s; }
+        .download-container.is-visible #gallery-img-2 { transition-delay: 0.4s; }
 
         /* The Download Button with Shine Effect */
         .download-button {
@@ -765,27 +753,30 @@
             color: #ffffff;
         }
 
-        /* Status Messages */
-        .status {
+        /* --- Loading States --- */
+        .loading-state {
             text-align: center;
-            font-size: 1.2rem;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 600px;
-            border-radius: 12px;
+            padding: 60px 20px;
+            color: var(--text-secondary);
         }
-        .status.loading { color: var(--text-secondary); }
-        .status.error { background-color: #FEE2E2; color: #991B1B; }
 
-        /* Project Title */
-        .project-title {
-            text-align: center;
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2rem;
-            padding: 0 20px;
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-left: 4px solid var(--color-dark-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         /* --- Responsive Adjustments --- */
@@ -801,7 +792,7 @@
 
         @media (max-width: 900px){
             .gallery-section { 
-                padding: 60px 20px; 
+                padding: 60px 0; 
             }
             
             .gallery-section h2 { 
@@ -833,7 +824,7 @@
 
             /* Download Section */
             .download-section { 
-                padding: 60px 20px; 
+                padding: 80px 24px; 
             }
             
             .download-container { 
@@ -884,7 +875,7 @@
 
         @media (max-width: 768px) {
             .gallery-section { 
-                padding: 40px 20px; 
+                padding: 40px 0; 
             }
             
             .gallery-section h2 { 
@@ -937,10 +928,6 @@
                 flex-direction: column;
                 gap: 12px;
             }
-
-            .project-title {
-                font-size: 2rem;
-            }
         }
 
         @media (max-width: 480px) {
@@ -949,10 +936,6 @@
             }
 
             .text-content h2 {
-                font-size: 1.8rem;
-            }
-
-            .project-title {
                 font-size: 1.8rem;
             }
         }
@@ -1015,21 +998,21 @@
         </div>
     </header>
 
-    <!-- Status Message -->
-    <p id="status-message" class="status loading">Loading Project...</p>
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+        <div class="loading-spinner"></div>
+        <p>Loading your project gallery...</p>
+    </div>
 
     <!-- Main Content -->
-    <div id="main-content" style="display: none;">
-        <!-- Project Title -->
-        <h1 class="project-title" id="project-name"></h1>
-
+    <div id="mainContent" class="hidden">
         <!-- Gallery Section -->
         <section class="gallery-section">
             <h2>Explore Your <span class="serif">Gallery</span></h2>
 
             <div class="gallery-carousel" id="carousel-container">
                 <div class="carousel-track" id="track">
-                    <!-- Images will be dynamically inserted here -->
+                    <!-- Dynamic images will be inserted here -->
                 </div>
                 <button id="prev-btn" class="nav-btn">&#10094;</button>
                 <button id="next-btn" class="nav-btn">&#10095;</button>
@@ -1039,7 +1022,7 @@
         </section>
 
         <!-- Download Section -->
-        <section class="download-section" id="download-section">
+        <section class="download-section" id="downloadSection">
             <div class="download-container">
                 <div class="text-content">
                     <p class="eyebrow-text">Your Memories, Delivered</p>
@@ -1047,14 +1030,14 @@
                     <p>
                         We've put the finishing touches on your collection. Each image has been professionally edited and is now available in high-resolution, ready to be shared and cherished.
                     </p>
-                    <a href="#" class="download-button" id="download-section-button" download>
+                    <a href="#" class="download-button" id="downloadButton" download>
                         Download Your Album
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     </a>
                 </div>
-                <div class="image-stack-container" id="image-stack-container">
-                    <img src="" alt="Extra gallery image 1" class="image-stack-item" id="gallery-img-1" data-speed="0.08">
-                    <img src="" alt="Extra gallery image 2" class="image-stack-item" id="gallery-img-2" data-speed="0.03">
+                <div class="image-stack-container" id="imageStackContainer">
+                    <img src="" alt="Gallery image 1" class="image-stack-item hidden" id="gallery-img-1" data-speed="0.08">
+                    <img src="" alt="Gallery image 2" class="image-stack-item hidden" id="gallery-img-2" data-speed="0.03">
                 </div>
             </div>
         </section>
@@ -1089,54 +1072,41 @@
         </div>
     </footer>
 
-    <!-- Firebase and Application Logic -->
+    <!-- Firebase and Application Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
-        // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
-          authDomain: "harsha-demo01.firebaseapp.com",
-          projectId: "harsha-demo01",
-          storageBucket: "harsha-demo01.firebasestorage.app",
-          messagingSenderId: "676891713475",
-          appId: "1:676891713475:web:a57e93657253e27a382776",
-          measurementId: "G-B211571YB4"
+            apiKey: "AIzaSyB-u3L7Jz3gEfXmfP7-XQfPnI2CwpJM_Vs",
+            authDomain: "harsha-demo01.firebaseapp.com",
+            projectId: "harsha-demo01",
+            storageBucket: "harsha-demo01.firebasestorage.app",
+            messagingSenderId: "676891713475",
+            appId: "1:676891713475:web:a57e93657253e27a382776",
+            measurementId: "G-B211571YB4"
         };
         
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         // UI Elements
-        const projectNameTitle = document.getElementById('project-name');
-        const statusMessage = document.getElementById('status-message');
-        const mainContent = document.getElementById('main-content');
-        const downloadSection = document.getElementById('download-section');
-        const imageStackContainer = document.getElementById('image-stack-container');
-        const downloadSectionButton = document.getElementById('download-section-button');
+        const loadingState = document.getElementById('loadingState');
+        const mainContent = document.getElementById('mainContent');
+        const track = document.getElementById('track');
+        const downloadButton = document.getElementById('downloadButton');
+        const galleryImg1 = document.getElementById('gallery-img-1');
+        const galleryImg2 = document.getElementById('gallery-img-2');
+        const downloadSection = document.getElementById('downloadSection');
+        const imageStackContainer = document.getElementById('imageStackContainer');
 
-        // Gallery Carousel Elements
-        const carouselTrack = document.getElementById('track');
-        const dotsContainer = document.getElementById('dots');
-
-        // Carousel Variables
-        let imageWrappers = [];
-        let totalImages = 0;
-        let idx = 0, auto = null;
-        const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
-        const offsetByClass = { 'pos-3':-3, 'pos-2':-2, 'pos-1':-1, 'pos0':0, 'pos1':1, 'pos2':2, 'pos3':3 };
-
-        // Page Logic
         document.addEventListener('DOMContentLoaded', async () => {
             // Get Project ID from URL
             const params = new URLSearchParams(window.location.search);
             const projectId = params.get('id');
 
             if (!projectId) {
-                statusMessage.textContent = 'Error: No project ID provided. The link is invalid.';
-                statusMessage.className = 'status error';
+                showError('No project ID provided. The link is invalid.');
                 return;
             }
 
@@ -1147,127 +1117,159 @@
 
                 if (docSnap.exists()) {
                     const projectData = docSnap.data();
-                    
-                    // Populate the page with data
-                    projectNameTitle.textContent = projectData.name;
-                    document.title = `${projectData.name} - HV Photography`;
-
-                    // Handle images distribution
-                    if (projectData.imageURLs && projectData.imageURLs.length > 0) {
-                        const allImages = projectData.imageURLs;
-                        totalImages = allImages.length;
-
-                        // First 7 images go to the carousel
-                        const carouselImages = allImages.slice(0, 7);
-                        populateCarousel(carouselImages, projectData.name);
-
-                        // Remaining images (if any) go to download section
-                        const extraImages = allImages.slice(7, 9); // Get at most 2 extra images
-                        if (extraImages.length > 0) {
-                            populateDownloadSection(extraImages, projectData.name);
-                        } else {
-                            // Hide download section images if no extra images
-                            imageStackContainer.classList.add('hidden');
-                        }
-                    } else {
-                        carouselTrack.innerHTML = '<p class="status">This project has no images.</p>';
-                        downloadSection.classList.add('hidden');
-                    }
-
-                    // Set up download button
-                    if (projectData.link) {
-                        downloadSectionButton.href = projectData.link;
-                        downloadSectionButton.target = '_blank';
-                        downloadSectionButton.rel = 'noopener noreferrer';
-                    } else {
-                        downloadSectionButton.style.display = 'none';
-                    }
-
-                    // Show the content
-                    statusMessage.style.display = 'none';
-                    mainContent.style.display = 'block';
-
-                    // Initialize carousel after images are loaded
-                    setTimeout(initCarousel, 100);
-
+                    await initializeGallery(projectData);
                 } else {
-                    statusMessage.textContent = 'Error: Project not found. It may have been deleted.';
-                    statusMessage.className = 'status error';
+                    showError('Project not found. It may have been deleted.');
                 }
             } catch (error) {
                 console.error("Error fetching project:", error);
-                statusMessage.textContent = 'An error occurred while loading the project.';
-                statusMessage.className = 'status error';
+                showError('An error occurred while loading the project.');
             }
         });
 
-        // Populate Carousel with Images
-        function populateCarousel(images, projectName) {
-            carouselTrack.innerHTML = '';
-            imageWrappers = [];
-            
+        async function initializeGallery(projectData) {
+            // Set download button
+            if (projectData.link) {
+                downloadButton.href = projectData.link;
+                downloadButton.target = '_blank';
+            }
+
+            // Process images
+            if (projectData.imageURLs && projectData.imageURLs.length > 0) {
+                const images = projectData.imageURLs;
+                
+                // First 7 images go to gallery carousel
+                const galleryImages = images.slice(0, 7);
+                populateGalleryCarousel(galleryImages);
+                
+                // Next 2 images (if available) go to download section
+                const downloadImages = images.slice(7, 9);
+                if (downloadImages.length > 0) {
+                    populateDownloadSection(downloadImages);
+                } else {
+                    // Hide download section images if no extra images
+                    imageStackContainer.classList.add('hidden');
+                }
+                
+                // Show main content and initialize carousel
+                loadingState.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                initCarousel();
+                initDownloadSectionAnimations();
+            } else {
+                showError('This project has no images.');
+            }
+        }
+
+        function populateGalleryCarousel(images) {
+            track.innerHTML = '';
             images.forEach((url, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'image-wrapper';
                 
-                const link = document.createElement('a');
-                link.href = url;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
                 
                 const img = document.createElement('img');
                 img.src = url;
-                img.alt = `${projectName} - Image ${index + 1}`;
+                img.alt = `Project image ${index + 1}`;
+                img.loading = 'lazy';
                 
-                link.appendChild(img);
-                wrapper.appendChild(link);
-                carouselTrack.appendChild(wrapper);
-                imageWrappers.push(wrapper);
+                a.appendChild(img);
+                wrapper.appendChild(a);
+                track.appendChild(wrapper);
             });
+        }
 
-            // Create dots for navigation
+        function populateDownloadSection(images) {
+            if (images[0]) {
+                galleryImg1.src = images[0];
+                galleryImg1.alt = 'Additional project image 1';
+                galleryImg1.classList.remove('hidden');
+            }
+            
+            if (images[1]) {
+                galleryImg2.src = images[1];
+                galleryImg2.alt = 'Additional project image 2';
+                galleryImg2.classList.remove('hidden');
+            }
+            
+            imageStackContainer.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            loadingState.innerHTML = `<p style="color: #dc2626;">${message}</p>`;
+        }
+
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        const openMenu = () => {
+            mobileMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeMenu = () => {
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', openMenu);
+        }
+        
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        const mobileMenuLinks = document.querySelectorAll('#mobileMenu a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+
+        // Gallery Carousel Functionality
+        function initCarousel() {
+            const carouselContainer = document.getElementById('carousel-container');
+            const imageWrappers = document.querySelectorAll('.gallery-carousel .image-wrapper');
+            const dotsContainer = document.getElementById('dots');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const total = imageWrappers.length;
+            const positions = ['pos-3','pos-2','pos-1','pos0','pos1','pos2','pos3'];
+            const offsetByClass = { 'pos-3':-3, 'pos-2':-2, 'pos-1':-1, 'pos0':0, 'pos1':1, 'pos2':2, 'pos3':3 };
+
+            let idx = 0, auto = null;
+            let startX = 0, lastX = 0, velocity = 0, lastTime = 0;
+
+            // Create dots
             dotsContainer.innerHTML = '';
-            for (let i = 0; i < images.length; i++) {
+            for (let i = 0; i < total; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
                 dot.dataset.idx = i;
                 dotsContainer.appendChild(dot);
             }
-        }
-
-        // Populate Download Section with Extra Images
-        function populateDownloadSection(images, projectName) {
-            const img1 = document.getElementById('gallery-img-1');
-            const img2 = document.getElementById('gallery-img-2');
-            
-            if (images[0]) {
-                img1.src = images[0];
-                img1.alt = `${projectName} - Extra Image 1`;
-            } else {
-                img1.style.display = 'none';
-            }
-            
-            if (images[1]) {
-                img2.src = images[1];
-                img2.alt = `${projectName} - Extra Image 2`;
-            } else {
-                img2.style.display = 'none';
-            }
-        }
-
-        // Initialize Carousel Functionality
-        function initCarousel() {
-            if (imageWrappers.length === 0) return;
-
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
             const dots = document.querySelectorAll('.dot');
-
-            let startX = 0, lastX = 0, velocity = 0, lastTime = 0;
 
             function update() {
                 for (let i = 0; i < positions.length; i++) {
-                    const wrapperIdx = (idx + i - 3 + totalImages) % totalImages;
+                    const wrapperIdx = (idx + i - 3 + total) % total;
                     if (imageWrappers[wrapperIdx]) {
                         imageWrappers[wrapperIdx].className = 'image-wrapper ' + positions[i];
                     }
@@ -1276,11 +1278,15 @@
             }
 
             function go(dir) {
-                idx = (idx + dir + totalImages) % totalImages;
+                idx = (idx + dir + total) % total;
                 update();
             }
 
-            function startAuto(){ auto = setInterval(() => go(1), 3000); }
+            function startAuto(){ 
+                if (total > 1) {
+                    auto = setInterval(() => go(1), 3000); 
+                }
+            }
             function stopAuto(){ clearInterval(auto); }
 
             // Button navigation
@@ -1297,7 +1303,6 @@
             });
 
             // Touch swipe
-            const carouselContainer = document.getElementById('carousel-container');
             carouselContainer.addEventListener('touchstart', e => {
                 stopAuto();
                 startX = e.touches[0].clientX;
@@ -1339,48 +1344,42 @@
             startAuto();
         }
 
-        // Mobile Menu Functionality
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const menuOverlay = document.getElementById('menuOverlay');
+        // Download Section Animations
+        function initDownloadSectionAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
 
-        const openMenu = () => {
-            mobileMenu.classList.add('active');
-            menuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        const closeMenu = () => {
-            mobileMenu.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-
-        if (mobileMenuButton) {
-            mobileMenuButton.addEventListener('click', openMenu);
-        }
-        
-        if (mobileMenuClose) {
-            mobileMenuClose.addEventListener('click', closeMenu);
-        }
-        
-        if (menuOverlay) {
-            menuOverlay.addEventListener('click', closeMenu);
-        }
-        
-        // Close menu when clicking on menu links
-        const mobileMenuLinks = document.querySelectorAll('#mobileMenu a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
-        
-        // Close menu when pressing Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeMenu();
+            const downloadContainer = document.querySelector('.download-container');
+            if (downloadContainer) {
+                observer.observe(downloadContainer);
             }
-        });
+
+            // Parallax Effect on Scroll (Desktop Only)
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth > 768) {
+                    const scrollY = window.scrollY;
+                    const images = document.querySelectorAll('.image-stack-item');
+                    const sectionTop = document.querySelector('.download-section').offsetTop;
+
+                    images.forEach(img => {
+                        if (img.classList.contains('hidden')) return;
+                        
+                        const speed = parseFloat(img.getAttribute('data-speed')) || 0;
+                        const yPos = -(scrollY - sectionTop) * speed;
+                        const initialTransform = getComputedStyle(img).transform;
+                        const rotateValue = initialTransform.includes('matrix') ? 0 : initialTransform.split('rotateZ(')[1].split('deg)')[0];
+
+                        img.style.transform = `translateY(${yPos}px) rotateZ(${rotateValue}deg)`;
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
