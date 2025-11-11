@@ -13,7 +13,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        // ADDED getDoc and setDoc for custom project IDs
+        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
 
         // Your web app's Firebase configuration
@@ -36,8 +37,8 @@
         // --- GLOBAL STATE ---
         let currentUser = null;
         let editingProjectId = null;
-        let projectFiles = []; 
-        let firestoreUnsubscribe = null; 
+        let projectFiles = [];
+        let firestoreUnsubscribe = null;
 
         // --- UI ELEMENTS ---
         const loginBtn = document.getElementById('login-btn');
@@ -59,7 +60,6 @@
         const cancelBtn = document.getElementById('cancel-edit-btn');
         const submitSpinner = document.getElementById('submit-spinner');
         const formMessage = document.getElementById('form-message');
-        const toastNotification = document.getElementById('toast-notification');
         const projectsContainer = document.getElementById('projects-container');
 
         // --- AUTHENTICATION ---
@@ -95,7 +95,7 @@
 
         const uploadFile = (file) => {
             if (!currentUser) { showMessage('You must be logged in to upload images.', false); return; }
-            const uniqueId = `file-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+            const uniqueId = `file-${Date.now()}`;
             const storagePath = `projects/${currentUser.uid}/${Date.now()}-${file.name}`;
             const storageRef = ref(storage, storagePath);
             const uploadTask = uploadBytesResumable(storageRef, file);
@@ -173,9 +173,8 @@
                     </div>
                     <div class="project-images">${imagesHTML}</div>
                     <div class="project-actions">
-                        <button class="btn btn-info" data-id="${project.id}" data-action="share"><i class='bx bx-share-alt'></i> Share</button>
-                        <button class="btn btn-secondary" data-id="${project.id}" data-action="edit"><i class='bx bx-pencil'></i> Edit</button>
-                        <button class="btn btn-danger" data-id="${project.id}" data-action="delete"><i class='bx bx-trash'></i> Delete</button>
+                        <button class="btn btn-secondary" data-id="${project.id}" data-action="edit">Edit</button>
+                        <button class="btn btn-danger" data-id="${project.id}" data-action="delete">Delete</button>
                     </div>`;
                 projectsContainer.appendChild(projectCard);
             });
@@ -193,31 +192,15 @@
                 const docSnap = await getDoc(doc(db, 'projects', projectId));
                 if (docSnap.exists()) loadProjectIntoForm(docSnap.id, docSnap.data());
             }
-            if (action === 'share') {
-                handleShareClick(projectId);
-            }
-        };
-
-        const handleShareClick = (projectId) => {
-            const currentUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-            const shareLink = `${currentUrl}/player.html?id=${projectId}`;
-            navigator.clipboard.writeText(shareLink).then(() => {
-                showToast('Share link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                showToast('Failed to copy link.', false);
-            });
         };
 
         const deleteProject = async (projectId) => {
             try {
-                // For a full-featured app, you would also delete associated images from Storage
-                // using a Cloud Function triggered by the document deletion.
                 await deleteDoc(doc(db, 'projects', projectId));
-                showToast('Project deleted successfully.');
+                showMessage('Project deleted successfully.', true);
             } catch (error) {
                 console.error("Error deleting project:", error);
-                showToast('Failed to delete project.', false);
+                showMessage('Failed to delete project.', false);
             }
         };
 
@@ -247,28 +230,90 @@
             renderImagePreviews();
         };
 
+        // --- NEW: UTILITY FOR CUSTOM PROJECT ID ---
+        const slugify = (text) => {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start of text
+                .replace(/-+$/, '');            // Trim - from end of text
+        };
+
+        const findUniqueProjectId = async (baseSlug) => {
+            let finalId = baseSlug;
+            let counter = 2;
+            while (true) {
+                const projectRef = doc(db, "projects", finalId);
+                const docSnap = await getDoc(projectRef);
+                if (!docSnap.exists()) {
+                    return finalId; // Found a unique ID
+                } else {
+                    finalId = `${baseSlug}-${counter}`;
+                    counter++;
+                }
+            }
+        };
+
+
+        // --- UPDATED: HANDLE FORM SUBMIT WITH VALIDATIONS ---
         const handleFormSubmit = async (e) => {
             e.preventDefault();
             if (!currentUser) { showMessage('You must be logged in.', false); return; }
             const projectName = projectNameInput.value.trim();
             const driveLink = driveLinkInput.value.trim();
-            if (!projectName || !driveLink) { showMessage('Please fill in all fields.', false); return; }
+            if (!projectName || !driveLink) {
+                showMessage('Project Name and Drive Link are required.', false);
+                return;
+            }
             showSpinner(true);
+
+            // Check for pending uploads
             if (projectFiles.some(f => f.status === 'uploading')) {
                 showMessage('Please wait for all images to finish uploading.', false);
                 showSpinner(false);
                 return;
             }
-            const imageURLs = projectFiles.filter(f => f.status === 'completed').map(f => f.downloadURL);
+
+            // --- NEW: Image count validation ---
+            const completedImages = projectFiles.filter(f => f.status === 'completed' && f.downloadURL);
+            const imageCount = completedImages.length;
+
+            if (imageCount !== 7 && imageCount !== 9) {
+                let message = `You must upload exactly 7 or 9 images. You have ${imageCount}.`;
+                if (imageCount < 7) {
+                    const needed = 7 - imageCount;
+                    message = `Please upload ${needed} more image${needed > 1 ? 's' : ''} to reach a total of 7.`;
+                } else if (imageCount === 8) {
+                    message = `Please upload 1 more image to reach a total of 9.`;
+                } else if (imageCount > 9) {
+                    const excess = imageCount - 9;
+                    message = `Please remove ${excess} image${excess > 1 ? 's' : ''} to have a total of 9.`;
+                }
+                showMessage(message, false);
+                showSpinner(false);
+                return;
+            }
+            
+            const imageURLs = completedImages.map(f => f.downloadURL);
             const projectData = { name: projectName, link: driveLink, userId: currentUser.uid, imageURLs, updatedAt: serverTimestamp() };
+
             try {
                 if (editingProjectId) {
-                    await updateDoc(doc(db, 'projects', editingProjectId), projectData);
-                    showToast('Project updated successfully!');
+                    // UPDATE logic remains the same, using existing ID
+                    const projectRef = doc(db, 'projects', editingProjectId);
+                    await updateDoc(projectRef, projectData);
+                    showMessage('Project updated successfully!', true);
                 } else {
+                    // CREATE logic now uses a custom ID
                     projectData.createdAt = serverTimestamp();
-                    await addDoc(collection(db, 'projects'), projectData);
-                    showToast('Project created successfully!');
+                    
+                    const baseSlug = slugify(projectName) || 'untitled-project';
+                    const uniqueProjectId = await findUniqueProjectId(baseSlug);
+
+                    const newProjectRef = doc(db, "projects", uniqueProjectId);
+                    await setDoc(newProjectRef, projectData);
+                    showMessage('Project created successfully!', true);
                 }
                 resetForm();
             } catch (error) {
@@ -284,12 +329,7 @@
             formMessage.textContent = msg;
             formMessage.className = isSuccess ? 'message success' : 'message error';
             formMessage.style.display = 'block';
-            setTimeout(() => { formMessage.style.display = 'none'; }, 4000);
-        };
-        const showToast = (msg, isSuccess = true) => {
-            toastNotification.textContent = msg;
-            toastNotification.className = isSuccess ? 'toast show success' : 'toast show error';
-            setTimeout(() => { toastNotification.classList.remove('show'); }, 3000);
+            setTimeout(() => { formMessage.style.display = 'none'; }, 5000);
         };
         const showSpinner = (show) => {
             submitSpinner.style.display = show ? 'inline-block' : 'none';
@@ -311,7 +351,6 @@
             const deleteButton = e.target.closest('.delete-btn');
             if (deleteButton) deleteImage(deleteButton.dataset.id);
         });
-        
     </script>
     
     <style>
@@ -319,7 +358,7 @@
             --body-bg: #F9FAFB; --widget-bg: #FFFFFF; --border-color: #E5E7EB;
             --text-primary: #1F2937; --text-secondary: #6B7280; --brand-color: #3B82F6;
             --brand-hover: #2563EB; --danger-color: #EF4444; --success-color: #10B981;
-            --info-color: #6366F1; --font-family: 'IBM Plex Sans', sans-serif;
+            --font-family: 'IBM Plex Sans', sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: var(--font-family); background-color: var(--body-bg); color: var(--text-primary); font-size: 16px; line-height: 1.6; }
@@ -340,15 +379,13 @@
         input[type="text"] { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: var(--font-family); background-color: #F9FAFB; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
         input[type="text"]:focus { outline: none; border-color: var(--brand-color); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
         
-        .btn { padding: 0.6rem 1.25rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: background-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .btn i { font-size: 1.2rem; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background-color 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .btn-primary { background-color: var(--brand-color); color: white; }
         .btn-primary:hover { background-color: var(--brand-hover); }
         .btn-primary:disabled { background-color: #93C5FD; cursor: not-allowed; }
         .btn-google { background-color: #DB4437; color: white; }
         .btn-secondary { background-color: #6B7280; color: white; }
         .btn-danger { background-color: var(--danger-color); color: white; }
-        .btn-info { background-color: var(--info-color); color: white; }
         #cancel-edit-btn { display: none; }
 
         .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 18px; height: 18px; animation: spin 1s linear infinite; display: none; }
@@ -357,11 +394,6 @@
         .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; display: none; border: 1px solid transparent; }
         .message.success { background-color: #D1FAE5; color: #065F46; }
         .message.error { background-color: #FEE2E2; color: #991B1B; }
-
-        #toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 1rem 2rem; border-radius: 8px; color: white; z-index: 1000; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; }
-        #toast-notification.show { visibility: visible; opacity: 1; }
-        #toast-notification.success { background-color: var(--success-color); }
-        #toast-notification.error { background-color: var(--danger-color); }
         
         #drop-area { border: 2px dashed var(--border-color); border-radius: 12px; padding: 2.5rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background-color: var(--body-bg); }
         #drop-area:hover, #drop-area.drag-over { border-color: var(--brand-color); background-color: #EFF6FF; }
@@ -396,8 +428,6 @@
 </head>
 <body>
 
-    <div id="toast-notification"></div>
-
     <div class="container">
         <h1>Project Manager</h1>
 
@@ -420,28 +450,37 @@
                         <label for="drive-link">Google Drive Link</label>
                         <input type="text" id="drive-link" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label>Project Images</label>
+                        <label>Project Images (Requires exactly 7 or 9)</label>
                         <div id="drop-area">
                             <input type="file" id="file-input" accept="image/*" multiple>
                             <i class='bx bx-cloud-upload'></i>
                             <p>Drop images here, or <strong>browse</strong></p>
                         </div>
-                        <div id="image-preview-container"><p class="no-images">No images selected.</p></div>
+                        <div id="image-preview-container">
+                             <p class="no-images">No images selected.</p>
+                        </div>
                     </div>
+                    
                     <div>
-                        <button type="submit" id="submit-btn" class="btn btn-primary">Add Project<div class="spinner" id="submit-spinner"></div></button>
-                        <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" id="submit-btn" class="btn btn-primary">
+                            Add Project
+                            <div class="spinner" id="submit-spinner"></div>
+                        </button>
+                         <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
                     </div>
                 </form>
             </div>
             
             <div id="projects-list">
                 <h2>My Projects</h2>
-                <div id="projects-container"><p>Loading projects...</p></div>
+                <div id="projects-container">
+                    <p>Loading projects...</p>
+                </div>
             </div>
         </div>
 
     </div>
 </body>
-</html>
+</html>```
