@@ -335,6 +335,7 @@
         .skeleton-header {
             height: 60px;
             width: 300px;
+            margin: 0 auto 1.5rem;
         }
 
         .skeleton-carousel-container {
@@ -464,6 +465,7 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 2rem 0;
             text-align: center;
         }
 
@@ -471,6 +473,7 @@
             font-family: var(--font-serif);
             font-size: 2.5rem;
             font-weight: 600;
+            margin-bottom: 2rem;
             color: var(--text-primary);
         }
 
@@ -550,8 +553,8 @@
         .pos2 { transform: translateX(350px) scale(0.85) rotateY(-20deg); z-index: 2; }
         .pos3 { transform: translateX(500px) scale(0.75) rotateY(-30deg); z-index: 1; }
 
-        .image-wrapper:not(.pos0) {
-            pointer-events: none;
+        .image-wrapper {
+            pointer-events: all;
         }
 
         .nav-btn {
@@ -1045,11 +1048,12 @@
             }
 
             .gallery-section {
-                padding: 3rem 1rem;
+                padding: 2rem 0;
             }
 
             .section-title {
                 font-size: 2rem;
+                margin-bottom: 1.5rem;
             }
 
             .gallery-carousel {
@@ -1494,6 +1498,8 @@
             allImages = images;
             carouselTrack.innerHTML = '';
             
+            const preloadImages = [];
+            
             images.forEach((imageUrl, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'image-wrapper';
@@ -1501,18 +1507,21 @@
                 const img = document.createElement('img');
                 img.src = imageUrl;
                 img.alt = `Project image ${index + 1}`;
-                img.loading = 'lazy';
+                img.loading = 'eager';
                 
                 img.onload = function() {
                     this.style.opacity = '1';
                 };
                 
                 img.style.opacity = '0';
-                img.style.transition = 'opacity 0.3s ease';
+                img.style.transition = 'opacity 0.2s ease';
                 
                 wrapper.appendChild(img);
                 wrapper.addEventListener('click', () => openModal(index));
                 carouselTrack.appendChild(wrapper);
+                
+                preloadImages.push(new Image());
+                preloadImages[index].src = imageUrl;
             });
 
             const dotsContainer = document.getElementById('dots');
@@ -1660,15 +1669,8 @@
             stopAutoPlay();
             currentModalIndex = index;
             
-            const img = new Image();
-            img.src = allImages[index];
-            img.onload = function() {
-                modalImage.src = allImages[index];
-                modalImage.style.opacity = '1';
-            };
-            
-            modalImage.style.opacity = '0';
-            modalImage.style.transition = 'opacity 0.3s ease';
+            modalImage.src = allImages[index];
+            modalImage.style.opacity = '1';
             
             imageModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1682,15 +1684,7 @@
 
         function navigateModal(direction) {
             currentModalIndex = (currentModalIndex + direction + allImages.length) % allImages.length;
-            
-            const img = new Image();
-            img.src = allImages[currentModalIndex];
-            img.onload = function() {
-                modalImage.src = allImages[currentModalIndex];
-                modalImage.style.opacity = '1';
-            };
-            
-            modalImage.style.opacity = '0';
+            modalImage.src = allImages[currentModalIndex];
         }
 
         modalClose.addEventListener('click', closeModal);
@@ -1761,7 +1755,7 @@
                                     galleryImg1.style.opacity = '1';
                                 };
                                 galleryImg1.style.opacity = '0';
-                                galleryImg1.style.transition = 'opacity 0.3s ease';
+                                galleryImg1.style.transition = 'opacity 0.2s ease';
                                 galleryImg1.addEventListener('click', () => openModal(7));
                             }
                             if (extraImages[1]) {
@@ -1773,7 +1767,7 @@
                                     galleryImg2.style.opacity = '1';
                                 };
                                 galleryImg2.style.opacity = '0';
-                                galleryImg2.style.transition = 'opacity 0.3s ease';
+                                galleryImg2.style.transition = 'opacity 0.2s ease';
                                 galleryImg2.addEventListener('click', () => openModal(8));
                             }
                         }
@@ -1789,7 +1783,7 @@
                             statusMessage.classList.add('hidden');
                             gallerySection.classList.remove('hidden');
                             downloadContent.classList.remove('hidden');
-                        }, 500);
+                        }, 300);
 
                     } else {
                         showError('This project has no images.');
