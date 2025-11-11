@@ -137,15 +137,24 @@
             gap: 1rem;
         }
 
+        /* Fixed Mobile Menu Button Size */
         .menu-button {
             display: flex;
-            padding: 0.5rem;
+            padding: 0.75rem;
             border: 1px solid var(--color-dark-teal);
             border-radius: 6px;
             color: var(--color-dark-teal);
             background-color: transparent;
             cursor: pointer;
             transition: all 0.3s ease;
+            width: 48px;
+            height: 48px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-button i {
+            font-size: 24px;
         }
 
         .menu-button:hover {
@@ -239,14 +248,25 @@
             display: block;
         }
 
+        /* Fixed Mobile Menu Close Button Size */
         .mobile-menu-close {
-            padding: 8px;
+            padding: 0.75rem;
             border-radius: 8px;
             border: none;
             background: transparent;
             align-self: flex-end;
             margin-bottom: 24px;
             cursor: pointer;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-close i {
+            font-size: 24px;
+            color: #4b5563;
         }
 
         .mobile-nav-links {
@@ -300,6 +320,53 @@
         .divider {
             height: 1px;
             background-color: #e5e7eb;
+        }
+
+        /* --- Skeleton Loading --- */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-header {
+            height: 60px;
+            width: 300px;
+            margin: 0 auto 3rem;
+        }
+
+        .skeleton-carousel {
+            height: 500px;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .skeleton-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 2rem;
+        }
+
+        .skeleton-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .skeleton-download {
+            height: 450px;
+            width: 100%;
         }
 
         /* --- Gallery Section --- */
@@ -490,15 +557,16 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
+        /* Improved Modal Controls - Visible on white backgrounds */
         .modal-close {
             position: absolute;
             top: -50px;
             right: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
@@ -507,19 +575,22 @@
             align-items: center;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.9);
             transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .modal-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
             width: 50px;
             height: 50px;
@@ -531,11 +602,14 @@
             align-items: center;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
         }
 
         .modal-nav:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.9);
             transform: translateY(-50%) scale(1.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .modal-prev {
@@ -615,6 +689,7 @@
             border: 5px solid white;
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
             -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
         }
 
         #gallery-img-1 {
@@ -867,6 +942,10 @@
             .modal-next {
                 right: 10px;
             }
+
+            .skeleton-carousel {
+                height: 450px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -967,8 +1046,8 @@
             .modal-close {
                 top: 10px;
                 right: 10px;
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 font-size: 20px;
             }
 
@@ -993,6 +1072,19 @@
             .footer-links {
                 flex-direction: column;
                 gap: 0.75rem;
+            }
+
+            .skeleton-carousel {
+                height: 400px;
+            }
+
+            .skeleton-header {
+                height: 50px;
+                width: 250px;
+            }
+
+            .skeleton-download {
+                height: 400px;
             }
         }
 
@@ -1020,6 +1112,15 @@
 
             .text-content h2 {
                 font-size: 1.8rem;
+            }
+
+            .skeleton-carousel {
+                height: 350px;
+            }
+
+            .skeleton-header {
+                height: 40px;
+                width: 200px;
             }
         }
     </style>
@@ -1073,8 +1174,28 @@
         </div>
     </header>
 
+    <!-- Skeleton Loading -->
+    <div id="skeleton-loading">
+        <section class="gallery-section">
+            <div class="skeleton skeleton-header"></div>
+            <div class="skeleton skeleton-carousel"></div>
+            <div class="skeleton-dots">
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+                <div class="skeleton skeleton-dot"></div>
+            </div>
+        </section>
+        <section class="download-section">
+            <div class="skeleton skeleton-download"></div>
+        </section>
+    </div>
+
     <!-- Status Message -->
-    <div id="status-message" class="status-message">Loading your project gallery...</div>
+    <div id="status-message" class="status-message hidden">Loading your project gallery...</div>
 
     <!-- Gallery Section -->
     <section id="gallery-section" class="gallery-section hidden">
@@ -1108,7 +1229,7 @@
     </div>
 
     <!-- Download Section - ALWAYS VISIBLE -->
-    <section class="download-section">
+    <section id="download-content" class="download-section hidden">
         <div class="download-container" id="download-container">
             <div class="text-content">
                 <p class="eyebrow-text">Your Memories, Delivered</p>
@@ -1181,8 +1302,10 @@
         const db = getFirestore(app);
 
         // UI Elements
+        const skeletonLoading = document.getElementById('skeleton-loading');
         const statusMessage = document.getElementById('status-message');
         const gallerySection = document.getElementById('gallery-section');
+        const downloadContent = document.getElementById('download-content');
         const downloadContainer = document.getElementById('download-container');
         const downloadButton = document.getElementById('download-button');
         const carouselTrack = document.getElementById('track');
@@ -1484,7 +1607,6 @@
                         const carouselImages = images.slice(0, 7);
                         if (carouselImages.length > 0) {
                             initializeCarousel(carouselImages);
-                            gallerySection.classList.remove('hidden');
                         }
 
                         // Handle extra images in download section (images 8 and 9)
@@ -1498,11 +1620,13 @@
                             if (extraImages[0]) {
                                 galleryImg1.src = extraImages[0];
                                 galleryImg1.classList.remove('hidden');
+                                // Fix: Add click event to download section images
                                 galleryImg1.addEventListener('click', () => openModal(7));
                             }
                             if (extraImages[1]) {
                                 galleryImg2.src = extraImages[1];
                                 galleryImg2.classList.remove('hidden');
+                                // Fix: Add click event to download section images
                                 galleryImg2.addEventListener('click', () => openModal(8));
                             }
                         }
@@ -1514,7 +1638,14 @@
                             downloadButton.rel = 'noopener noreferrer';
                         }
 
-                        statusMessage.classList.add('hidden');
+                        // Hide skeleton and show actual content after a small delay for smooth transition
+                        setTimeout(() => {
+                            skeletonLoading.classList.add('hidden');
+                            statusMessage.classList.add('hidden');
+                            gallerySection.classList.remove('hidden');
+                            downloadContent.classList.remove('hidden');
+                        }, 500);
+
                     } else {
                         showError('This project has no images.');
                     }
@@ -1528,8 +1659,10 @@
         });
 
         function showError(message) {
+            skeletonLoading.classList.add('hidden');
             statusMessage.textContent = message;
             statusMessage.className = 'status-message status-error';
+            statusMessage.classList.remove('hidden');
         }
     </script>
 </body>
