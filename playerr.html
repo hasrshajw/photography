@@ -611,6 +611,23 @@
             100% { background-position: 100% 50%; }
         }
 
+        /* Layout for when there are no extra images */
+        .download-container.no-images .image-stack-container {
+            display: none;
+        }
+
+        .download-container.no-images .text-content {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .download-container.no-images .text-content p {
+            max-width: 600px;
+        }
+
         /* --- Footer Section --- */
         .footer-section {
             background-color: var(--color-dark-teal);
@@ -840,6 +857,12 @@
                 font-size: 1.1rem;
             }
 
+            /* Mobile layout for no images */
+            .download-container.no-images .text-content {
+                text-align: center;
+                margin-bottom: 0;
+            }
+
             .footer-section {
                 padding: 3rem 1rem 1.5rem;
             }
@@ -954,9 +977,9 @@
         <div class="dots" id="dots"></div>
     </section>
 
-    <!-- Download Section -->
-    <section id="download-section" class="download-section hidden">
-        <div class="download-container">
+    <!-- Download Section - ALWAYS VISIBLE -->
+    <section class="download-section">
+        <div class="download-container" id="download-container">
             <div class="text-content">
                 <p class="eyebrow-text">Your Memories, Delivered</p>
                 <h2>Your Gallery is <span class="serif">Ready!</span></h2>
@@ -1031,7 +1054,7 @@
         const projectNameTitle = document.getElementById('project-name');
         const statusMessage = document.getElementById('status-message');
         const gallerySection = document.getElementById('gallery-section');
-        const downloadSection = document.getElementById('download-section');
+        const downloadContainer = document.getElementById('download-container');
         const downloadButton = document.getElementById('download-button');
         const carouselTrack = document.getElementById('track');
         const galleryImg1 = document.getElementById('gallery-img-1');
@@ -1187,11 +1210,14 @@
                             gallerySection.classList.remove('hidden');
                         }
 
-                        // Show extra images in download section (images 8 and 9)
+                        // Handle extra images in download section (images 8 and 9)
                         const extraImages = images.slice(7, 9);
-                        if (extraImages.length > 0) {
-                            downloadSection.classList.remove('hidden');
-                            
+                        
+                        if (extraImages.length === 0) {
+                            // No extra images - hide image stack and center content
+                            downloadContainer.classList.add('no-images');
+                        } else {
+                            // We have extra images - show them
                             if (extraImages[0]) {
                                 galleryImg1.src = extraImages[0];
                                 galleryImg1.classList.remove('hidden');
