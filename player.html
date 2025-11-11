@@ -222,7 +222,7 @@
             max-width: 320px;
             height: 100vh;
             background: #ffffff;
-            padding: 24px 16px;
+            padding: 20px 16px;
             transform: translateX(100%);
             transition: transform 0.3s ease;
             box-shadow: -2px 0 8px rgba(0,0,0,0.1);
@@ -257,17 +257,17 @@
             border: none;
             background: transparent;
             align-self: flex-end;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             cursor: pointer;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .mobile-menu-close i {
-            font-size: 24px;
+            font-size: 22px;
             color: #4b5563;
         }
 
@@ -275,12 +275,13 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            flex: 1;
         }
 
         .mobile-nav-link {
             display: block;
-            padding: 16px 12px;
-            font-size: 18px;
+            padding: 14px 12px;
+            font-size: 16px;
             font-weight: 500;
             color: #2d3436;
             text-decoration: none;
@@ -297,7 +298,6 @@
             padding-top: 20px;
             border-top: 1px solid #e5e7eb;
             margin-top: auto;
-            margin-bottom: 20px;
         }
 
         .mobile-menu-auth-buttons {
@@ -785,7 +785,6 @@
             border: 5px solid white;
             transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
             -webkit-tap-highlight-color: transparent;
-            cursor: pointer;
         }
 
         #gallery-img-1 {
@@ -1544,25 +1543,6 @@
         let prevTranslate = 0;
         let animationID;
 
-        function preloadImages(urls) {
-            return Promise.all(
-                urls.map(url => {
-                    return new Promise((resolve, reject) => {
-                        const img = new Image();
-                        img.src = url;
-                        img.onload = () => {
-                            console.log('Image loaded:', url);
-                            resolve(img);
-                        };
-                        img.onerror = (err) => {
-                            console.error('Error loading image:', url, err);
-                            reject(err);
-                        };
-                    });
-                })
-            );
-        }
-
         function initializeCarousel(images) {
             allImages = images;
             carouselTrack.innerHTML = '';
@@ -1577,8 +1557,6 @@
                 img.loading = 'eager';
                 img.decoding = 'async';
                 img.fetchPriority = 'high';
-                
-                img.style.opacity = '1';
                 
                 wrapper.appendChild(img);
                 wrapper.addEventListener('click', () => openModal(index));
@@ -1730,10 +1708,7 @@
             stopAutoPlay();
             currentModalIndex = index;
             
-            console.log('Opening modal with image:', allImages[index]);
             modalImage.src = allImages[index];
-            modalImage.style.opacity = '1';
-            
             imageModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1787,7 +1762,6 @@
             }
 
             try {
-                console.log('Fetching project data...');
                 const projectRef = doc(db, 'projects', projectId);
                 const docSnap = await getDoc(projectRef);
 
@@ -1798,17 +1772,7 @@
 
                     if (projectData.imageURLs && projectData.imageURLs.length > 0) {
                         const images = projectData.imageURLs;
-                        console.log('Found images:', images.length);
                         
-                        // Preload all images before showing content
-                        try {
-                            await preloadImages(images);
-                            console.log('All images preloaded successfully');
-                        } catch (error) {
-                            console.error('Some images failed to load:', error);
-                        }
-                        
-                        // Store all images for modal
                         allImages = images;
                         
                         const carouselImages = images.slice(0, 7);
@@ -1825,22 +1789,10 @@
                             if (extraImages[0]) {
                                 galleryImg1.src = extraImages[0];
                                 galleryImg1.classList.remove('hidden');
-                                galleryImg1.style.opacity = '1';
-                                // Remove click event listeners from download section images
-                                // galleryImg1.addEventListener('click', () => {
-                                //     console.log('Opening download section image 1');
-                                //     openModal(7);
-                                // });
                             }
                             if (extraImages[1]) {
                                 galleryImg2.src = extraImages[1];
                                 galleryImg2.classList.remove('hidden');
-                                galleryImg2.style.opacity = '1';
-                                // Remove click event listeners from download section images
-                                // galleryImg2.addEventListener('click', () => {
-                                //     console.log('Opening download section image 2');
-                                //     openModal(8);
-                                // });
                             }
                         }
 
@@ -1850,7 +1802,6 @@
                             downloadButton.rel = 'noopener noreferrer';
                         }
 
-                        // Hide skeleton and show content immediately since images are preloaded
                         skeletonLoading.classList.add('hidden');
                         statusMessage.classList.add('hidden');
                         gallerySection.classList.remove('hidden');
