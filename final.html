@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HV PHOTOGRAPHY</title>
+    <title>Gayathri Digitals</title>
     <style>
         /* --- Google Font Import --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
@@ -824,6 +824,13 @@
             z-index: 2;
         }
 
+        /* Book Us Logo */
+        .book-us-logo {
+            height: 60px;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
         .eyebrow-text {
             color: var(--color-dark-teal);
             font-size: 0.9rem;
@@ -913,6 +920,101 @@
             100% { background-position: 100% 50%; }
         }
 
+        /* --- Why Choose Us Section --- */
+        .why-choose-section {
+            width: 100%;
+            padding: 100px 40px;
+            background-color: var(--primary-bg);
+        }
+
+        .why-choose-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .why-choose-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .why-choose-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .why-choose-header h2 .serif {
+            font-style: italic;
+            color: var(--color-dark-teal);
+        }
+
+        .why-choose-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .why-choose-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .why-choose-card {
+            display: flex;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .why-choose-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .why-choose-icon {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background-color: var(--color-dark-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .why-choose-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #ffffff;
+        }
+
+        .why-choose-content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .why-choose-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
         /* --- Gallery Section Styles --- */
         .gallery-section {
             width: 100%;
@@ -992,6 +1094,13 @@
         .gallery-text {
             margin-bottom: 2rem;
             transition: opacity 0.5s ease, transform 0.5s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .gallery-text-content {
+            flex-grow: 1;
         }
 
         .gallery-text h3 {
@@ -1007,6 +1116,30 @@
             font-size: 1.1rem;
             line-height: 1.7;
             transition: all 0.5s ease;
+            margin-bottom: 1rem;
+        }
+
+        .view-more-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--color-dark-teal);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-more-button:hover {
+            background: var(--color-teal-hover);
+            transform: translateY(-2px);
+        }
+
+        .view-more-button svg {
+            width: 16px;
+            height: 16px;
         }
 
         .gallery-grid {
@@ -1024,6 +1157,7 @@
             transition: all 0.5s ease;
             opacity: 0;
             transform: translateY(20px);
+            cursor: pointer;
         }
 
         .gallery-item img {
@@ -1046,8 +1180,9 @@
         .mobile-gallery-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             margin-bottom: 2rem;
+            gap: 20px;
         }
 
         .mobile-gallery-title {
@@ -1057,12 +1192,36 @@
             color: var(--text-primary);
             text-align: center;
             flex-grow: 1;
-            margin: 0 20px;
+            margin: 0;
         }
 
         .mobile-gallery-title .serif {
             font-style: italic;
             color: var(--color-dark-teal);
+        }
+
+        .mobile-gallery-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 15px;
+        }
+
+        .mobile-gallery-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            gap: 15px;
+        }
+
+        .mobile-gallery-heading h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            text-align: center;
         }
 
         .gallery-nav-button {
@@ -1106,17 +1265,34 @@
             text-align: center;
         }
 
-        .mobile-gallery-text h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
         .mobile-gallery-text p {
             color: var(--text-secondary);
             font-size: 1rem;
             line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-view-more-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--color-dark-teal);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-view-more-button:hover {
+            background: var(--color-teal-hover);
+            transform: translateY(-2px);
+        }
+
+        .mobile-view-more-button svg {
+            width: 16px;
+            height: 16px;
         }
 
         /* Animation classes */
@@ -1362,6 +1538,19 @@
                 font-size: 1.1rem;
             }
             
+            /* Why Choose Us Mobile */
+            .why-choose-section {
+                padding: 60px 20px;
+            }
+            
+            .why-choose-header h2 {
+                font-size: 2.5rem;
+            }
+            
+            .why-choose-card {
+                padding: 1.5rem;
+            }
+            
             /* Gallery Section Mobile */
             .gallery-section {
                 padding: 60px 0;
@@ -1380,7 +1569,7 @@
                 font-size: 1.8rem;
             }
             
-            .mobile-gallery-text h3 {
+            .mobile-gallery-heading h3 {
                 font-size: 1.4rem;
             }
         }
@@ -1410,7 +1599,7 @@
             <nav class="nav">
                 <div class="nav-left">
                     <a href="/">
-                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
+                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo">
                     </a>
                     <div class="nav-links">
                         <a class="nav-link" href="/home">Home</a>
@@ -1465,7 +1654,7 @@
     <!-- Hero Section -->
     <div class="main-wrapper">
         <div class="hero-header">
-            <div class="logo-text">HV PHOTOGRAPHY</div>
+            <div class="logo-text">GAYATHRI DIGITALS</div>
             <h1>
                 Capturing Your <span class="serif">Timeless</span> Moments
             </h1>
@@ -1672,6 +1861,9 @@
     <!-- New Book Us Section -->
     <section class="book-us-section">
         <div class="book-us-content">
+            <!-- Logo in Book Us Section -->
+            <img class="book-us-logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo">
+            
             <!-- "Eyebrow" text for better hierarchy -->
             <p class="eyebrow-text">Let's Create Together</p>
             
@@ -1683,6 +1875,87 @@
                 Book Us Now
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </a>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section">
+        <div class="why-choose-container">
+            <div class="why-choose-header">
+                <h2>Why Choose <span class="serif">Gayathri Digitals</span></h2>
+                <p>We don't just take photos — we capture emotions, create memories, and tell your unique story</p>
+            </div>
+            
+            <div class="why-choose-grid">
+                <!-- Affordable Pricing -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Affordable Pricing</h3>
+                        <p>We believe every beautiful moment deserves to be captured — not just by those who can afford luxury, but by everyone with a story to tell. We keep our prices simple and fair, because memories are priceless.</p>
+                    </div>
+                </div>
+                
+                <!-- On-Time Delivery -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>On-Time Delivery</h3>
+                        <p>Your special moments shouldn't have to wait. We deliver every project on time, so you can relive your joy while the feelings are still fresh in your heart.</p>
+                    </div>
+                </div>
+                
+                <!-- Professional Editing -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Professional Editing</h3>
+                        <p>Every click becomes a masterpiece. Our expert editing brings out true emotions, natural beauty, and colors that make your memories glow forever.</p>
+                    </div>
+                </div>
+                
+                <!-- Customer Satisfaction -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Customer Satisfaction</h3>
+                        <p>We don't just take photos — we build happiness. Seeing your smile when you receive your pictures is our greatest reward.</p>
+                    </div>
+                </div>
+                
+                <!-- Every Frame Speaks -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 7l-7 5 7 5V7z"></path>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Every Frame Speaks</h3>
+                        <p>Each frame we capture tells your story — the laughter, the tears, the magic of real moments. We don't just take photos, we capture feelings that stay for a lifetime.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1702,26 +1975,35 @@
             </div>
             <div class="gallery-content">
                 <div class="gallery-text">
-                    <h3>Portrait Photography</h3>
-                    <p>Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.</p>
+                    <div class="gallery-text-content">
+                        <h3>Portrait Photography</h3>
+                        <p>Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.</p>
+                        <a href="/portrait-photography.html" class="view-more-button">
+                            View More
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
                 <div class="gallery-grid">
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
                     </div>
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Portrait Photography">
                     </div>
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Portrait Photography">
                     </div>
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Portrait Photography">
                     </div>
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Portrait Photography">
                     </div>
-                    <div class="gallery-item fade-in">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                         <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Portrait Photography">
                     </div>
                 </div>
@@ -1731,12 +2013,20 @@
         <!-- Mobile Gallery Section -->
         <div class="mobile-gallery">
             <div class="mobile-gallery-header">
+                <div class="mobile-gallery-title">Explore Our <span class="serif">Gallery</span></div>
+            </div>
+            
+            <div class="mobile-gallery-nav">
                 <button class="gallery-nav-button prev-button" aria-label="Previous category">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"></polyline>
                     </svg>
                 </button>
-                <div class="mobile-gallery-title">Explore Our <span class="serif">Gallery</span></div>
+                
+                <div class="mobile-gallery-heading">
+                    <h3>Portrait Photography</h3>
+                </div>
+                
                 <button class="gallery-nav-button next-button" aria-label="Next category">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -1745,27 +2035,33 @@
             </div>
             
             <div class="mobile-gallery-text">
-                <h3>Portrait Photography</h3>
                 <p>Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.</p>
+                <a href="/portrait-photography.html" class="mobile-view-more-button">
+                    View More
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
             </div>
             
             <div class="mobile-gallery-grid">
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Portrait Photography">
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Portrait Photography">
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Portrait Photography">
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Portrait Photography">
                 </div>
-                <div class="gallery-item fade-in">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
                     <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Portrait Photography">
                 </div>
             </div>
@@ -1841,7 +2137,7 @@
             const mobileGalleryGrid = document.querySelector('.mobile-gallery-grid');
             const mobilePrevButton = document.querySelector('.prev-button');
             const mobileNextButton = document.querySelector('.next-button');
-            const mobileGalleryTitle = document.querySelector('.mobile-gallery-title');
+            const mobileGalleryHeading = document.querySelector('.mobile-gallery-heading h3');
             
             // Gallery data
             const galleryData = {
@@ -1855,7 +2151,8 @@
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg",
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg",
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg"
-                    ]
+                    ],
+                    link: "/portrait-photography.html"
                 },
                 wedding: {
                     title: "Wedding Photography",
@@ -1867,7 +2164,8 @@
                         "https://i.pinimg.com/736x/db/6f/ab/db6fab9b13a8d971cf62a3aa80e2fa70.jpg",
                         "https://i.pinimg.com/736x/71/f9/8f/71f98f8e9b65c20a4d275901a6ecdac0.jpg",
                         "https://i.pinimg.com/736x/7f/f7/e5/7ff7e595cb59ccd6826c386f92e764f7.jpg"
-                    ]
+                    ],
+                    link: "/wedding-photography.html"
                 },
                 commercial: {
                     title: "Commercial Photography",
@@ -1879,7 +2177,8 @@
                         "https://i.pinimg.com/736x/20/b3/25/20b3257bbd87b1bb0937b553762f5db8.jpg",
                         "https://i.pinimg.com/736x/5f/7c/ba/5f7cba530e2a39a4841c7b96cbd639d6.jpg",
                         "https://i.pinimg.com/736x/40/22/f9/4022f94197478b756293581c39c9be2d.jpg"
-                    ]
+                    ],
+                    link: "/commercial-photography.html"
                 },
                 aerial: {
                     title: "Aerial & Drone Photography",
@@ -1891,7 +2190,8 @@
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg",
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg",
                         "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg"
-                    ]
+                    ],
+                    link: "/aerial-photography.html"
                 },
                 editing: {
                     title: "Editing & Retouching",
@@ -1903,7 +2203,8 @@
                         "https://i.pinimg.com/736x/db/6f/ab/db6fab9b13a8d971cf62a3aa80e2fa70.jpg",
                         "https://i.pinimg.com/736x/71/f9/8f/71f98f8e9b65c20a4d275901a6ecdac0.jpg",
                         "https://i.pinimg.com/736x/7f/f7/e5/7ff7e595cb59ccd6826c386f92e764f7.jpg"
-                    ]
+                    ],
+                    link: "/editing-services.html"
                 },
                 campaigns: {
                     title: "Brand Campaigns",
@@ -1915,7 +2216,8 @@
                         "https://i.pinimg.com/736x/20/b3/25/20b3257bbd87b1bb0937b553762f5db8.jpg",
                         "https://i.pinimg.com/736x/5f/7c/ba/5f7cba530e2a39a4841c7b96cbd639d6.jpg",
                         "https://i.pinimg.com/736x/40/22/f9/4022f94197478b756293581c39c9be2d.jpg"
-                    ]
+                    ],
+                    link: "/brand-campaigns.html"
                 }
             };
 
@@ -1955,11 +2257,18 @@
                         galleryText.querySelector('h3').textContent = data.title;
                         galleryText.querySelector('p').textContent = data.description;
                         
+                        // Update view more button link
+                        const viewMoreButton = galleryText.querySelector('.view-more-button');
+                        if (viewMoreButton) {
+                            viewMoreButton.href = data.link;
+                        }
+                        
                         // Update images
                         const galleryItems = document.querySelectorAll('.gallery-item');
                         galleryItems.forEach((item, index) => {
                             if (index < data.images.length) {
                                 item.querySelector('img').src = data.images[index];
+                                item.setAttribute('data-link', data.link);
                             }
                         });
                         
@@ -1988,15 +2297,26 @@
                     
                     // Update content after fade-out
                     setTimeout(() => {
+                        // Update heading
+                        if (mobileGalleryHeading) {
+                            mobileGalleryHeading.textContent = data.title;
+                        }
+                        
                         // Update text
-                        mobileGalleryText.querySelector('h3').textContent = data.title;
                         mobileGalleryText.querySelector('p').textContent = data.description;
+                        
+                        // Update view more button link
+                        const mobileViewMoreButton = mobileGalleryText.querySelector('.mobile-view-more-button');
+                        if (mobileViewMoreButton) {
+                            mobileViewMoreButton.href = data.link;
+                        }
                         
                         // Update images
                         const mobileGalleryItems = document.querySelectorAll('.mobile-gallery-grid .gallery-item');
                         mobileGalleryItems.forEach((item, index) => {
                             if (index < data.images.length) {
                                 item.querySelector('img').src = data.images[index];
+                                item.setAttribute('data-link', data.link);
                             }
                         });
                         
@@ -2074,6 +2394,17 @@
                     updateGallery(getPrevCategory(), true);
                 });
             }
+            
+            // Add click event listeners to gallery items
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const link = this.getAttribute('data-link');
+                    if (link) {
+                        window.location.href = link;
+                    }
+                });
+            });
             
             // Add swipe functionality for mobile
             let touchStartX = 0;
