@@ -263,18 +263,17 @@
         transform: translateX(0);
     }
 
-    /* FIXED: Menu overlay - only covers content, not the menu */
-    #menuOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7); /* Darker overlay */
-        z-index: 1001; /* Below mobile menu but above everything else */
-        display: none;
-        backdrop-filter: blur(5px); /* Optional blur effect */
-    }
+   #menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Change this from 100% to 100vh */
+    background: rgba(0,0,0,0.7); /* Darker overlay */
+    z-index: 1001; /* Below mobile menu but above everything else */
+    display: none;
+    backdrop-filter: blur(5px); /* Optional blur effect */
+}
 
     #menuOverlay.active {
         display: block;
