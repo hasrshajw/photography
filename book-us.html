@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Us - HV Photography</title>
+    <title>Book Us - Gayathri Digitals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
         /* --- Google Font Import --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
@@ -50,10 +51,409 @@
         body {
             font-family: var(--font-sans);
             line-height: 1.6;
+            padding-top: 80px; /* Increased for fixed header - prevents overlap */
             background-color: var(--primary-bg);
             overflow-x: hidden;
             color: var(--text-primary);
-            padding: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dark overlay when mobile menu is open - FIXED */
+        body.menu-open {
+            overflow: hidden; /* Prevent scrolling when menu is open */
+        }
+
+        /* --- Header styles --- */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            transition-property: all;
+            transition-duration: 0.3s;
+            transition-timing-function: var(--default-transition-timing-function);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Container */
+        .header-container {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1400px;
+        }
+
+        @media (min-width: 48rem) {
+            .header-container {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding-left: 16px;
+                padding-right: 16px;
+                width: 100%;
+            }
+            .nav-left, .nav-right {
+                margin: 0;
+                padding: 0;
+            }
+            .logo, .menu-button {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                padding-top: 70px; /* Adjusted for mobile */
+            }
+        }
+
+        /* Navigation */
+        .nav {
+            padding-top: calc(var(--spacing) * 3); /* Updated to 12px */
+            padding-bottom: calc(var(--spacing) * 3); /* Updated to 12px */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Logo and nav links container */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 6);
+        }
+        
+        @media (max-width: 768px) {
+            .nav {
+                padding-top: calc(var(--spacing) * 3); /* Updated to 12px */
+                padding-bottom: calc(var(--spacing) * 3); /* Updated to 12px */
+            }
+            
+            /* Fix logo vertical alignment on mobile */
+            .nav-left {
+                align-items: center;
+            }
+            
+            .logo {
+                display: flex;
+                align-items: center;
+            }
+        }
+        
+        /* Logo image */
+        .logo {
+            margin-right: calc(var(--spacing) * 6);
+            height: 40px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Nav links (hidden on mobile, flex on md) */
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: calc(var(--spacing) * 2);
+        }
+
+        @media (min-width: 48rem) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* Nav link hover effect */
+        .nav-link {
+            padding-left: calc(var(--spacing) * 4);
+            padding-right: calc(var(--spacing) * 4);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 8px;
+            left: 50%;
+            background-color: var(--color-dark-teal);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        @media (hover: hover) {
+            .nav-link:hover {
+                color: var(--color-dark-teal);
+                background-color: transparent;
+            }
+            
+            .nav-link:hover:after {
+                width: 70%;
+            }
+        }
+
+        /* Right-side buttons container */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        /* Mobile menu button */
+        .menu-button {
+            display: flex;
+            padding: calc(var(--spacing) * 1.5);
+            border: 1px solid var(--color-dark-teal);
+            border-radius: var(--radius-md);
+            color: var(--color-dark-teal);
+            background-color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: var(--color-dark-teal);
+            color: white;
+        }
+
+        @media (min-width: 48rem) {
+            .menu-button {
+                display: none;
+            }
+        }
+
+        /* Mobile menu styles - COMPLETELY FIXED */
+        #mobileMenu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 85vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #ffffff;
+            padding: 24px 16px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            z-index: 1002; /* Increased z-index */
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        #mobileMenu.active {
+            transform: translateX(0);
+        }
+
+       #menuOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh; /* Change this from 100% to 100vh */
+        background: rgba(0,0,0,0.7); /* Darker overlay */
+        z-index: 1001; /* Below mobile menu but above everything else */
+        display: none;
+        backdrop-filter: blur(5px); /* Optional blur effect */
+    }
+
+        #menuOverlay.active {
+            display: block;
+        }
+
+        .mobile-menu-close {
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            transition: background 0.2s ease, transform 0.2s ease;
+            align-self: flex-end;
+            margin-bottom: 24px;
+            cursor: pointer;
+            z-index: 1003; /* Ensure close button is above everything */
+        }
+
+        .mobile-menu-close svg {
+            width: 24px;
+            height: 24px;
+            color: #4b5563;
+        }
+
+        .mobile-menu-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Updated from 8px to 12px */
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 16px 12px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #2d3436;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .mobile-menu-auth {
+            flex-shrink: 0;
+            padding-top: 20px;
+            margin-top: auto; /* Push to bottom */
+        }
+
+        .mobile-menu-auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mobile-menu-auth-button {
+            padding: 14px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .mobile-menu-auth-button.submit {
+            background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
+            background-size: 250% 100%;
+            color: var(--color-white);
+            position: relative;
+            overflow: hidden;
+            animation: gradient-shimmer 4s linear infinite;
+        }
+        
+        .mobile-menu-auth-button.submit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 75%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .mobile-menu-auth-button.submit:hover::before { 
+            left: 150%; 
+        }
+
+        .mobile-menu-auth-button.join {
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+
+        @media (hover: hover) {
+            .mobile-menu-auth-button.submit:hover {
+                background: var(--color-teal-hover);
+            }
+            .mobile-menu-auth-button.join:hover {
+                background: #f3f4f6;
+            }
+        }
+
+        /* Auth buttons container */
+        .auth-buttons {
+            display: none;
+            align-items: center;
+            gap: calc(var(--spacing) * 4);
+        }
+
+        @media (min-width: 48rem) {
+            .auth-buttons {
+                display: flex;
+            }
+        }
+
+        /* Auth button */
+        .auth-button {
+            padding-left: calc(var(--spacing) * 5);
+            padding-right: calc(var(--spacing) * 5);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
+            border: 1px solid var(--color-dark-teal);
+            border-radius: var(--radius-md);
+            color: var(--color-dark-teal);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .auth-button.submit {
+            background-color: var(--color-dark-teal);
+            color: var(--color-white);
+            border: none;
+        }
+
+        @media (hover: hover) {
+            .auth-button:hover {
+                color: var(--color-white);
+                background-color: var(--color-teal-hover);
+            }
+            .auth-button.submit:hover {
+                background-color: var(--color-teal-hover);
+            }
+        }
+
+        /* NEW STYLE FOR MOBILE-ONLY "BOOK US" BUTTON */
+        .mobile-auth-button {
+            display: inline-block;
+        }
+        
+        @media (min-width: 48rem) { /* 768px */
+            .mobile-auth-button {
+                display: none;
+            }
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background-color: var(--color-gray-200);
+        }
+
+        @media (max-width: 768px) {
+            .divider {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
         }
 
         /* --- Image Gallery Section --- */
@@ -148,11 +548,50 @@
 
         .logo-text {
             font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 2px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
             margin-bottom: 16px;
-            color: var(--text-secondary);
+            background: linear-gradient(90deg, #8B0000, #B22222, #8B0000, #8B0000, #B22222, #8B0000);
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            text-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-text::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
         }
 
         .book-us-header h1 {
@@ -893,6 +1332,283 @@
             max-height: 500px;
         }
 
+        /* --- Footer Styles --- */
+        .upper-half {
+            background-color: #f8f9fa;
+            position: relative;
+            padding-top: 80px; 
+            padding-bottom: 150px; 
+        }
+
+        .lower-half {
+            background-color: #012726;
+            padding: 120px 20px 40px 20px; /* Reduced padding for mobile */
+        }
+        
+        .subscribe-card {
+            background: linear-gradient(135deg, #003d3b, #012726);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 10px 40px rgba(0, 39, 38, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: 90%;
+            max-width: 1200px;
+            z-index: 10;
+        }
+
+        .subscribe-info { flex: 1; }
+        .subscribe-info h2 { 
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem; 
+            font-weight: 600; 
+            line-height: 1.2; 
+            margin-bottom: 1rem; 
+        }
+        .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
+        .subscribe-form-area { flex-basis: 45%; }
+        .subscribe-form-area label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
+        .subscribe-form { display: flex; gap: 12px; }
+        
+        .input-with-prefix {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 0 20px;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .input-with-prefix .prefix {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-right: 8px;
+            pointer-events: none;
+        }
+        
+        .subscribe-form input[type="tel"] {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            color: #ffffff;
+            padding: 16px 0;
+            font-size: 1rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .subscribe-form input[type="tel"]::placeholder { color: #b3d1d0; }
+        
+        .input-with-prefix:focus-within {
+            border-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .subscribe-form button { 
+            background-color: #ffffff; 
+            color: #012726; 
+            border: none; 
+            padding: 16px 32px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease; 
+        }
+        .subscribe-form button:hover { background-color: #e2e6ea; }
+        .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
+        .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
+
+        .footer-bottom { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        .footer-logo-area { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            flex-basis: 30%; 
+        }
+        
+        .footer-logo-img {
+            max-width: 140px;
+            opacity: 0.9;
+        }
+        
+        .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
+        
+        .footer-links-container { 
+            display: flex; 
+            gap: 120px; 
+        }
+        
+        .footer-column h3 { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: #ffffff; 
+            margin-bottom: 24px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 18px; }
+        .footer-column ul li a { 
+            text-decoration: none; 
+            color: #d1d5db; 
+            font-size: 1rem; 
+            transition: color 0.2s ease-in-out; 
+        }
+        
+        .footer-column ul li a:hover { color: #ffffff; }
+
+        .footer-copyright-bar {
+            max-width: 1200px;
+            margin: 60px auto 0 auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .copyright-links { display: flex; gap: 24px; }
+        .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
+        .copyright-links a:hover { color: #ffffff; }
+
+        /* NEW: Footer Success Popup Styles */
+        .footer-success-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-success-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .footer-popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+        
+        .footer-success-popup.active .footer-popup-content {
+            transform: scale(1);
+        }
+        
+        .footer-popup-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-dark-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .footer-popup-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 3;
+        }
+        
+        .footer-popup-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--color-dark-teal);
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .footer-popup-message {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .footer-popup-button {
+            background: var(--color-dark-teal);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .footer-popup-button:hover {
+            background: var(--color-teal-hover);
+        }
+
+        /* Footer Responsive Design */
+        @media (max-width: 1024px) {
+            .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
+            .subscribe-form-area { width: 100%; margin-top: 20px; }
+            .footer-bottom { flex-direction: column; gap: 50px; }
+            .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
+        }
+
+        @media (max-width: 768px) {
+            .subscribe-info h2 { font-size: 2.2rem; }
+            .subscribe-form { flex-direction: column; }
+            .footer-links-container { 
+                flex-direction: row; 
+                gap: 40px; 
+                justify-content: space-between;
+                width: 100%;
+            }
+            .upper-half { padding-top: 60px; padding-bottom: 280px; }
+            .lower-half { 
+                padding-top: 320px; 
+                padding-left: 20px; 
+                padding-right: 20px; 
+                padding-bottom: 40px; 
+            }
+            .subscribe-form input[type="tel"]::placeholder { font-size: 0.9rem; }
+            .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
+            .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
+            .copyright-text, .copyright-links a { font-size: 0.8rem; }
+        }
+
         /* --- Responsive Styles --- */
         @media (max-width: 992px) {
             .book-us-header h1 {
@@ -1015,6 +1731,79 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <header class="header">
+        <div class="header-container">
+            <nav class="nav">
+                <div class="nav-left">
+                    <a href="/">
+                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo">
+                    </a>
+                    <div class="nav-links">
+                        <a class="nav-link" href="/home">Home</a>
+                        <a class="nav-link" href="/about">About</a>
+                        <a class="nav-link" href="/services">Services</a>
+                        <a class="nav-link" href="/gallery">Gallery</a>
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <!-- ADDED "BOOK US" BUTTON FOR MOBILE VIEW -->
+                    <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
+                    
+                    <button class="menu-button" id="mobileMenuButton">
+                        <svg width="24" height="24" viewBox="0 0 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- This container is for the desktop "Book Us" button -->
+                    <div class="auth-buttons">
+                        <a class="auth-button submit" href="/book-us">Book Us</a>
+                    </div>
+                </div>
+            </nav>
+            <!-- UPDATED MOBILE MENU WITH BOOK US BUTTON AT BOTTOM -->
+            <div id="mobileMenu">
+                <div class="mobile-menu-close" id="mobileMenuClose">
+                    <svg viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                <div class="mobile-menu-content">
+                    <div class="mobile-nav-links">
+                        <a href="/home" class="mobile-nav-link">Home</a>
+                        <a href="/about" class="mobile-nav-link">About</a>
+                        <a href="/services" class="mobile-nav-link">Services</a>
+                        <a href="/gallery" class="mobile-nav-link">Gallery</a>
+                        <a href="/contact" class="mobile-nav-link">Contact</a>
+                    </div>
+                    <div class="mobile-menu-auth">
+                        <div class="mobile-menu-auth-buttons">
+                            <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="menuOverlay"></div>
+            <div class="divider"></div>
+        </div>
+    </header>
+
+    <!-- NEW: Footer Success Popup -->
+    <div class="footer-success-popup" id="footerSuccessPopup">
+        <div class="footer-popup-content">
+            <div class="footer-popup-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="footer-popup-title">Booking Request Sent!</h3>
+            <p class="footer-popup-message">Thank you for your interest! We'll contact you shortly to confirm your booking details.</p>
+            <button class="footer-popup-button" id="closeFooterPopup">Got It</button>
+        </div>
+    </div>
+
     <!-- Image Gallery Section -->
     <section class="image-gallery-section">
         <div class="gallery-row first-row">
@@ -1104,7 +1893,7 @@
             <!-- Header Section -->
             <div class="header-content">
                 <div class="book-us-header">
-                    <div class="logo-text">HV PHOTOGRAPHY</div>
+                    <div class="logo-text">GAYATHRI DIGITALS</div>
                     <h1>Book Your <span class="serif">Session</span></h1>
                     <p>Let's create something beautiful together. Fill out the form below or contact us directly to schedule your photography session.</p>
                 </div>
@@ -1268,7 +2057,7 @@
                     <button class="close-modal" id="closeModal">&times;</button>
                 </div>
                 <div class="message-options">
-                    <a href="https://wa.me/1234567890?text=Hi%20HV%20Photography%2C%20I%27d%20like%20to%20book%20a%20session" class="message-option whatsapp" target="_blank">
+                    <a href="https://wa.me/1234567890?text=Hi%20Gayathri%20Digitals%2C%20I%27d%20like%20to%20book%20a%20session" class="message-option whatsapp" target="_blank">
                         <div class="icon">W</div>
                         <div class="text">
                             <h4>WhatsApp</h4>
@@ -1282,7 +2071,7 @@
                             <p>DM us on Instagram</p>
                         </div>
                     </a>
-                    <a href="sms:+1234567890?body=Hi%20HV%20Photography%2C%20I%27d%20like%20to%20book%20a%20session" class="message-option text">
+                    <a href="sms:+1234567890?body=Hi%20Gayathri%20Digitals%2C%20I%27d%20like%20to%20book%20a%20session" class="message-option text">
                         <div class="icon">T</div>
                         <div class="text">
                             <h4>Text Message</h4>
@@ -1331,8 +2120,168 @@
         </div>
     </div>
 
+    <!-- Footer Section -->
+    <div class="upper-half">
+        <!-- This card sits on the boundary between the page and the footer -->
+        <div class="subscribe-card">
+            <div class="subscribe-info">
+                <!-- UPDATED CONTENT -->
+                <h2>Ready to Capture Your Moment?</h2>
+                <p>From weddings and portraits to commercial projects, we're here to create stunning visual stories that last a lifetime. Let's discuss your vision.</p>
+            </div>
+            <div class="subscribe-form-area">
+                <!-- UPDATED CONTENT -->
+                <label for="mobile">Book a Free Consultation</label>
+                <form action="#" method="POST" class="subscribe-form" id="footerBookingForm">
+                    <div class="input-with-prefix">
+                        <span class="prefix">+91</span>
+                        <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}" autocomplete="off">
+                    </div>
+                    <button type="submit">Request Booking</button>
+                </form>
+                <p class="form-disclaimer">By requesting a booking, you agree to our <a href="#">Privacy Policy</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- The lower-half is the main footer area -->
+    <div class="lower-half">
+        <div class="footer-bottom">
+            <div class="footer-logo-area">
+                <!-- UPDATED LOGO -->
+                <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo" class="footer-logo-img">
+                <!-- UPDATED TAGLINE -->
+                <p class="logo-tagline">Capturing Life's Timeless Moments.</p>
+            </div>
+            <div class="footer-links-container">
+                <div class="footer-column">
+                    <!-- UPDATED LINKS -->
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <!-- UPDATED LINKS -->
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Portrait Photography</a></li>
+                        <li><a href="#">Wedding Photography</a></li>
+                        <li><a href="#">Commercial Shoots</a></li>
+                        <li><a href="#">View Gallery</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-copyright-bar">
+            <!-- UPDATED COPYRIGHT -->
+            <p class="copyright-text">&copy; Gayathri Digitals. All rights reserved.</p>
+            <div class="copyright-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Booking Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Mobile Menu Functionality
         document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const menuOverlay = document.getElementById('menuOverlay');
+
+            // Footer Booking Form Elements
+            const footerBookingForm = document.getElementById('footerBookingForm');
+            const footerSuccessPopup = document.getElementById('footerSuccessPopup');
+            const closeFooterPopup = document.getElementById('closeFooterPopup');
+
+            const openMenu = () => {
+                mobileMenu.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.classList.add('menu-open');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeMenu = () => {
+                mobileMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                document.body.style.overflow = '';
+            };
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', openMenu);
+            }
+            
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeMenu);
+            }
+            
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', closeMenu);
+            }
+            
+            // Close menu when clicking on menu links
+            const mobileMenuLinks = document.querySelectorAll('#mobileMenu a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+
+            // Footer Booking Form Logic
+            if (footerBookingForm) {
+                footerBookingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const mobileInput = this.querySelector('input[type="tel"]');
+                    const phoneNumber = mobileInput.value.trim();
+                    
+                    // Validate phone number (Indian format)
+                    const phoneRegex = /^[6-9]\d{9}$/;
+                    if (!phoneRegex.test(phoneNumber)) {
+                        alert('Please enter a valid 10-digit Indian mobile number');
+                        return;
+                    }
+                    
+                    // Show success popup
+                    footerSuccessPopup.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    
+                    // Reset form
+                    mobileInput.value = '';
+                });
+            }
+            
+            // Close footer popup
+            if (closeFooterPopup) {
+                closeFooterPopup.addEventListener('click', function() {
+                    footerSuccessPopup.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                });
+            }
+            
+            // Close footer popup when clicking outside
+            if (footerSuccessPopup) {
+                footerSuccessPopup.addEventListener('click', function(e) {
+                    if (e.target === footerSuccessPopup) {
+                        footerSuccessPopup.classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scrolling
+                    }
+                });
+            }
+
             // Form submission
             const bookingForm = document.getElementById('bookingForm');
             const successMessage = document.getElementById('successMessage');
@@ -1416,11 +2365,11 @@
             
             // Visit option - redirect to Google Maps
             visitOption.addEventListener('click', function() {
-                window.open('https://www.google.com/maps/search/?api=1&query=HV+Photography+Studio', '_blank');
+                window.open('https://www.google.com/maps/search/?api=1&query=Gayathri+Digitals+Studio', '_blank');
             });
             
             mobileVisitOption.addEventListener('click', function() {
-                window.open('https://www.google.com/maps/search/?api=1&query=HV+Photography+Studio', '_blank');
+                window.open('https://www.google.com/maps/search/?api=1&query=Gayathri+Digitals+Studio', '_blank');
             });
             
             // Close modal
