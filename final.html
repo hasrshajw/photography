@@ -336,8 +336,26 @@
     }
 
     .mobile-menu-auth-button.submit {
-        background: var(--color-dark-teal);
+        background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
+        background-size: 250% 100%;
         color: var(--color-white);
+        position: relative;
+        overflow: hidden;
+        animation: gradient-shimmer 4s linear infinite;
+    }
+    
+    .mobile-menu-auth-button.submit::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 75%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        transform: skewX(-25deg);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mobile-menu-auth-button.submit:hover::before { 
+        left: 150%; 
     }
 
     .mobile-menu-auth-button.join {
@@ -518,14 +536,7 @@
         font-style: italic;
     }
 
-    .hero-header .subheading {
-        font-size: 20px;
-        line-height: 1.6;
-        color: var(--text-secondary);
-        margin: 0;
-        max-width: 600px;
-        font-weight: 400;
-    }
+    /* REMOVED: Subheading paragraph from hero section */
 
     .cta-container {
         display: flex;
@@ -666,7 +677,7 @@
         letter-spacing: 1px;
     }
 
-    /* Mobile Content Section - Added for mobile layout */
+    /* Mobile Content Section - Only visible on mobile */
     .mobile-content {
         display: none;
         flex-direction: column;
@@ -676,6 +687,8 @@
         max-width: 600px;
         padding: 20px 0;
     }
+
+    /* REMOVED: Subheading paragraph from mobile content section */
 
     /* --- Services Section Styles --- */
     .services-section {
@@ -743,6 +756,9 @@
         transform: translateY(50px) scale(0.98);
         border: 1px solid var(--border-color);
         overflow: hidden;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
     }
 
     .service-card.show {
@@ -1034,8 +1050,9 @@
         
         /* FIXED: Make 5th card same width as others on mobile */
         .why-choose-card:nth-child(5) {
-            grid-column: auto;
+            grid-column: 1;
             max-width: 100%;
+            justify-self: stretch;
         }
     }
 
@@ -1642,8 +1659,7 @@
             font-size: 42px;
         }
         
-        /* Hide paragraph and buttons in header for mobile */
-        .hero-header .subheading,
+        /* Hide buttons in header for mobile */
         .hero-header .cta-container {
             display: none;
         }
@@ -1888,17 +1904,12 @@
                     </div>
                 </div>
             </nav>
-            <!-- UPDATED MOBILE MENU WITH BOOK US BUTTON AT TOP -->
+            <!-- UPDATED MOBILE MENU WITH BOOK US BUTTON AT BOTTOM -->
             <div id="mobileMenu">
                 <div class="mobile-menu-close" id="mobileMenuClose">
                     <svg viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
-                </div>
-                <div class="mobile-menu-auth">
-                    <div class="mobile-menu-auth-buttons">
-                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
-                    </div>
                 </div>
                 <div class="mobile-menu-content">
                     <div class="mobile-nav-links">
@@ -1907,6 +1918,11 @@
                         <a href="/services" class="mobile-nav-link">Services</a>
                         <a href="/gallery" class="mobile-nav-link">Gallery</a>
                         <a href="/contact" class="mobile-nav-link">Contact</a>
+                    </div>
+                </div>
+                <div class="mobile-menu-auth">
+                    <div class="mobile-menu-auth-buttons">
+                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
                     </div>
                 </div>
             </div>
@@ -1922,6 +1938,7 @@
             <h1>
                 Capturing Your <span class="serif">Timeless</span> Moments
             </h1>
+            <!-- REMOVED: Subheading paragraph -->
             <div class="cta-container">
                 <a href="#" class="cta-button">BOOK A SESSION</a>
                 <a href="#" class="cta-button secondary-button">VIEW PORTFOLIO</a>
@@ -1967,6 +1984,7 @@
 
         <!-- Mobile Content Section - Only visible on mobile -->
         <div class="mobile-content">
+            <!-- REMOVED: Subheading paragraph -->
             <div class="mobile-cta-container">
                 <a href="#" class="mobile-cta-button">BOOK A SESSION</a>
                 <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW PORTFOLIO</a>
@@ -2003,7 +2021,7 @@
                 <div class="right-content">
                     
                     <!-- Card 1: Portrait Photography -->
-                    <div class="service-card">
+                    <a href="/portrait-photography.html" class="service-card">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
                         </div>
@@ -2015,13 +2033,13 @@
                             <div class="card-text">
                                 <h3>Portrait Photography</h3>
                                 <p>Elegant and authentic portraits that capture personality and emotion. Perfect for individuals, families, and professional headshots.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Card 2: Wedding Photography -->
-                    <div class="service-card">
+                    <a href="/wedding-photography.html" class="service-card">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Wedding Photography">
                         </div>
@@ -2033,13 +2051,13 @@
                             <div class="card-text">
                                 <h3>Wedding Photography</h3>
                                 <p>Documenting your special day with artistic vision. We capture the emotion, beauty, and joy of your celebration from start to finish.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Card 3: Commercial Photography -->
-                    <div class="service-card">
+                    <a href="/commercial-photography.html" class="service-card">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Commercial Photography">
                         </div>
@@ -2051,13 +2069,13 @@
                             <div class="card-text">
                                 <h3>Commercial Photography</h3>
                                 <p>Professional imagery for brands and businesses that elevates your visual identity, from product shots to corporate events.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Card 4: Aerial (HIDDEN ON MOBILE) -->
-                    <div class="service-card hide-on-mobile">
+                    <a href="/aerial-photography.html" class="service-card hide-on-mobile">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Aerial & Drone Photography">
                         </div>
@@ -2069,13 +2087,13 @@
                             <div class="card-text">
                                 <h3>Aerial & Drone Photography</h3>
                                 <p>Capture breathtaking perspectives with our professional drone services. Ideal for real estate, landscapes, and unique event coverage.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Card 5: Editing (HIDDEN ON MOBILE) -->
-                    <div class="service-card hide-on-mobile">
+                    <a href="/editing-services.html" class="service-card hide-on-mobile">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Editing & Retouching">
                         </div>
@@ -2087,13 +2105,13 @@
                             <div class="card-text">
                                 <h3>Editing & Retouching</h3>
                                 <p>Advanced post-production, color grading, and retouching to perfect every detail and enhance the visual storytelling of your images.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
                     <!-- Card 6: Campaigns (HIDDEN ON MOBILE) -->
-                    <div class="service-card hide-on-mobile">
+                    <a href="/brand-campaigns.html" class="service-card hide-on-mobile">
                         <div class="card-image">
                             <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Brand Campaigns">
                         </div>
@@ -2105,10 +2123,10 @@
                             <div class="card-text">
                                 <h3>Brand Campaigns</h3>
                                 <p>Strategic brand visuals crafted to strengthen identity and engagement across social platforms and marketing campaigns.</p>
-                                <a href="#" class="learn-more">Learn More</a>
+                                <span class="learn-more">Learn More</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
