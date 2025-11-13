@@ -57,10 +57,12 @@
         transition: background-color 0.3s ease;
     }
 
-    /* Dark overlay when mobile menu is open */
+    /* Dark overlay when mobile menu is open - FIXED */
     body.menu-open {
-        background-color: rgba(0, 0, 0, 0.5);
+        overflow: hidden; /* Prevent scrolling when menu is open */
     }
+
+    /* Remove the body::before overlay and use only #menuOverlay */
 
     /* --- Header styles --- */
     .header {
@@ -251,7 +253,7 @@
         transform: translateX(100%);
         transition: transform 0.3s ease;
         box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-        z-index: 1000;
+        z-index: 1002; /* Increased z-index */
         display: flex;
         flex-direction: column;
         overflow-y: auto;
@@ -261,15 +263,17 @@
         transform: translateX(0);
     }
 
+    /* FIXED: Menu overlay - only covers content, not the menu */
     #menuOverlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 999;
+        background: rgba(0,0,0,0.7); /* Darker overlay */
+        z-index: 1001; /* Below mobile menu but above everything else */
         display: none;
+        backdrop-filter: blur(5px); /* Optional blur effect */
     }
 
     #menuOverlay.active {
@@ -285,6 +289,7 @@
         align-self: flex-end;
         margin-bottom: 24px;
         cursor: pointer;
+        z-index: 1003; /* Ensure close button is above everything */
     }
 
     .mobile-menu-close svg {
@@ -564,6 +569,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        white-space: nowrap; /* ADDED: Prevent text wrapping */
     }
 
     .hero-header .cta-button:hover {
@@ -698,7 +704,7 @@
 
     /* REMOVED: Subheading paragraph from mobile content section */
 
-    /* Mobile buttons side by side in smaller size */
+    /* Mobile buttons side by side in smaller size - UPDATED: Increased width */
     .mobile-cta-container {
         display: flex;
         flex-direction: row;
@@ -706,12 +712,13 @@
         max-width: 100%;
         margin-top: 0;
         gap: 10px;
+        justify-content: center; /* Center buttons */
     }
     
     .mobile-cta-button {
         background-color: var(--accent-color);
         color: #fff;
-        padding: 10px 16px; /* Reduced height */
+        padding: 12px 20px; /* Increased padding for wider buttons */
         border-radius: 30px;
         text-decoration: none;
         font-size: 14px;
@@ -720,9 +727,11 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        flex: 1;
+        flex: 1; /* Make buttons take equal space */
         text-align: center;
         height: 44px; /* Fixed height */
+        min-width: 140px; /* Minimum width to prevent breaking */
+        white-space: nowrap; /* Prevent text from breaking into two lines */
     }
     
     .mobile-secondary-button {
@@ -1726,6 +1735,91 @@
     .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
     .copyright-links a:hover { color: #ffffff; }
 
+    /* NEW: Footer Success Popup Styles */
+    .footer-success-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .footer-success-popup.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .footer-popup-content {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0.7);
+        transition: transform 0.3s ease;
+    }
+    
+    .footer-success-popup.active .footer-popup-content {
+        transform: scale(1);
+    }
+    
+    .footer-popup-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--color-dark-teal);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+    
+    .footer-popup-icon svg {
+        width: 40px;
+        height: 40px;
+        stroke: white;
+        stroke-width: 3;
+    }
+    
+    .footer-popup-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--color-dark-teal);
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .footer-popup-message {
+        color: var(--text-secondary);
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+    
+    .footer-popup-button {
+        background: var(--color-dark-teal);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .footer-popup-button:hover {
+        background: var(--color-teal-hover);
+    }
+
     /* Footer Responsive Design */
     @media (max-width: 1024px) {
         .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
@@ -2004,8 +2098,9 @@
         }
         
         .mobile-cta-button {
-            padding: 10px 12px;
+            padding: 12px 16px;
             font-size: 13px;
+            min-width: 120px; /* Adjusted for very small screens */
         }
     }
 </style>
@@ -2070,6 +2165,20 @@
         </div>
     </header>
 
+    <!-- NEW: Footer Success Popup -->
+    <div class="footer-success-popup" id="footerSuccessPopup">
+        <div class="footer-popup-content">
+            <div class="footer-popup-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="footer-popup-title">Booking Request Sent!</h3>
+            <p class="footer-popup-message">Thank you for your interest! We'll contact you shortly to confirm your booking details.</p>
+            <button class="footer-popup-button" id="closeFooterPopup">Got It</button>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <div class="main-wrapper">
         <div class="hero-header">
@@ -2079,8 +2188,9 @@
             </h1>
             <!-- REMOVED: Subheading paragraph -->
             <div class="cta-container">
-                <a href="#" class="cta-button">BOOK A SESSION</a>
-                <a href="#" class="cta-button secondary-button">VIEW PORTFOLIO</a>
+                <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" -->
+                <a href="#" class="cta-button">BOOK NOW</a>
+                <a href="#" class="cta-button secondary-button">VIEW GALLERY</a>
             </div>
         </div>
 
@@ -2125,6 +2235,7 @@
         <div class="mobile-content">
             <!-- REMOVED: Subheading paragraph -->
             <div class="mobile-cta-container">
+                <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" with increased width -->
                 <a href="#" class="mobile-cta-button">BOOK NOW</a>
                 <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW GALLERY</a>
             </div>
@@ -2511,7 +2622,7 @@
             <div class="subscribe-form-area">
                 <!-- UPDATED CONTENT -->
                 <label for="mobile">Book a Free Consultation</label>
-                <form action="#" method="POST" class="subscribe-form">
+                <form action="#" method="POST" class="subscribe-form" id="footerBookingForm">
                     <div class="input-with-prefix">
                         <span class="prefix">+91</span>
                         <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}" autocomplete="off">
@@ -2581,15 +2692,16 @@
             const bookUsButton = document.getElementById('bookUsButton');
             const successAnimation = document.getElementById('successAnimation');
 
+            // Footer Booking Form Elements
+            const footerBookingForm = document.getElementById('footerBookingForm');
+            const footerSuccessPopup = document.getElementById('footerSuccessPopup');
+            const closeFooterPopup = document.getElementById('closeFooterPopup');
+
             const openMenu = () => {
                 mobileMenu.classList.add('active');
                 menuOverlay.classList.add('active');
                 document.body.classList.add('menu-open');
                 document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
-                
-                // Calculate and set menu height for proper button positioning
-                const menuHeight = window.innerHeight;
-                mobileMenu.style.height = `${menuHeight}px`;
             };
 
             const closeMenu = () => {
@@ -2662,6 +2774,48 @@
                             phoneInput.value = '';
                         }, 3000);
                     }, 1000);
+                });
+            }
+
+            // Footer Booking Form Logic
+            if (footerBookingForm) {
+                footerBookingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const mobileInput = this.querySelector('input[type="tel"]');
+                    const phoneNumber = mobileInput.value.trim();
+                    
+                    // Validate phone number (Indian format)
+                    const phoneRegex = /^[6-9]\d{9}$/;
+                    if (!phoneRegex.test(phoneNumber)) {
+                        alert('Please enter a valid 10-digit Indian mobile number');
+                        return;
+                    }
+                    
+                    // Show success popup
+                    footerSuccessPopup.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    
+                    // Reset form
+                    mobileInput.value = '';
+                });
+            }
+            
+            // Close footer popup
+            if (closeFooterPopup) {
+                closeFooterPopup.addEventListener('click', function() {
+                    footerSuccessPopup.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                });
+            }
+            
+            // Close footer popup when clicking outside
+            if (footerSuccessPopup) {
+                footerSuccessPopup.addEventListener('click', function(e) {
+                    if (e.target === footerSuccessPopup) {
+                        footerSuccessPopup.classList.remove('active');
+                        document.body.style.overflow = ''; // Restore scrolling
+                    }
                 });
             }
 
