@@ -3,1098 +3,2110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Gayathri Digitals</title>
+    <title>Gayathri Digitals</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    <style>
-        /* --- Google Font Import --- */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+<style>
+    /* --- Google Font Import --- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+    
+    /* --- Universal box-sizing --- */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* --- Root variables --- */
+    :root {
+        --primary-bg: #fefefe;
+        --secondary-bg: #f8f8f8;
+        --accent-color: #1a1a1a;
+        --text-primary: #121212;
+        --text-secondary: #666666;
+        --text-light: #888888;
+        --border-color: rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --radius: 12px;
         
-        /* --- Universal box-sizing --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        --spacing: 0.25rem;
+        --color-gray-200: oklch(92.8% 0.006 264.531);
+        --color-white: #fff;
+        --color-black: #000;
+        --color-dark-teal: #012726;
+        --color-teal-hover: #004D4B;
+        --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        --font-weight-medium: 500;
+        --font-weight-normal: 400;
+        --font-weight-bold: 700;
+        --text-base: 1rem;
+        --text-base--line-height: 1.5;
+        --radius-md: 0.375rem;
+        --default-transition-duration: 0.15s;
+        --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        /* --- Root variables --- */
-        :root {
-            --primary-bg: #fefefe;
-            --secondary-bg: #f8f8f8;
-            --accent-color: #1a1a1a;
-            --text-primary: #121212;
-            --text-secondary: #666666;
-            --text-light: #888888;
-            --border-color: rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --radius: 12px;
-            
-            --spacing: 0.25rem;
-            --color-gray-200: oklch(92.8% 0.006 264.531);
-            --color-white: #fff;
-            --color-black: #000;
-            --color-dark-teal: #012726;
-            --color-teal-hover: #004D4B;
-            --color-vibrant-teal: #005F5C;
-            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            --font-weight-medium: 500;
-            --font-weight-normal: 400;
-            --font-weight-bold: 700;
-            --text-base: 1rem;
-            --text-base--line-height: 1.5;
-            --radius-md: 0.375rem;
-            --default-transition-duration: 0.15s;
-            --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    /* --- Body styles --- */
+    body {
+        font-family: var(--font-sans);
+        line-height: 1.6;
+        padding-top: 80px; /* Increased for fixed header - prevents overlap */
+        background-color: var(--primary-bg);
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        color: var(--text-primary);
+        transition: background-color 0.3s ease;
+    }
 
-        /* --- Body styles --- */
-        body {
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            padding-top: 80px; /* Increased for fixed header - prevents overlap */
-            background-color: var(--primary-bg);
-            overflow-x: hidden;
-            color: var(--text-primary);
-            transition: background-color 0.3s ease;
-            scroll-behavior: smooth;
-        }
+    /* Dark overlay when mobile menu is open - FIXED */
+    body.menu-open {
+        overflow: hidden; /* Prevent scrolling when menu is open */
+    }
 
-        /* Dark overlay when mobile menu is open - FIXED */
-        body.menu-open {
-            overflow: hidden; /* Prevent scrolling when menu is open */
-        }
+    /* Remove the body::before overlay and use only #menuOverlay */
 
-        /* --- Header styles --- */
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 50;
-            transition-property: all;
-            transition-duration: 0.3s;
-            transition-timing-function: var(--default-transition-timing-function);
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-        }
+    /* --- Header styles --- */
+    .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+        transition-property: all;
+        transition-duration: 0.3s;
+        transition-timing-function: var(--default-transition-timing-function);
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    }
 
-        /* Container */
+    /* Container */
+    .header-container {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1400px;
+    }
+
+    @media (min-width: 48rem) {
         .header-container {
             width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            max-width: 1400px;
         }
+    }
 
-        @media (min-width: 48rem) {
-            .header-container {
-                width: 90%;
-            }
+    @media (max-width: 768px) {
+        .header-container {
+            padding-left: 16px;
+            padding-right: 16px;
+            width: 100%;
         }
-
-        @media (max-width: 768px) {
-            .header-container {
-                padding-left: 16px;
-                padding-right: 16px;
-                width: 100%;
-            }
-            .nav-left, .nav-right {
-                margin: 0;
-                padding: 0;
-            }
-            .logo, .menu-button {
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                padding-top: 70px; /* Adjusted for mobile */
-            }
+        .nav-left, .nav-right {
+            margin: 0;
+            padding: 0;
         }
+        .logo, .menu-button {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            padding-top: 70px; /* Adjusted for mobile */
+        }
+    }
 
-        /* Navigation */
+    /* Navigation */
+    .nav {
+        padding-top: calc(var(--spacing) * 3); /* Updated to 12px */
+        padding-bottom: calc(var(--spacing) * 3); /* Updated to 12px */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Logo and nav links container */
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--spacing) * 6);
+    }
+    
+    @media (max-width: 768px) {
         .nav {
             padding-top: calc(var(--spacing) * 3); /* Updated to 12px */
             padding-bottom: calc(var(--spacing) * 3); /* Updated to 12px */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
-
-        /* Logo and nav links container */
+        
+        /* Fix logo vertical alignment on mobile */
         .nav-left {
-            display: flex;
             align-items: center;
-            gap: calc(var(--spacing) * 6);
         }
         
-        @media (max-width: 768px) {
-            .nav {
-                padding-top: calc(var(--spacing) * 3); /* Updated to 12px */
-                padding-bottom: calc(var(--spacing) * 3); /* Updated to 12px */
-            }
-            
-            /* Fix logo vertical alignment on mobile */
-            .nav-left {
-                align-items: center;
-            }
-            
-            .logo {
-                display: flex;
-                align-items: center;
-            }
-        }
-        
-        /* Logo image */
         .logo {
-            margin-right: calc(var(--spacing) * 6);
-            height: 40px;
-            width: auto;
-            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
         }
+    }
+    
+    /* Logo image */
+    .logo {
+        margin-right: calc(var(--spacing) * 6);
+        height: 40px;
+        width: auto;
+        transition: transform 0.3s ease;
+    }
 
-        .logo:hover {
-            transform: scale(1.05);
-        }
+    .logo:hover {
+        transform: scale(1.05);
+    }
 
-        /* Nav links (hidden on mobile, flex on md) */
+    /* Nav links (hidden on mobile, flex on md) */
+    .nav-links {
+        display: none;
+        align-items: center;
+        gap: calc(var(--spacing) * 2);
+    }
+
+    @media (min-width: 48rem) {
         .nav-links {
-            display: none;
-            align-items: center;
-            gap: calc(var(--spacing) * 2);
-        }
-
-        @media (min-width: 48rem) {
-            .nav-links {
-                display: flex;
-            }
-        }
-
-        /* Nav link hover effect */
-        .nav-link {
-            padding-left: calc(var(--spacing) * 4);
-            padding-right: calc(var(--spacing) * 4);
-            padding-top: calc(var(--spacing) * 2);
-            padding-bottom: calc(var(--spacing) * 2);
-            font-size: var(--text-base);
-            line-height: var(--text-base--line-height);
-            font-weight: var(--font-weight-medium);
-            color: var(--text-primary);
-            transition-property: color, background-color;
-            transition-duration: var(--default-transition-duration);
-            transition-timing-function: var(--default-transition-timing-function);
-            text-decoration: none;
-            border-radius: var(--radius-md);
-            position: relative;
-        }
-
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 8px;
-            left: 50%;
-            background-color: var(--color-dark-teal);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        @media (hover: hover) {
-            .nav-link:hover {
-                color: var(--color-dark-teal);
-                background-color: transparent;
-            }
-            
-            .nav-link:hover:after {
-                width: 70%;
-            }
-        }
-
-        /* Right-side buttons container */
-        .nav-right {
             display: flex;
-            align-items: center;
-            gap: calc(var(--spacing) * 4);
         }
+    }
 
-        /* Mobile menu button */
-        .menu-button {
-            display: flex;
-            padding: calc(var(--spacing) * 1.5);
-            border: 1px solid var(--color-dark-teal);
-            border-radius: var(--radius-md);
+    /* Nav link hover effect */
+    .nav-link {
+        padding-left: calc(var(--spacing) * 4);
+        padding-right: calc(var(--spacing) * 4);
+        padding-top: calc(var(--spacing) * 2);
+        padding-bottom: calc(var(--spacing) * 2);
+        font-size: var(--text-base);
+        line-height: var(--text-base--line-height);
+        font-weight: var(--font-weight-medium);
+        color: var(--text-primary);
+        transition-property: color, background-color;
+        transition-duration: var(--default-transition-duration);
+        transition-timing-function: var(--default-transition-timing-function);
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        position: relative;
+    }
+
+    .nav-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 8px;
+        left: 50%;
+        background-color: var(--color-dark-teal);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    @media (hover: hover) {
+        .nav-link:hover {
             color: var(--color-dark-teal);
             background-color: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
         }
-
-        .menu-button:hover {
-            background-color: var(--color-dark-teal);
-            color: white;
+        
+        .nav-link:hover:after {
+            width: 70%;
         }
+    }
 
-        @media (min-width: 48rem) {
-            .menu-button {
-                display: none;
-            }
+    /* Right-side buttons container */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--spacing) * 4);
+    }
+
+    /* Mobile menu button */
+    .menu-button {
+        display: flex;
+        padding: calc(var(--spacing) * 1.5);
+        border: 1px solid var(--color-dark-teal);
+        border-radius: var(--radius-md);
+        color: var(--color-dark-teal);
+        background-color: transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .menu-button:hover {
+        background-color: var(--color-dark-teal);
+        color: white;
+    }
+
+    @media (min-width: 48rem) {
+        .menu-button {
+            display: none;
         }
+    }
 
-        /* Mobile menu styles - COMPLETELY FIXED */
-        #mobileMenu {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 85vw;
-            max-width: 320px;
-            height: 100vh;
-            background: #ffffff;
-            padding: 24px 16px;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            z-index: 1002; /* Increased z-index */
+    /* Mobile menu styles - COMPLETELY FIXED */
+    #mobileMenu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 85vw;
+        max-width: 320px;
+        height: 100vh;
+        background: #ffffff;
+        padding: 24px 16px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+        z-index: 1002; /* Increased z-index */
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    #mobileMenu.active {
+        transform: translateX(0);
+    }
+
+    /* FIXED: Menu overlay - only covers content, not the menu */
+#menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Change this from 100% to 100vh */
+    background: rgba(0,0,0,0.7); /* Darker overlay */
+    z-index: 1001; /* Below mobile menu but above everything else */
+    display: none;
+    backdrop-filter: blur(5px); /* Optional blur effect */
+}
+
+    #menuOverlay.active {
+        display: block;
+    }
+
+    .mobile-menu-close {
+        padding: 8px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        transition: background 0.2s ease, transform 0.2s ease;
+        align-self: flex-end;
+        margin-bottom: 24px;
+        cursor: pointer;
+        z-index: 1003; /* Ensure close button is above everything */
+    }
+
+    .mobile-menu-close svg {
+        width: 24px;
+        height: 24px;
+        color: #4b5563;
+    }
+
+.mobile-menu-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Add this */
+    min-height: 0; /* Add this for proper flexbox behavior */
+}
+
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* Updated from 8px to 12px */
+    }
+
+    .mobile-nav-link {
+        display: block;
+        padding: 16px 12px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #2d3436;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+
+    .mobile-nav-link:hover {
+        background-color: #f8f9fa;
+    }
+    
+.mobile-menu-auth {
+    flex-shrink: 0;
+    padding-top: 20px;
+    margin-top: auto; /* Push to bottom */
+    padding-bottom: 20px; /* Add some bottom padding */
+}
+
+    .mobile-menu-auth-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .mobile-menu-auth-button {
+        padding: 14px;
+        text-align: center;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.2s ease;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .mobile-menu-auth-button.submit {
+        background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
+        background-size: 250% 100%;
+        color: var(--color-white);
+        position: relative;
+        overflow: hidden;
+        animation: gradient-shimmer 4s linear infinite;
+    }
+    
+    .mobile-menu-auth-button.submit::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 75%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        transform: skewX(-25deg);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .mobile-menu-auth-button.submit:hover::before { 
+        left: 150%; 
+    }
+
+    .mobile-menu-auth-button.join {
+        border: 1px solid #d1d5db;
+        color: #4b5563;
+    }
+
+    @media (hover: hover) {
+        .mobile-menu-auth-button.submit:hover {
+            background: var(--color-teal-hover);
+        }
+        .mobile-menu-auth-button.join:hover {
+            background: #f3f4f6;
+        }
+    }
+
+    /* Auth buttons container */
+    .auth-buttons {
+        display: none;
+        align-items: center;
+        gap: calc(var(--spacing) * 4);
+    }
+
+    @media (min-width: 48rem) {
+        .auth-buttons {
             display: flex;
-            flex-direction: column;
-            overflow-y: auto;
         }
+    }
 
-        #mobileMenu.active {
-            transform: translateX(0);
+    /* Auth button */
+    .auth-button {
+        padding-left: calc(var(--spacing) * 5);
+        padding-right: calc(var(--spacing) * 5);
+        padding-top: calc(var(--spacing) * 2);
+        padding-bottom: calc(var(--spacing) * 2);
+        font-size: var(--text-base);
+        line-height: var(--text-base--line-height);
+        font-weight: var(--font-weight-medium);
+        border: 1px solid var(--color-dark-teal);
+        border-radius: var(--radius-md);
+        color: var(--color-dark-teal);
+        transition-property: color, background-color;
+        transition-duration: var(--default-transition-duration);
+        transition-timing-function: var(--default-transition-timing-function);
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    .auth-button.submit {
+        background-color: var(--color-dark-teal);
+        color: var(--color-white);
+        border: none;
+    }
+
+    @media (hover: hover) {
+        .auth-button:hover {
+            color: var(--color-white);
+            background-color: var(--color-teal-hover);
         }
+        .auth-button.submit:hover {
+            background-color: var(--color-teal-hover);
+        }
+    }
 
-       #menuOverlay {
+    /* NEW STYLE FOR MOBILE-ONLY "BOOK US" BUTTON */
+    .mobile-auth-button {
+        display: inline-block;
+    }
+    
+    @media (min-width: 48rem) { /* 768px */
+        .mobile-auth-button {
+            display: none;
+        }
+    }
+
+    /* Divider */
+    .divider {
+        height: 1px;
+        background-color: var(--color-gray-200);
+    }
+
+    @media (max-width: 768px) {
+        .divider {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    /* --- Hero Section Styles --- */
+    /* Main Wrapper for All Content */
+    .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        max-width: 1400px;
+        padding: 0 30px;
+        margin: 0 auto;
+    }
+
+    /* Header Content Styling */
+    .hero-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+        max-width: 800px;
+        z-index: 10;
+        position: relative;
+        margin-bottom: -10px;
+        padding-top: 20px; /* Added to ensure content doesn't touch navbar */
+    }
+
+    /* UPDATED: More eye-catching logo text */
+    .logo-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 0;
+        background: linear-gradient(90deg, #8B0000, #B22222, #8B0000, #8B0000, #B22222, #8B0000);
+        background-size: 400% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 4s linear infinite;
+        text-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+        padding: 8px 16px;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .logo-text::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 4s infinite;
+    }
+
+    @keyframes shine {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+
+    .hero-header h1 {
+        font-size: 72px;
+        font-weight: 600;
+        line-height: 1.05;
+        margin: 0;
+        color: var(--text-primary);
+        letter-spacing: -1px;
+    }
+
+    .hero-header h1 .serif {
+        font-family: 'Playfair Display', serif;
+        font-weight: 500;
+        font-style: italic;
+    }
+
+    /* REMOVED: Subheading paragraph from hero section */
+
+    .cta-container {
+        display: flex;
+        gap: 16px;
+        margin-top: 5px;
+    }
+
+    .hero-header .cta-button {
+        background-color: var(--accent-color);
+        color: #fff;
+        padding: 16px 32px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap; /* ADDED: Prevent text wrapping */
+    }
+
+    .hero-header .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .secondary-button {
+        background-color: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    /* FIXED: Secondary button hover styles */
+    .secondary-button:hover {
+        background-color: var(--accent-color);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Carousel Container */
+    .carousel-section {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        overflow: hidden; /* Prevent horizontal scrolling */
+    }
+
+    .carousel-container {
+        width: 100%;
+        max-width: 1600px;
+        height: 420px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        perspective: 800px;
+        mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+        -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    }
+
+    .carousel {
+        position: relative;
+        width: 1px;
+        height: 100%;
+        transform-style: preserve-3d;
+        animation: rotateAnimation 60s linear infinite;
+    }
+
+    @keyframes rotateAnimation {
+        from { transform: rotateY(0deg); }
+        to { transform: rotateY(360deg); }
+    }
+
+    .image-container {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 1600px; 
+        height: 400px;
+        transform-style: preserve-3d;
+        transform-origin: center;
+        transform: translateX(-50%);
+    }
+    
+    .image-container:nth-child(1) { transform: translateX(-50%) rotateY(30deg); }
+    .image-container:nth-child(2) { transform: translateX(-50%) rotateY(60deg); }
+    .image-container:nth-child(3) { transform: translateX(-50%) rotateY(90deg); }
+    .image-container:nth-child(4) { transform: translateX(-50%) rotateY(120deg); }
+    .image-container:nth-child(5) { transform: translateX(-50%) rotateY(150deg); }
+    .image-container:nth-child(6) { transform: translateX(-50%) rotateY(180deg); }
+
+    .image-container img {
+        position: absolute;
+        width: 280px; 
+        height: 400px;
+        object-fit: cover;
+        border-radius: 16px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .image-container .img-front { transform: rotateY(90deg); left: 0; }
+    .image-container .img-back { transform: rotateY(-90deg); right: 0; }
+
+    /* Stats Section */
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        padding: 15px 0;
+        width: 100%;
+        max-width: 800px;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 42px;
+        font-weight: 600;
+        color: var(--text-primary);
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Mobile Content Section - Only visible on mobile */
+    .mobile-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        max-width: 600px;
+        padding: 20px 0;
+    }
+
+    /* REMOVED: Subheading paragraph from mobile content section */
+
+    /* Mobile buttons side by side in smaller size - UPDATED: Increased width */
+    .mobile-cta-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+        gap: 10px;
+        justify-content: center; /* Center buttons */
+    }
+    
+    .mobile-cta-button {
+        background-color: var(--accent-color);
+        color: #fff;
+        padding: 12px 20px; /* Increased padding for wider buttons */
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1; /* Make buttons take equal space */
+        text-align: center;
+        height: 44px; /* Fixed height */
+        min-width: 140px; /* Minimum width to prevent breaking */
+        white-space: nowrap; /* Prevent text from breaking into two lines */
+    }
+    
+    .mobile-secondary-button {
+        background-color: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .mobile-secondary-button:hover {
+        background-color: var(--accent-color);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* --- Services Section Styles --- */
+    .services-section {
+        width: 100%;
+        padding: 80px 0;
+    }
+
+    .section-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+        /* Removed padding: 0 30px; as requested */
+    }
+
+    .left-content {
+        position: sticky;
+        top: 140px;
+        flex: 0 0 30%; /* Reduced width for text area */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 2rem;
+    }
+
+    .left-content h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        line-height: 1.15;
+    }
+
+    .left-content h2 .serif {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        color: var(--color-dark-teal);
+    }
+
+    .left-content p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        max-width: 380px; /* Reduced width for text area */
+    }
+
+    .right-content {
+        flex: 0 0 65%; /* Increased width for cards */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    /* Service Card Styling */
+    .service-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 0;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        opacity: 0;
+        transform: translateY(50px) scale(0.98);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .service-card.show {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    /* Service Card Image - Square aspect ratio */
+    .card-image {
+        width: 100%;
+        height: 280px; /* Increased height for square images */
+        overflow: hidden;
+    }
+
+    .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .icon-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+        transition: var(--transition);
+        background-color: var(--color-dark-teal);
+    }
+    
+    .icon-circle svg {
+        width: 24px;
+        height: 24px;
+        stroke: #ffffff;
+    }
+
+    .service-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .service-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .learn-more {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--color-dark-teal);
+        transition: var(--transition);
+        font-size: 0.9rem;
+    }
+
+    .learn-more::after {
+        content: "→";
+        margin-left: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    /* Desktop Hover Effects */
+    @media (hover: hover) {
+        .service-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+        }
+        .service-card:hover .icon-circle {
+            background-color: var(--color-teal-hover);
+            transform: scale(1.1);
+        }
+        .service-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        .learn-more:hover {
+            color: var(--color-teal-hover);
+            padding-left: 4px;
+        }
+        .learn-more:hover::after {
+            transform: translateX(5px);
+        }
+    }
+
+    /* Hide on mobile */
+    .hide-on-mobile {
+        display: block;
+    }
+
+    /* --- Book Us Section Styles --- */
+    .book-us-section {
+        width: 100%;
+        background-color: var(--secondary-bg);
+        padding: 120px 40px;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .book-us-section::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-image: radial-gradient(circle at 1px 1px, rgba(1, 39, 38, 0.04) 1px, transparent 0);
+        background-size: 20px 20px;
+        opacity: 0.5;
+        z-index: 1;
+    }
+
+    .book-us-content { 
+        max-width: 750px;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+    }
+
+    /* Book Us Logo */
+    .book-us-logo {
+        height: 60px;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+
+    .eyebrow-text {
+        color: var(--color-dark-teal);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+    }
+
+    .book-us-content h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.5px;
+    }
+    
+    .book-us-content h2 .serif {
+        font-style: italic;
+        color: var(--color-dark-teal);
+    }
+
+    .book-us-content p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin: 0 auto 2.5rem auto;
+        line-height: 1.8;
+        max-width: 600px;
+    }
+
+    /* Updated Book Us Form Styles */
+    .book-us-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .phone-input-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 12px;
+        padding: 8px 16px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border: 1px solid var(--border-color);
+    }
+    
+    .phone-prefix {
+        font-weight: 600;
+        color: var(--color-dark-teal);
+        margin-right: 8px;
+    }
+    
+    .phone-input {
+        flex: 1;
+        border: none;
+        padding: 12px 0;
+        font-size: 16px;
+        outline: none;
+        background: transparent;
+    }
+    
+    .phone-input::placeholder {
+        color: var(--text-light);
+    }
+    
+    .book-us-cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
+        background-size: 250% 100%;
+        color: #fff;
+        border: none;
+        padding: 18px 40px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(1, 39, 38, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: gradient-shimmer 4s linear infinite;
+    }
+    
+    .book-us-cta-button::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 75%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        transform: skewX(-25deg);
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .book-us-cta-button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 12px 35px rgba(1, 39, 38, 0.3);
+        animation-play-state: paused;
+    }
+    
+    .book-us-cta-button:hover::before { left: 150%; }
+    
+    .book-us-cta-button:active {
+        transform: translateY(-2px) scale(1.0);
+        box-shadow: 0 8px 20px rgba(1, 39, 38, 0.25);
+    }
+    
+    .book-us-cta-button svg {
+        width: 22px; height: 22px; stroke: #fff;
+        stroke-width: 2.5; transition: transform 0.3s ease;
+    }
+    
+    .book-us-cta-button:hover svg { transform: translateX(5px); }
+    
+    /* Success Animation */
+    .success-animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .success-checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: var(--color-dark-teal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: scaleIn 0.5s ease-out;
+    }
+    
+    .success-checkmark svg {
+        width: 40px;
+        height: 40px;
+        stroke: white;
+        stroke-width: 3;
+    }
+    
+    .success-message {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-dark-teal);
+        animation: fadeIn 0.5s ease-out 0.3s both;
+    }
+    
+    @keyframes scaleIn {
+        0% { transform: scale(0); }
+        70% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes gradient-shimmer {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    /* --- Why Choose Us Section --- */
+    .why-choose-section {
+        width: 100%;
+        padding: 80px 40px; /* Reduced padding */
+        background-color: var(--primary-bg);
+    }
+
+    .why-choose-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .why-choose-header {
+        text-align: center;
+        margin-bottom: 3rem; /* Reduced margin */
+    }
+
+    .why-choose-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+    
+    .why-choose-header h2 .serif {
+        font-style: italic;
+        color: var(--color-dark-teal);
+    }
+
+    .why-choose-header p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    .why-choose-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem; /* Reduced gap */
+    }
+
+    /* Center the 5th card on desktop */
+    .why-choose-card:nth-child(5) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        max-width: 50%;
+    }
+
+    @media (max-width: 768px) {
+        .why-choose-section {
+            padding: 60px 20px; /* Reduced padding for mobile */
+        }
+        
+        .why-choose-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem; /* Reduced gap for mobile */
+        }
+        
+        /* FIXED: Make 5th card same width as others on mobile */
+        .why-choose-card:nth-child(5) {
+            grid-column: 1;
+            max-width: 100%;
+            justify-self: stretch;
+        }
+    }
+
+    .why-choose-card {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.5rem; /* Reduced padding */
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+    }
+
+    .why-choose-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .why-choose-icon {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background-color: var(--color-dark-teal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .why-choose-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: #ffffff;
+    }
+
+    .why-choose-content h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        color: var(--text-primary);
+    }
+
+    .why-choose-content p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+
+    /* Mobile styles for Why Choose Us section */
+    @media (max-width: 768px) {
+        .why-choose-section {
+            padding: 60px 20px;
+        }
+        
+        .why-choose-header {
+            text-align: left; /* Left align header text on mobile */
+            margin-bottom: 2rem; /* Reduced margin */
+        }
+        
+        .why-choose-header h2 {
+            font-size: 2.5rem;
+        }
+        
+        .why-choose-card {
+            padding: 1.2rem; /* Smaller padding for smaller cards */
+            gap: 1rem; /* Smaller gap */
+            align-items: center; /* Center items vertically */
+            min-height: auto; /* Remove fixed height */
+        }
+        
+        .why-choose-icon {
+            width: 40px; /* Smaller icon */
+            height: 40px; /* Smaller icon */
+        }
+        
+        .why-choose-icon svg {
+            width: 20px; /* Smaller SVG */
+            height: 20px; /* Smaller SVG */
+        }
+        
+        .why-choose-content h3 {
+            font-size: 1.2rem; /* Smaller heading */
+            margin-bottom: 0; /* Remove margin since we're hiding paragraph */
+        }
+        
+        .why-choose-content p {
+            display: none; /* Hide paragraph on mobile */
+        }
+    }
+
+    /* --- Gallery Section Styles --- */
+    .gallery-section {
+        width: 100%;
+        padding: 100px 0;
+        background-color: var(--primary-bg);
+    }
+
+    .gallery-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 30px;
+        display: flex;
+        gap: 40px;
+    }
+
+    .gallery-left {
+        flex: 0 0 35%;
+        position: sticky;
+        top: 140px;
+        height: fit-content;
+    }
+
+    .gallery-left h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+        line-height: 1.15;
+    }
+
+    .gallery-left h2 .serif {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        color: var(--color-dark-teal);
+    }
+
+    .gallery-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .gallery-nav-item {
+        padding: 16px 20px;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gallery-nav-item.active {
+        background-color: var(--color-dark-teal);
+        color: white;
+        border-color: var(--color-dark-teal);
+        transform: translateX(8px);
+    }
+
+    .gallery-nav-item:not(.active):hover {
+        background-color: rgba(1, 39, 38, 0.05);
+        color: var(--color-dark-teal);
+        border-color: var(--color-dark-teal);
+    }
+
+    .gallery-content {
+        flex: 0 0 60%;
+    }
+
+    .gallery-text {
+        margin-bottom: 2rem;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .gallery-text-content {
+        flex-grow: 1;
+    }
+
+    .gallery-text h3 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+        transition: all 0.5s ease;
+    }
+
+    .gallery-text p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        transition: all 0.5s ease;
+        margin-bottom: 1rem;
+    }
+
+    .view-more-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--color-dark-teal);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .view-more-button:hover {
+        background: var(--color-teal-hover);
+        transform: translateY(-2px);
+    }
+
+    .view-more-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        transition: all 0.5s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        cursor: pointer;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+
+    /* Mobile Gallery Styles */
+    .mobile-gallery {
+        display: none;
+        width: 100%;
+    }
+
+    .mobile-gallery-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        gap: 20px;
+    }
+
+    .mobile-gallery-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-align: center;
+        flex-grow: 1;
+        margin: 0;
+    }
+
+    .mobile-gallery-title .serif {
+        font-style: italic;
+        color: var(--color-dark-teal);
+    }
+
+    .mobile-gallery-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        gap: 15px;
+    }
+
+    .mobile-gallery-heading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        gap: 15px;
+    }
+
+    .mobile-gallery-heading h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        text-align: center;
+    }
+
+    .gallery-nav-button {
+        background: var(--color-dark-teal);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .gallery-nav-button:hover {
+        background: var(--color-teal-hover);
+        transform: scale(1.05);
+    }
+
+    .gallery-nav-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .gallery-nav-button svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .mobile-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .mobile-gallery-text {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .mobile-gallery-text p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .mobile-view-more-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--color-dark-teal);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-view-more-button:hover {
+        background: var(--color-teal-hover);
+        transform: translateY(-2px);
+    }
+
+    .mobile-view-more-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Animation classes */
+    .fade-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .fade-out {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    /* --- Footer Styles --- */
+    .upper-half {
+        background-color: #f8f9fa;
+        position: relative;
+        padding-top: 80px; 
+        padding-bottom: 150px; 
+    }
+
+    .lower-half {
+        background-color: #012726;
+        padding: 260px 20px 40px 20px; /* Reduced padding for mobile */
+    }
+    
+    .subscribe-card {
+        background: linear-gradient(135deg, #003d3b, #012726);
+        color: #ffffff;
+        border-radius: 24px;
+        padding: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        box-shadow: 0 10px 40px rgba(0, 39, 38, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        width: 90%;
+        max-width: 1200px;
+        z-index: 10;
+    }
+
+    .subscribe-info { flex: 1; }
+    .subscribe-info h2 { 
+        font-family: 'Playfair Display', serif;
+        font-size: 2.8rem; 
+        font-weight: 600; 
+        line-height: 1.2; 
+        margin-bottom: 1rem; 
+    }
+    .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
+    .subscribe-form-area { flex-basis: 45%; }
+    .subscribe-form-area label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
+    .subscribe-form { display: flex; gap: 12px; }
+    
+    .input-with-prefix {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 0 20px;
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    .input-with-prefix .prefix {
+        color: #ffffff;
+        font-size: 1rem;
+        margin-right: 8px;
+        pointer-events: none;
+    }
+    
+    .subscribe-form input[type="tel"] {
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        color: #ffffff;
+        padding: 16px 0;
+        font-size: 1rem;
+        outline: none;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .subscribe-form input[type="tel"]::placeholder { color: #b3d1d0; }
+    
+    .input-with-prefix:focus-within {
+        border-color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .subscribe-form button { 
+        background-color: #ffffff; 
+        color: #012726; 
+        border: none; 
+        padding: 16px 32px; 
+        border-radius: 12px; 
+        font-weight: 700; 
+        font-size: 1rem; 
+        cursor: pointer; 
+        white-space: nowrap; 
+        font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease; 
+    }
+    .subscribe-form button:hover { background-color: #e2e6ea; }
+    .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
+    .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
+
+    .footer-bottom { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: flex-start; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+    }
+    
+    .footer-logo-area { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 16px; 
+        flex-basis: 30%; 
+    }
+    
+    .footer-logo-img {
+        max-width: 140px;
+        opacity: 0.9;
+    }
+    
+    .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
+    
+    .footer-links-container { 
+        display: flex; 
+        gap: 120px; 
+    }
+    
+    .footer-column h3 { 
+        font-size: 1rem; 
+        font-weight: 600; 
+        color: #ffffff; 
+        margin-bottom: 24px; 
+        text-transform: uppercase; 
+        letter-spacing: 0.5px; 
+    }
+    
+    .footer-column ul { list-style: none; }
+    .footer-column ul li { margin-bottom: 18px; }
+    .footer-column ul li a { 
+        text-decoration: none; 
+        color: #d1d5db; 
+        font-size: 1rem; 
+        transition: color 0.2s ease-in-out; 
+    }
+    
+    .footer-column ul li a:hover { color: #ffffff; }
+
+    .footer-copyright-bar {
+        max-width: 1200px;
+        margin: 60px auto 0 auto;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #d1d5db;
+        font-size: 0.9rem;
+    }
+
+    .copyright-links { display: flex; gap: 24px; }
+    .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
+    .copyright-links a:hover { color: #ffffff; }
+
+    /* NEW: Footer Success Popup Styles */
+    .footer-success-popup {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh; /* Change this from 100% to 100vh */
-        background: rgba(0,0,0,0.7); /* Darker overlay */
-        z-index: 1001; /* Below mobile menu but above everything else */
-        display: none;
-        backdrop-filter: blur(5px); /* Optional blur effect */
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .footer-success-popup.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .footer-popup-content {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0.7);
+        transition: transform 0.3s ease;
+    }
+    
+    .footer-success-popup.active .footer-popup-content {
+        transform: scale(1);
+    }
+    
+    .footer-popup-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--color-dark-teal);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+    
+    .footer-popup-icon svg {
+        width: 40px;
+        height: 40px;
+        stroke: white;
+        stroke-width: 3;
+    }
+    
+    .footer-popup-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--color-dark-teal);
+        margin-bottom: 10px;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .footer-popup-message {
+        color: var(--text-secondary);
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+    
+    .footer-popup-button {
+        background: var(--color-dark-teal);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .footer-popup-button:hover {
+        background: var(--color-teal-hover);
     }
 
-        #menuOverlay.active {
-            display: block;
-        }
+    /* Footer Responsive Design */
+    @media (max-width: 1024px) {
+        .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
+        .subscribe-form-area { width: 100%; margin-top: 20px; }
+        .footer-bottom { flex-direction: column; gap: 50px; }
+        .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
+    }
 
-        .mobile-menu-close {
-            padding: 8px;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            transition: background 0.2s ease, transform 0.2s ease;
-            align-self: flex-end;
-            margin-bottom: 24px;
-            cursor: pointer;
-            z-index: 1003; /* Ensure close button is above everything */
-        }
-
-        .mobile-menu-close svg {
-            width: 24px;
-            height: 24px;
-            color: #4b5563;
-        }
-
-        .mobile-menu-content {
-            flex-grow: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px; /* Updated from 8px to 12px */
-        }
-
-        .mobile-nav-link {
-            display: block;
-            padding: 16px 12px;
-            font-size: 18px;
-            font-weight: 500;
-            color: #2d3436;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.2s ease;
-        }
-
-        .mobile-nav-link:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .mobile-menu-auth {
-            flex-shrink: 0;
-            padding-top: 20px;
-            margin-top: auto; /* Push to bottom */
-        }
-
-        .mobile-menu-auth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .mobile-menu-auth-button {
-            padding: 14px;
-            text-align: center;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background 0.2s ease;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .mobile-menu-auth-button.submit {
-            background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
-            background-size: 250% 100%;
-            color: var(--color-white);
-            position: relative;
-            overflow: hidden;
-            animation: gradient-shimmer 4s linear infinite;
-        }
-        
-        .mobile-menu-auth-button.submit::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 75%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-            transform: skewX(-25deg);
-            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .mobile-menu-auth-button.submit:hover::before { 
-            left: 150%; 
-        }
-
-        .mobile-menu-auth-button.join {
-            border: 1px solid #d1d5db;
-            color: #4b5563;
-        }
-
-        @media (hover: hover) {
-            .mobile-menu-auth-button.submit:hover {
-                background: var(--color-teal-hover);
-            }
-            .mobile-menu-auth-button.join:hover {
-                background: #f3f4f6;
-            }
-        }
-
-        /* Auth buttons container */
-        .auth-buttons {
-            display: none;
-            align-items: center;
-            gap: calc(var(--spacing) * 4);
-        }
-
-        @media (min-width: 48rem) {
-            .auth-buttons {
-                display: flex;
-            }
-        }
-
-        /* Auth button */
-        .auth-button {
-            padding-left: calc(var(--spacing) * 5);
-            padding-right: calc(var(--spacing) * 5);
-            padding-top: calc(var(--spacing) * 2);
-            padding-bottom: calc(var(--spacing) * 2);
-            font-size: var(--text-base);
-            line-height: var(--text-base--line-height);
-            font-weight: var(--font-weight-medium);
-            border: 1px solid var(--color-dark-teal);
-            border-radius: var(--radius-md);
-            color: var(--color-dark-teal);
-            transition-property: color, background-color;
-            transition-duration: var(--default-transition-duration);
-            transition-timing-function: var(--default-transition-timing-function);
-            text-decoration: none;
-            background-color: transparent;
-        }
-
-        .auth-button.submit {
-            background-color: var(--color-dark-teal);
-            color: var(--color-white);
-            border: none;
-        }
-
-        @media (hover: hover) {
-            .auth-button:hover {
-                color: var(--color-white);
-                background-color: var(--color-teal-hover);
-            }
-            .auth-button.submit:hover {
-                background-color: var(--color-teal-hover);
-            }
-        }
-
-        /* NEW STYLE FOR MOBILE-ONLY "BOOK US" BUTTON */
-        .mobile-auth-button {
-            display: inline-block;
-        }
-        
-        @media (min-width: 48rem) { /* 768px */
-            .mobile-auth-button {
-                display: none;
-            }
-        }
-
-        /* Divider */
-        .divider {
-            height: 1px;
-            background-color: var(--color-gray-200);
-        }
-
-        @media (max-width: 768px) {
-            .divider {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-        }
-
-        /* --- Hero Section --- */
-        .gallery-hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(1, 39, 38, 0.9), rgba(0, 95, 92, 0.7)), 
-                        url('https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            padding: 0 20px;
-            margin-top: -80px; /* Compensate for fixed header */
-        }
-
-        .gallery-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.3) 100%);
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-        }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            margin-bottom: 16px;
-            background: linear-gradient(90deg, #8B0000, #B22222, #8B0000, #8B0000, #B22222, #8B0000);
-            background-size: 400% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
-            text-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
-            padding: 8px 16px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-text::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 4s infinite;
-        }
-
-        @keyframes shine {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 100%;
-            }
-        }
-
-        .gallery-hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            font-weight: 600;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .gallery-hero h1 .serif {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .gallery-hero p {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.85);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            z-index: 2;
-        }
-
-        .scroll-indicator::after {
-            content: '';
-            width: 1px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.5);
-            margin-top: 10px;
-            animation: scrollPulse 2s infinite;
-        }
-
-        @keyframes scrollPulse {
-            0% { opacity: 1; height: 0; }
-            50% { opacity: 0.5; height: 40px; }
-            100% { opacity: 0; height: 40px; }
-        }
-
-        /* --- Gallery Categories --- */
-        .gallery-category {
-            padding: 100px 8%;
-            opacity: 0;
-            transform: translateY(60px) scale(0.98);
-            transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .gallery-category.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* Parallax Background */
-        .gallery-category::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-            opacity: 0.08;
-            z-index: -1;
-            transition: transform 0.8s ease, opacity 0.6s ease;
-        }
-
-        .gallery-category:nth-child(1)::before { background-image: url("https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-        .gallery-category:nth-child(2)::before { background-image: url("https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-        .gallery-category:nth-child(3)::before { background-image: url("https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-        .gallery-category:nth-child(4)::before { background-image: url("https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-        .gallery-category:nth-child(5)::before { background-image: url("https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-        .gallery-category:nth-child(6)::before { background-image: url("https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"); }
-
-        .gallery-category h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 50px;
-            position: relative;
-            color: var(--text-primary);
-            letter-spacing: 0.5px;
-        }
-
-        .gallery-category h2::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--color-vibrant-teal), var(--color-dark-teal));
-            border-radius: 2px;
-        }
-
-        /* 3-column Grid */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            justify-items: center;
-            margin-bottom: 40px;
-        }
-
-        .gallery-grid img {
-            width: 100%;
-            max-width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            transform: scale(0.9);
-            opacity: 0;
-            transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                        opacity 0.7s ease, 
-                        box-shadow 0.3s ease;
-            filter: saturate(0.9);
-        }
-
-        .gallery-grid img.visible {
-            opacity: 1;
-            transform: scale(1);
-            filter: saturate(1.1);
-        }
-
-        .gallery-grid img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            filter: brightness(1.05);
-        }
-
-        /* View More Button */
-        .view-more-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .view-more-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background-color: var(--color-dark-teal);
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(1, 39, 38, 0.2);
-        }
-
-        .view-more-btn:hover {
-            background-color: var(--color-teal-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(1, 39, 38, 0.3);
-        }
-
-        .view-more-btn svg {
-            width: 18px;
-            height: 18px;
-            transition: transform 0.3s ease;
-        }
-
-        .view-more-btn:hover svg {
-            transform: translateX(5px);
-        }
-
-        /* --- Footer Styles --- */
-        .upper-half {
-            background-color: #f8f9fa;
-            position: relative;
-            padding-top: 80px; 
-            padding-bottom: 150px; 
-        }
-
-        .lower-half {
-            background-color: #012726;
-            padding: 120px 20px 40px 20px; /* Reduced padding for mobile */
-        }
-        
-        .subscribe-card {
-            background: linear-gradient(135deg, #003d3b, #012726);
-            color: #ffffff;
-            border-radius: 24px;
-            padding: 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 40px;
-            box-shadow: 0 10px 40px rgba(0, 39, 38, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            width: 90%;
-            max-width: 1200px;
-            z-index: 10;
-        }
-
-        .subscribe-info { flex: 1; }
-        .subscribe-info h2 { 
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem; 
-            font-weight: 600; 
-            line-height: 1.2; 
-            margin-bottom: 1rem; 
-        }
-        .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
-        .subscribe-form-area { flex-basis: 45%; }
-        .subscribe-form-area label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
-        .subscribe-form { display: flex; gap: 12px; }
-        
-        .input-with-prefix {
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 0 20px;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
-
-        .input-with-prefix .prefix {
-            color: #ffffff;
-            font-size: 1rem;
-            margin-right: 8px;
-            pointer-events: none;
-        }
-        
-        .subscribe-form input[type="tel"] {
-            width: 100%;
-            background-color: transparent;
-            border: none;
-            color: #ffffff;
-            padding: 16px 0;
-            font-size: 1rem;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .subscribe-form input[type="tel"]::placeholder { color: #b3d1d0; }
-        
-        .input-with-prefix:focus-within {
-            border-color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .subscribe-form button { 
-            background-color: #ffffff; 
-            color: #012726; 
-            border: none; 
-            padding: 16px 32px; 
-            border-radius: 12px; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            white-space: nowrap; 
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s ease; 
-        }
-        .subscribe-form button:hover { background-color: #e2e6ea; }
-        .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
-        .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
-
-        .footer-bottom { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
-        
-        .footer-logo-area { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px; 
-            flex-basis: 30%; 
-        }
-        
-        .footer-logo-img {
-            max-width: 140px;
-            opacity: 0.9;
-        }
-        
-        .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
-        
+    @media (max-width: 768px) {
+        .subscribe-info h2 { font-size: 2.2rem; }
+        .subscribe-form { flex-direction: column; }
         .footer-links-container { 
-            display: flex; 
-            gap: 120px; 
+            flex-direction: row; 
+            gap: 40px; 
+            justify-content: space-between;
+            width: 100%;
         }
-        
-        .footer-column h3 { 
-            font-size: 1rem; 
-            font-weight: 600; 
-            color: #ffffff; 
-            margin-bottom: 24px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
+        .upper-half { padding-top: 60px; padding-bottom: 280px; }
+        .lower-half { 
+            padding-top: 340px; 
+            padding-left: 20px; 
+            padding-right: 20px; 
+            padding-bottom: 40px; 
         }
-        
-        .footer-column ul { list-style: none; }
-        .footer-column ul li { margin-bottom: 18px; }
-        .footer-column ul li a { 
-            text-decoration: none; 
-            color: #d1d5db; 
-            font-size: 1rem; 
-            transition: color 0.2s ease-in-out; 
-        }
-        
-        .footer-column ul li a:hover { color: #ffffff; }
+        .subscribe-form input[type="tel"]::placeholder { font-size: 0.9rem; }
+        .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
+        .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
+        .copyright-text, .copyright-links a { font-size: 0.8rem; }
+    }
 
-        .footer-copyright-bar {
-            max-width: 1200px;
-            margin: 60px auto 0 auto;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 1600px) {
+        .carousel-container {
+            width: 98vw;
+        }
+    }
+    
+    @media (max-width: 1200px) {
+        .hero-header h1 {
+            font-size: 60px;
+        }
+        
+        .stats-container {
+            gap: 40px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+        }
+        
+        .right-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 992px) { /* Tablet */
+        .main-wrapper {
+            gap: 10px;
+        }
+        
+        .hero-header h1 {
+            font-size: 52px;
+        }
+        
+        .section-wrapper {
+            flex-direction: column;
+            gap: 0;
+        }
+        
+        .left-content {
+            position: static;
+            margin-bottom: 3rem;
+            width: 100%;
+            padding-right: 0;
+            text-align: left; 
+            align-items: flex-start;
+        }
+        
+        .left-content p {
+            max-width: 550px;
+        }
+        
+        .right-content {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) { /* Mobile */
+        body {
+            padding-top: 65px; /* Adjusted for mobile to prevent overlap */
+        }
+        
+        .main-wrapper {
+            gap: 5px;
+            padding: 0 20px;
+        }
+        
+        .hero-header {
+            margin-bottom: -15px;
+            padding-top: 10px; /* Added for mobile */
+        }
+        
+        .hero-header h1 {
+            font-size: 42px;
+        }
+        
+        /* Hide buttons in header for mobile */
+        .hero-header .cta-container {
+            display: none;
+        }
+        
+        /* Show mobile content section */
+        .mobile-content {
             display: flex;
+        }
+        
+        .carousel-container {
+            height: 350px;
+            perspective: 600px;
+        }
+        
+        .image-container {
+            width: 1400px;
+            height: 400px;
+            top: -25px;
+        }
+        
+        .image-container img {
+            width: 280px;
+            height: 400px;
+        }
+
+        .stats-container {
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        
+        .stat-item {
+            flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            color: #d1d5db;
-            font-size: 0.9rem;
+            text-align: left;
+        }
+        
+        .stat-number {
+            margin-bottom: 0;
+            font-size: 32px;
         }
 
-        .copyright-links { display: flex; gap: 24px; }
-        .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
-        .copyright-links a:hover { color: #ffffff; }
+        /* Mobile Services Section */
+        .left-content h2 {
+            font-size: 2.5rem;
+        }
 
-        /* NEW: Footer Success Popup Styles */
-        .footer-success-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .hide-on-mobile {
+            display: none;
+        }
+        
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            padding: 0;
+        }
+        
+        .card-image {
+            height: 200px; /* Square images on mobile too */
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
         }
         
-        .footer-success-popup.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .footer-popup-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transform: scale(0.7);
-            transition: transform 0.3s ease;
-        }
-        
-        .footer-success-popup.active .footer-popup-content {
-            transform: scale(1);
-        }
-        
-        .footer-popup-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--color-dark-teal);
-            border-radius: 50%;
+        .card-content {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
         }
         
-        .footer-popup-icon svg {
-            width: 40px;
-            height: 40px;
-            stroke: white;
-            stroke-width: 3;
+        .icon-circle {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            border-radius: 10px;
         }
         
-        .footer-popup-title {
+        .icon-circle svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .card-text {
+            flex-grow: 1;
+        }
+        
+        .service-card h3 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        
+        .service-card p,
+        .service-card .learn-more {
+            display: none;
+        }
+        
+        /* Book Us Section Mobile */
+        .book-us-section { 
+            padding: 80px 24px 90px;
+        }
+        
+        .book-us-content { text-align: left; }
+        .eyebrow-text { font-size: 0.8rem; }
+        .book-us-content h2 { font-size: 2.5rem; }
+        .book-us-content p { font-size: 1rem; margin-bottom: 2.5rem; }
+        
+        .book-us-form {
+            max-width: 100%;
+        }
+        
+        .book-us-cta-button {
+            display: flex;
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.1rem;
+        }
+        
+        /* Gallery Section Mobile */
+        .gallery-section {
+            padding: 60px 0;
+        }
+        
+        .gallery-container {
+            display: none;
+        }
+        
+        .mobile-gallery {
+            display: block;
+            padding: 0 20px;
+        }
+        
+        .mobile-gallery-title {
             font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--color-dark-teal);
-            margin-bottom: 10px;
-            font-family: 'Playfair Display', serif;
         }
         
-        .footer-popup-message {
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            line-height: 1.6;
+        .mobile-gallery-heading h3 {
+            font-size: 1.4rem;
         }
         
-        .footer-popup-button {
-            background: var(--color-dark-teal);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
+        /* Hide mobile gallery text as requested */
+        .mobile-gallery-text {
+            display: none;
         }
         
-        .footer-popup-button:hover {
-            background: var(--color-teal-hover);
+        /* Decrease size of gallery navigation buttons */
+        .gallery-nav-button {
+            width: 36px;
+            height: 36px;
         }
+        
+        .gallery-nav-button svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
 
-        /* Footer Responsive Design */
-        @media (max-width: 1024px) {
-            .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
-            .subscribe-form-area { width: 100%; margin-top: 20px; }
-            .footer-bottom { flex-direction: column; gap: 50px; }
-            .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
+    @media (max-width: 480px) {
+        .hero-header h1 {
+            font-size: 36px;
         }
-
-        @media (max-width: 768px) {
-            .subscribe-info h2 { font-size: 2.2rem; }
-            .subscribe-form { flex-direction: column; }
-            .footer-links-container { 
-                flex-direction: row; 
-                gap: 40px; 
-                justify-content: space-between;
-                width: 100%;
-            }
-            .upper-half { padding-top: 60px; padding-bottom: 280px; }
-            .lower-half { 
-                padding-top: 320px; 
-                padding-left: 20px; 
-                padding-right: 20px; 
-                padding-bottom: 40px; 
-            }
-            .subscribe-form input[type="tel"]::placeholder { font-size: 0.9rem; }
-            .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
-            .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
-            .copyright-text, .copyright-links a { font-size: 0.8rem; }
+        
+        /* Ensure buttons are still side by side on very small screens */
+        .mobile-cta-container {
+            flex-direction: row;
+            gap: 8px;
         }
-
-        /* --- Responsive Styles --- */
-        @media (max-width: 1200px) {
-            .gallery-hero h1 {
-                font-size: 4rem;
-            }
-            
-            .gallery-category h2 {
-                font-size: 2.5rem;
-            }
+        
+        .mobile-cta-button {
+            padding: 12px 16px;
+            font-size: 13px;
+            min-width: 120px; /* Adjusted for very small screens */
         }
-
-        @media (max-width: 992px) {
-            .gallery-hero h1 {
-                font-size: 3.5rem;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .gallery-category h2 {
-                font-size: 2.2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .gallery-hero {
-                height: 80vh;
-                padding: 0 15px;
-            }
-            
-            .gallery-hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .gallery-hero p {
-                font-size: 1.1rem;
-            }
-            
-            .gallery-category {
-                padding: 70px 5%;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .gallery-grid img {
-                height: 250px;
-            }
-            
-            .gallery-category h2 {
-                font-size: 1.9rem;
-            }
-            
-            .view-more-btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .gallery-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .gallery-hero p {
-                font-size: 1rem;
-            }
-            
-            .gallery-category {
-                padding: 50px 3%;
-            }
-            
-            .gallery-grid img {
-                height: 200px;
-            }
-            
-            .gallery-category h2 {
-                font-size: 1.6rem;
-            }
-            
-            .view-more-btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <!-- Navbar -->
@@ -1171,146 +2183,433 @@
     </div>
 
     <!-- Hero Section -->
-    <section class="gallery-hero">
-        <div class="hero-content">
+    <div class="main-wrapper">
+        <div class="hero-header">
             <div class="logo-text">GAYATHRI DIGITALS</div>
-            <h1>Our Visual <span class="serif">Gallery</span></h1>
-            <p>Explore our stunning collection of photography work. From weddings to commercial projects, each image tells a unique story captured with artistic vision.</p>
+            <h1>
+                Capturing Your <span class="serif">Timeless</span> Moments
+            </h1>
+            <!-- REMOVED: Subheading paragraph -->
+            <div class="cta-container">
+                <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" -->
+                <a href="#" class="cta-button">BOOK NOW</a>
+                <a href="#" class="cta-button secondary-button">VIEW GALLERY</a>
+            </div>
         </div>
-        <div class="scroll-indicator">
-            Scroll to Explore
+
+        <div class="carousel-section">
+            <div class="carousel-container">
+                <div class="carousel">
+                    <!-- Image Pair 1 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/73/ca/07/73ca07f8a74c1336e85d3354f4a494f3.jpg" alt="Serene Skincare Product Display" class="img-front">
+                        <img src="https://i.pinimg.com/736x/99/57/3d/99573dc8cfdeaaecd7ae8d680ed41515.jpg" alt="Skincare Close-Up" class="img-back">
+                    </div>
+                    <!-- Image Pair 2 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/cb/a2/f3/cba2f3e9fab306da395e5d46db5367ed.jpg" alt="Serene Minimalist Interior" class="img-front">
+                        <img src="https://i.pinimg.com/736x/db/6f/ab/db6fab9b13a8d971cf62a3aa80e2fa70.jpg" alt="Elegant Glass Dropper Bottles" class="img-back">
+                    </div>
+                    <!-- Image Pair 3 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/71/f9/8f/71f98f8e9b65c20a4d275901a6ecdac0.jpg" alt="Modern Minimalist Kitchen" class="img-front">
+                        <img src="https://i.pinimg.com/736x/7f/f7/e5/7ff7e595cb59ccd6826c386f92e764f7.jpg" alt="Contemplative Man in Hat" class="img-back">
+                    </div>
+                    <!-- Image Pair 4 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/20/fa/4e/20fa4ec7d56edd83924ea5810afc0407.jpg" alt="Minimalist Fashion Look" class="img-front">
+                        <img src="https://i.pinimg.com/736x/73/53/47/735347345dbbbddc1306d2d19edfcddd.jpg" alt="Minimalist Interior with Staircase" class="img-back">
+                    </div>
+                    <!-- Image Pair 5 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/a9/af/98/a9af983ec8885d0c1aec4cdec98556ee.jpg" alt="Minimalist Perfume Scene" class="img-front">
+                        <img src="https://i.pinimg.com/736x/20/b3/25/20b3257bbd87b1bb0937b553762f5db8.jpg" alt="Minimalist Skincare Arrangement" class="img-back">
+                    </div>
+                    <!-- Image Pair 6 -->
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/736x/5f/7c/ba/5f7cba530e2a39a4841c7b96cbd639d6.jpg" alt="Woman Running Outdoors" class="img-front">
+                        <img src="https://i.pinimg.com/736x/40/22/f9/4022f94197478b756293581c39c9be2d.jpg" alt="Stylish Sunglasses Display" class="img-back">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Content Section - Only visible on mobile -->
+        <div class="mobile-content">
+            <!-- REMOVED: Subheading paragraph -->
+            <div class="mobile-cta-container">
+                <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" with increased width -->
+                <a href="#" class="mobile-cta-button">BOOK NOW</a>
+                <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW GALLERY</a>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+        
+        <!-- Services Section -->
+        <div class="services-section">
+            <div class="section-wrapper">
+                <!-- Left Sticky Content -->
+                <div class="left-content">
+                    <h2>Our Creative <span class="serif">Services</span></h2>
+                    <p>
+                        We transform your moments into timeless art. Whether it's cinematic storytelling or stunning stills, every frame we capture is a masterpiece.
+                    </p>
+                </div>
+
+                <!-- Right Scrolling Content -->
+                <div class="right-content">
+                    
+                    <!-- Card 1: Portrait Photography -->
+                    <a href="/portrait-photography.html" class="service-card">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- User Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Portrait Photography</h3>
+                                <p>Elegant and authentic portraits that capture personality and emotion. Perfect for individuals, families, and professional headshots.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 2: Wedding Photography -->
+                    <a href="/wedding-photography.html" class="service-card">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Wedding Photography">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- Rings Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="16" r="6"></circle><circle cx="16" cy="16" r="6"></circle></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Wedding Photography</h3>
+                                <p>Documenting your special day with artistic vision. We capture the emotion, beauty, and joy of your celebration from start to finish.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 3: Commercial Photography -->
+                    <a href="/commercial-photography.html" class="service-card">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Commercial Photography">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- Building Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Commercial Photography</h3>
+                                <p>Professional imagery for brands and businesses that elevates your visual identity, from product shots to corporate events.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 4: Aerial (HIDDEN ON MOBILE) -->
+                    <a href="/aerial-photography.html" class="service-card hide-on-mobile">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Aerial & Drone Photography">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- Drone Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.5A2.5 2.5 0 0 1 9.5 16V8a2.5 2.5 0 0 1 5 0v8a2.5 2.5 0 0 1-2.5 2.5Z"></path><path d="M12 8V2"></path><path d="m8 6 1.83 1.83"></path><path d="M16 6l-1.83 1.83"></path><path d="M18 12h6"></path><path d="M6 12H0"></path></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Aerial & Drone Photography</h3>
+                                <p>Capture breathtaking perspectives with our professional drone services. Ideal for real estate, landscapes, and unique event coverage.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 5: Editing (HIDDEN ON MOBILE) -->
+                    <a href="/editing-services.html" class="service-card hide-on-mobile">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Editing & Retouching">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- Magic Wand Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5 4 8l4 4L12.5 8l-3-5.5Z"></path><path d="m14 7 5.5 5.5-4 4-5.5-5.5Z"></path><path d="M2 22l4-4"></path><path d="m13 19 4.5 2.5-2.5-4.5"></path></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Editing & Retouching</h3>
+                                <p>Advanced post-production, color grading, and retouching to perfect every detail and enhance the visual storytelling of your images.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 6: Campaigns (HIDDEN ON MOBILE) -->
+                    <a href="/brand-campaigns.html" class="service-card hide-on-mobile">
+                        <div class="card-image">
+                            <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Brand Campaigns">
+                        </div>
+                        <div class="card-content">
+                            <div class="icon-circle">
+                                <!-- Megaphone Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+                            </div>
+                            <div class="card-text">
+                                <h3>Brand Campaigns</h3>
+                                <p>Strategic brand visuals crafted to strengthen identity and engagement across social platforms and marketing campaigns.</p>
+                                <span class="learn-more">Learn More</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updated Book Us Section with Mobile Number Input -->
+    <section class="book-us-section">
+        <div class="book-us-content">
+            <!-- Logo in Book Us Section -->
+            <img class="book-us-logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo">
+            
+            <!-- "Eyebrow" text for better hierarchy -->
+            <p class="eyebrow-text">Let's Create Together</p>
+            
+            <h2>Book Your <span class="serif">Unforgettable</span> Session</h2>
+            <p>
+                Whether you're planning a wedding, a family portrait, or a commercial project, we're ready to bring your vision to life. Let's collaborate to create timeless images you'll cherish forever.
+            </p>
+            
+            <!-- Book Us Form -->
+            <div class="book-us-form" id="bookUsForm">
+                <div class="phone-input-container">
+                    <span class="phone-prefix">+91</span>
+                    <input type="tel" class="phone-input" id="phoneInput" placeholder="Enter your mobile number" maxlength="10">
+                </div>
+                <button class="book-us-cta-button" id="bookUsButton">
+                    Book Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+            
+            <!-- Success Message (Hidden by Default) -->
+            <div class="success-animation" id="successAnimation" style="display: none;">
+                <div class="success-checkmark">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <div class="success-message">Submitted Successfully!</div>
+            </div>
         </div>
     </section>
 
-    <!-- Wedding Gallery -->
-    <section class="gallery-category">
-        <h2>Wedding Gallery</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Wedding Photography">
-        </div>
-        <div class="view-more-container">
-            <a href="/wedding-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        </div>
-    </section>
-
-    <!-- Pre-Wedding Gallery -->
-    <section class="gallery-category">
-        <h2>Pre-Wedding</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Pre-Wedding Photography">
-        </div>
-        <div class="view-more-container">
-            <a href="/pre-wedding-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        </div>
-    </section>
-
-    <!-- Maternity Gallery -->
-    <section class="gallery-category">
-        <h2>Maternity</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Maternity Photography">
-        </div>
-        <div class="view-more-container">
-            <a href="/maternity-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        </div>
-    </section>
-
-    <!-- Birthday Gallery -->
-    <section class="gallery-category">
-        <h2>Birthday</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Birthday Photography">
-        </div>
-        <div class="view-more-container">
-            <a href="/birthday-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section">
+        <div class="why-choose-container">
+            <div class="why-choose-header">
+                <h2>Why Choose <span class="serif">Gayathri Digitals</span></h2>
+                <p>We don't just take photos — we capture emotions, create memories, and tell your unique story</p>
+            </div>
+            
+            <div class="why-choose-grid">
+                <!-- Affordable Pricing -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Affordable Pricing</h3>
+                        <p>We believe every beautiful moment deserves to be captured — not just by those who can afford luxury, but by everyone with a story to tell. We keep our prices simple and fair, because memories are priceless.</p>
+                    </div>
+                </div>
+                
+                <!-- On-Time Delivery -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>On-Time Delivery</h3>
+                        <p>Your special moments shouldn't have to wait. We deliver every project on time, so you can relive your joy while the feelings are still fresh in your heart.</p>
+                    </div>
+                </div>
+                
+                <!-- Professional Editing -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Professional Editing</h3>
+                        <p>Every click becomes a masterpiece. Our expert editing brings out true emotions, natural beauty, and colors that make your memories glow forever.</p>
+                    </div>
+                </div>
+                
+                <!-- Customer Satisfaction -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Customer Satisfaction</h3>
+                        <p>We don't just take photos — we build happiness. Seeing your smile when you receive your pictures is our greatest reward.</p>
+                    </div>
+                </div>
+                
+                <!-- Every Frame Speaks -->
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 7l-7 5 7 5V7z"></path>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                    </div>
+                    <div class="why-choose-content">
+                        <h3>Every Frame Speaks</h3>
+                        <p>Each frame we capture tells your story — the laughter, the tears, the magic of real moments. We don't just take photos, we capture feelings that stay for a lifetime.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Haldi Gallery -->
-    <section class="gallery-category">
-        <h2>Haldi</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Haldi Photography">
+    <!-- Desktop Gallery Section -->
+    <section class="gallery-section">
+        <div class="gallery-container">
+            <div class="gallery-left">
+                <h2>Explore Our <span class="serif">Gallery</span></h2>
+                <div class="gallery-nav">
+                    <button class="gallery-nav-item active" data-category="portrait">Portrait Photography</button>
+                    <button class="gallery-nav-item" data-category="wedding">Wedding Photography</button>
+                    <button class="gallery-nav-item" data-category="commercial">Commercial Photography</button>
+                    <button class="gallery-nav-item" data-category="aerial">Aerial & Drone</button>
+                    <button class="gallery-nav-item" data-category="editing">Editing & Retouching</button>
+                    <button class="gallery-nav-item" data-category="campaigns">Brand Campaigns</button>
+                </div>
+            </div>
+            <div class="gallery-content">
+                <div class="gallery-text">
+                    <div class="gallery-text-content">
+                        <h3>Portrait Photography</h3>
+                        <p>Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.</p>
+                        <a href="/portrait-photography.html" class="view-more-button">
+                            View More
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="gallery-grid">
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
+                    </div>
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Portrait Photography">
+                    </div>
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Portrait Photography">
+                    </div>
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Portrait Photography">
+                    </div>
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Portrait Photography">
+                    </div>
+                    <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                        <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Portrait Photography">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="view-more-container">
-            <a href="/haldi-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-        </div>
-    </section>
 
-    <!-- Event Gallery -->
-    <section class="gallery-category">
-        <h2>Event</h2>
-        <div class="gallery-grid">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-            <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Event Photography">
-        </div>
-        <div class="view-more-container">
-            <a href="/event-gallery" class="view-more-btn">
-                View More
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
+        <!-- Mobile Gallery Section -->
+        <div class="mobile-gallery">
+            <div class="mobile-gallery-header">
+                <div class="mobile-gallery-title">Explore Our <span class="serif">Gallery</span></div>
+            </div>
+            
+            <div class="mobile-gallery-nav">
+                <button class="gallery-nav-button prev-button" aria-label="Previous category">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="mobile-gallery-heading">
+                    <h3>Portrait Photography</h3>
+                </div>
+                
+                <button class="gallery-nav-button next-button" aria-label="Next category">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="mobile-gallery-text">
+                <p>Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.</p>
+                <a href="/portrait-photography.html" class="mobile-view-more-button">
+                    View More
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="mobile-gallery-grid">
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG" alt="Portrait Photography">
+                </div>
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg" alt="Portrait Photography">
+                </div>
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg" alt="Portrait Photography">
+                </div>
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg" alt="Portrait Photography">
+                </div>
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg" alt="Portrait Photography">
+                </div>
+                <div class="gallery-item fade-in" data-link="/portrait-photography.html">
+                    <img src="https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg" alt="Portrait Photography">
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1382,13 +2681,19 @@
         </div>
     </div>
 
+    <!-- In-built JavaScript for Mobile Menu Functionality -->
     <script>
-        // Mobile Menu Functionality
         document.addEventListener('DOMContentLoaded', function () {
             const mobileMenuButton = document.getElementById('mobileMenuButton');
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             const menuOverlay = document.getElementById('menuOverlay');
+
+            // Book Us Form Elements
+            const bookUsForm = document.getElementById('bookUsForm');
+            const phoneInput = document.getElementById('phoneInput');
+            const bookUsButton = document.getElementById('bookUsButton');
+            const successAnimation = document.getElementById('successAnimation');
 
             // Footer Booking Form Elements
             const footerBookingForm = document.getElementById('footerBookingForm');
@@ -1399,14 +2704,14 @@
                 mobileMenu.classList.add('active');
                 menuOverlay.classList.add('active');
                 document.body.classList.add('menu-open');
-                document.body.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
             };
 
             const closeMenu = () => {
                 mobileMenu.classList.remove('active');
                 menuOverlay.classList.remove('active');
                 document.body.classList.remove('menu-open');
-                document.body.style.overflow = '';
+                document.body.style.overflow = ''; // Restore scrolling
             };
 
             if (mobileMenuButton) {
@@ -1433,6 +2738,47 @@
                     closeMenu();
                 }
             });
+
+            // Book Us Form Logic
+            if (bookUsButton && phoneInput) {
+                bookUsButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const phoneNumber = phoneInput.value.trim();
+                    
+                    // If no number is entered, redirect to book us page
+                    if (!phoneNumber) {
+                        window.location.href = '/book-us';
+                        return;
+                    }
+                    
+                    // Validate phone number (Indian format)
+                    const phoneRegex = /^[6-9]\d{9}$/;
+                    if (!phoneRegex.test(phoneNumber)) {
+                        alert('Please enter a valid 10-digit Indian mobile number');
+                        return;
+                    }
+                    
+                    // Change button to Submit and show success
+                    bookUsButton.textContent = 'Submit';
+                    bookUsButton.disabled = true;
+                    
+                    // Simulate form submission
+                    setTimeout(() => {
+                        bookUsForm.style.display = 'none';
+                        successAnimation.style.display = 'flex';
+                        
+                        // Reset after 3 seconds
+                        setTimeout(() => {
+                            bookUsForm.style.display = 'flex';
+                            successAnimation.style.display = 'none';
+                            bookUsButton.textContent = 'Book Now';
+                            bookUsButton.disabled = false;
+                            phoneInput.value = '';
+                        }, 3000);
+                    }, 1000);
+                });
+            }
 
             // Footer Booking Form Logic
             if (footerBookingForm) {
@@ -1476,35 +2822,333 @@
                 });
             }
 
-            // Scroll animations for gallery sections
-            const sections = document.querySelectorAll(".gallery-category");
-            const options = { threshold: 0.15 };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    const section = entry.target;
-                    const imgs = section.querySelectorAll("img");
-                    if (entry.isIntersecting) {
-                        section.classList.add("visible");
-                        imgs.forEach((img, i) => {
-                            setTimeout(() => img.classList.add("visible"), i * 100);
-                        });
-                    } else {
-                        section.classList.remove("visible");
-                        imgs.forEach((img) => img.classList.remove("visible"));
+            // Scroll-based reveal animation for service cards
+            const cards = document.querySelectorAll('.service-card');
+            const revealOnScroll = () => {
+                const trigger = window.innerHeight * 0.9;
+                cards.forEach(card => {
+                    const top = card.getBoundingClientRect().top;
+                    if (top < trigger) {
+                        card.classList.add('show');
                     }
                 });
-            }, options);
+            };
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll();
 
-            sections.forEach((sec) => observer.observe(sec));
+            // Gallery Section Functionality
+            const galleryNavItems = document.querySelectorAll('.gallery-nav-item');
+            const galleryText = document.querySelector('.gallery-text');
+            const galleryGrid = document.querySelector('.gallery-grid');
+            
+            // Mobile elements
+            const mobileGalleryText = document.querySelector('.mobile-gallery-text');
+            const mobileGalleryGrid = document.querySelector('.mobile-gallery-grid');
+            const mobilePrevButton = document.querySelector('.prev-button');
+            const mobileNextButton = document.querySelector('.next-button');
+            const mobileGalleryHeading = document.querySelector('.mobile-gallery-heading h3');
+            
+            // Gallery data
+            const galleryData = {
+                portrait: {
+                    title: "Portrait Photography",
+                    description: "Elegant and authentic portraits that capture personality and emotion. Our portrait sessions are tailored to showcase your unique character in stunning visual narratives.",
+                    images: [
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg"
+                    ],
+                    link: "/portrait-photography.html"
+                },
+                wedding: {
+                    title: "Wedding Photography",
+                    description: "Capturing the magic and emotion of your special day. From intimate moments to grand celebrations, we document every detail with artistry and care.",
+                    images: [
+                        "https://i.pinimg.com/736x/73/ca/07/73ca07f8a74c1336e85d3354f4a494f3.jpg",
+                        "https://i.pinimg.com/736x/99/57/3d/99573dc8cfdeaaecd7ae8d680ed41515.jpg",
+                        "https://i.pinimg.com/736x/cb/a2/f3/cba2f3e9fab306da395e5d46db5367ed.jpg",
+                        "https://i.pinimg.com/736x/db/6f/ab/db6fab9b13a8d971cf62a3aa80e2fa70.jpg",
+                        "https://i.pinimg.com/736x/71/f9/8f/71f98f8e9b65c20a4d275901a6ecdac0.jpg",
+                        "https://i.pinimg.com/736x/7f/f7/e5/7ff7e595cb59ccd6826c386f92e764f7.jpg"
+                    ],
+                    link: "/wedding-photography.html"
+                },
+                commercial: {
+                    title: "Commercial Photography",
+                    description: "Professional imagery that elevates your brand. From product photography to corporate events, we create visuals that communicate your message effectively.",
+                    images: [
+                        "https://i.pinimg.com/736x/20/fa/4e/20fa4ec7d56edd83924ea5810afc0407.jpg",
+                        "https://i.pinimg.com/736x/73/53/47/735347345dbbbddc1306d2d19edfcddd.jpg",
+                        "https://i.pinimg.com/736x/a9/af/98/a9af983ec8885d0c1aec4cdec98556ee.jpg",
+                        "https://i.pinimg.com/736x/20/b3/25/20b3257bbd87b1bb0937b553762f5db8.jpg",
+                        "https://i.pinimg.com/736x/5f/7c/ba/5f7cba530e2a39a4841c7b96cbd639d6.jpg",
+                        "https://i.pinimg.com/736x/40/22/f9/4022f94197478b756293581c39c9be2d.jpg"
+                    ],
+                    link: "/commercial-photography.html"
+                },
+                aerial: {
+                    title: "Aerial & Drone Photography",
+                    description: "Breathtaking perspectives from above. Our drone services capture unique angles and sweeping vistas that transform ordinary scenes into extraordinary visuals.",
+                    images: [
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc01205-mk3J6o669GuVWLNa.JPG",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04261-AzGNWpQv14TXnQLX.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc08868-enhanced-nr-2-YKblgk1ZqvuvePMJ.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dcs01664-mePJKzeb80c3lqMb.jpg",
+                        "https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/dsc04480---copy-YleQlB1XazHbxnZl.jpg"
+                    ],
+                    link: "/aerial-photography.html"
+                },
+                editing: {
+                    title: "Editing & Retouching",
+                    description: "Transforming good images into exceptional ones. Our advanced post-production techniques enhance colors, remove imperfections, and perfect every detail.",
+                    images: [
+                        "https://i.pinimg.com/736x/73/ca/07/73ca07f8a74c1336e85d3354f4a494f3.jpg",
+                        "https://i.pinimg.com/736x/99/57/3d/99573dc8cfdeaaecd7ae8d680ed41515.jpg",
+                        "https://i.pinimg.com/736x/cb/a2/f3/cba2f3e9fab306da395e5d46db5367ed.jpg",
+                        "https://i.pinimg.com/736x/db/6f/ab/db6fab9b13a8d971cf62a3aa80e2fa70.jpg",
+                        "https://i.pinimg.com/736x/71/f9/8f/71f98f8e9b65c20a4d275901a6ecdac0.jpg",
+                        "https://i.pinimg.com/736x/7f/f7/e5/7ff7e595cb59ccd6826c386f92e764f7.jpg"
+                    ],
+                    link: "/editing-services.html"
+                },
+                campaigns: {
+                    title: "Brand Campaigns",
+                    description: "Strategic visual storytelling for brands. We create cohesive campaigns that strengthen identity and drive engagement across all platforms.",
+                    images: [
+                        "https://i.pinimg.com/736x/20/fa/4e/20fa4ec7d56edd83924ea5810afc0407.jpg",
+                        "https://i.pinimg.com/736x/73/53/47/735347345dbbbddc1306d2d19edfcddd.jpg",
+                        "https://i.pinimg.com/736x/a9/af/98/a9af983ec8885d0c1aec4cdec98556ee.jpg",
+                        "https://i.pinimg.com/736x/20/b3/25/20b3257bbd87b1bb0937b553762f5db8.jpg",
+                        "https://i.pinimg.com/736x/5f/7c/ba/5f7cba530e2a39a4841c7b96cbd639d6.jpg",
+                        "https://i.pinimg.com/736x/40/22/f9/4022f94197478b756293581c39c9be2d.jpg"
+                    ],
+                    link: "/brand-campaigns.html"
+                }
+            };
 
-            // Parallax effect
-            window.addEventListener("scroll", () => {
-                document.querySelectorAll("section.gallery-category").forEach((sec) => {
-                    const offset = window.scrollY * 0.2;
-                    sec.style.backgroundPositionY = offset + "px";
+            // State variables
+            let currentCategory = 'portrait';
+            let autoChangeInterval;
+            let userInteracted = false;
+            let lastUserInteractionTime = 0;
+            
+            // Function to update gallery content
+            function updateGallery(category, isUserInteraction = false) {
+                if (isUserInteraction) {
+                    userInteracted = true;
+                    lastUserInteractionTime = Date.now();
+                    
+                    // Reset auto-change timer with delay
+                    clearInterval(autoChangeInterval);
+                    setTimeout(startAutoChange, 10000);
+                }
+                
+                const data = galleryData[category];
+                currentCategory = category;
+                
+                // Update desktop gallery
+                if (galleryText) {
+                    // Add fade-out effect to current content
+                    galleryText.classList.add('fade-out');
+                    const galleryItems = document.querySelectorAll('.gallery-item');
+                    galleryItems.forEach(item => {
+                        item.classList.remove('fade-in');
+                        item.classList.add('fade-out');
+                    });
+                    
+                    // Update content after fade-out
+                    setTimeout(() => {
+                        // Update text
+                        galleryText.querySelector('h3').textContent = data.title;
+                        galleryText.querySelector('p').textContent = data.description;
+                        
+                        // Update view more button link
+                        const viewMoreButton = galleryText.querySelector('.view-more-button');
+                        if (viewMoreButton) {
+                            viewMoreButton.href = data.link;
+                        }
+                        
+                        // Update images
+                        const galleryItems = document.querySelectorAll('.gallery-item');
+                        galleryItems.forEach((item, index) => {
+                            if (index < data.images.length) {
+                                item.querySelector('img').src = data.images[index];
+                                item.setAttribute('data-link', data.link);
+                            }
+                        });
+                        
+                        // Add fade-in effect to new content
+                        galleryText.classList.remove('fade-out');
+                        galleryText.classList.add('fade-in');
+                        
+                        setTimeout(() => {
+                            galleryItems.forEach(item => {
+                                item.classList.remove('fade-out');
+                                item.classList.add('fade-in');
+                            });
+                        }, 50);
+                    }, 500);
+                }
+                
+                // Update mobile gallery
+                if (mobileGalleryText) {
+                    // Add fade-out effect to current content
+                    mobileGalleryText.classList.add('fade-out');
+                    const mobileGalleryItems = document.querySelectorAll('.mobile-gallery-grid .gallery-item');
+                    mobileGalleryItems.forEach(item => {
+                        item.classList.remove('fade-in');
+                        item.classList.add('fade-out');
+                    });
+                    
+                    // Update content after fade-out
+                    setTimeout(() => {
+                        // Update heading
+                        if (mobileGalleryHeading) {
+                            mobileGalleryHeading.textContent = data.title;
+                        }
+                        
+                        // Update text
+                        mobileGalleryText.querySelector('p').textContent = data.description;
+                        
+                        // Update view more button link
+                        const mobileViewMoreButton = mobileGalleryText.querySelector('.mobile-view-more-button');
+                        if (mobileViewMoreButton) {
+                            mobileViewMoreButton.href = data.link;
+                        }
+                        
+                        // Update images
+                        const mobileGalleryItems = document.querySelectorAll('.mobile-gallery-grid .gallery-item');
+                        mobileGalleryItems.forEach((item, index) => {
+                            if (index < data.images.length) {
+                                item.querySelector('img').src = data.images[index];
+                                item.setAttribute('data-link', data.link);
+                            }
+                        });
+                        
+                        // Add fade-in effect to new content
+                        mobileGalleryText.classList.remove('fade-out');
+                        mobileGalleryText.classList.add('fade-in');
+                        
+                        setTimeout(() => {
+                            mobileGalleryItems.forEach(item => {
+                                item.classList.remove('fade-out');
+                                item.classList.add('fade-in');
+                            });
+                        }, 50);
+                    }, 500);
+                }
+                
+                // Update active state in desktop navigation
+                galleryNavItems.forEach(item => {
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+
+            // Function to get next category
+            function getNextCategory() {
+                const categories = Object.keys(galleryData);
+                const currentIndex = categories.indexOf(currentCategory);
+                const nextIndex = (currentIndex + 1) % categories.length;
+                return categories[nextIndex];
+            }
+            
+            // Function to get previous category
+            function getPrevCategory() {
+                const categories = Object.keys(galleryData);
+                const currentIndex = categories.indexOf(currentCategory);
+                const prevIndex = (currentIndex - 1 + categories.length) % categories.length;
+                return categories[prevIndex];
+            }
+            
+            // Function to start auto-change
+            function startAutoChange() {
+                clearInterval(autoChangeInterval);
+                autoChangeInterval = setInterval(() => {
+                    // Check if user has interacted recently
+                    const timeSinceLastInteraction = Date.now() - lastUserInteractionTime;
+                    if (timeSinceLastInteraction > 10000) {
+                        updateGallery(getNextCategory());
+                    }
+                }, 4000);
+            }
+            
+            // Initialize auto-change
+            startAutoChange();
+            
+            // Add click event listeners to desktop gallery nav items
+            galleryNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    updateGallery(category, true);
                 });
             });
+            
+            // Add click event listeners to mobile navigation buttons
+            if (mobileNextButton) {
+                mobileNextButton.addEventListener('click', function() {
+                    updateGallery(getNextCategory(), true);
+                });
+            }
+            
+            if (mobilePrevButton) {
+                mobilePrevButton.addEventListener('click', function() {
+                    updateGallery(getPrevCategory(), true);
+                });
+            }
+            
+            // Add click event listeners to gallery items
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const link = this.getAttribute('data-link');
+                    if (link) {
+                        window.location.href = link;
+                    }
+                });
+            });
+            
+            // Add swipe functionality for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            function handleTouchStart(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }
+            
+            function handleTouchEnd(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const swipeDistance = touchEndX - touchStartX;
+                
+                if (Math.abs(swipeDistance) > swipeThreshold) {
+                    if (swipeDistance > 0) {
+                        // Swipe right - previous category
+                        updateGallery(getPrevCategory(), true);
+                    } else {
+                        // Swipe left - next category
+                        updateGallery(getNextCategory(), true);
+                    }
+                }
+            }
+            
+            // Add touch events to mobile gallery
+            const mobileGallerySection = document.querySelector('.mobile-gallery');
+            if (mobileGallerySection) {
+                mobileGallerySection.addEventListener('touchstart', handleTouchStart, false);
+                mobileGallerySection.addEventListener('touchend', handleTouchEnd, false);
+            }
         });
     </script>
 </body>
