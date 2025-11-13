@@ -54,6 +54,12 @@
         background-color: var(--primary-bg);
         overflow-x: hidden; /* Prevent horizontal scrolling */
         color: var(--text-primary);
+        transition: background-color 0.3s ease;
+    }
+
+    /* Dark overlay when mobile menu is open */
+    body.menu-open {
+        background-color: rgba(0, 0, 0, 0.7);
     }
 
     /* --- Header styles --- */
@@ -688,7 +694,49 @@
         padding: 20px 0;
     }
 
-    /* REMOVED: Subheading paragraph from mobile content section */
+    /* UPDATED: Mobile buttons style */
+    .mobile-cta-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+        gap: 12px;
+    }
+    
+    .mobile-cta-button {
+        background-color: var(--accent-color);
+        color: #fff;
+        padding: 14px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .mobile-secondary-button {
+        background-color: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .mobile-secondary-button:hover {
+        background-color: var(--accent-color);
+        color: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
 
     /* --- Services Section Styles --- */
     .services-section {
@@ -930,6 +978,56 @@
         max-width: 600px;
     }
 
+    /* NEW: Mobile Number Input Styles */
+    .mobile-input-container {
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .mobile-input-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+    }
+
+    .mobile-input-wrapper {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 12px;
+        padding: 0 16px;
+        border: 2px solid var(--border-color);
+        transition: border-color 0.3s ease;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .mobile-input-wrapper:focus-within {
+        border-color: var(--color-dark-teal);
+    }
+
+    .country-code {
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-right: 8px;
+    }
+
+    .mobile-input {
+        width: 100%;
+        border: none;
+        padding: 16px 0;
+        font-size: 1rem;
+        outline: none;
+        background: transparent;
+    }
+
+    .mobile-input::placeholder {
+        color: var(--text-light);
+    }
+
+    /* Book Us Button Styles */
     .book-us-cta-button {
         display: inline-flex;
         align-items: center;
@@ -981,6 +1079,30 @@
     }
     
     .book-us-cta-button:hover svg { transform: translateX(5px); }
+
+    /* Success State */
+    .book-us-cta-button.success {
+        background: #10b981;
+        animation: none;
+    }
+
+    .book-us-cta-button.success::before {
+        display: none;
+    }
+
+    .success-message {
+        margin-top: 1rem;
+        color: #10b981;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+    }
+
+    .success-message.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
     
     @keyframes gradient-shimmer {
         0% { background-position: 0% 50%; }
@@ -1444,7 +1566,7 @@
 
     .lower-half {
         background-color: #012726;
-        padding: 190px 40px 60px 40px; 
+        padding: 120px 20px 40px 20px; /* Reduced padding for mobile */
     }
     
     .subscribe-card {
@@ -1533,54 +1655,165 @@
     .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
     .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
 
-    .footer-bottom { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1200px; margin: 0 auto; }
-    .footer-logo-area { display: flex; flex-direction: column; gap: 16px; flex-basis: 30%; }
+    .footer-bottom { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: flex-start; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+    }
+    
+    .footer-logo-area { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px; 
+        flex-basis: 30%; 
+    }
+    
     .footer-logo-img {
-        max-width: 140px;
+        max-width: 120px; /* Reduced size for mobile */
         opacity: 0.9;
     }
-    .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
-    .footer-links-container { display: flex; gap: 120px; }
-    .footer-column h3 { font-size: 1rem; font-weight: 600; color: #ffffff; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .footer-column ul { list-style: none; }
-    .footer-column ul li { margin-bottom: 18px; }
-    .footer-column ul li a { text-decoration: none; color: #d1d5db; font-size: 1rem; transition: color 0.2s ease-in-out; }
-    .footer-column ul li a:hover { color: #ffffff; }
+    
+    .logo-tagline { 
+        font-size: 0.85rem; /* Reduced font size */
+        color: #d1d5db; 
+    }
+    
+    .footer-links-container { 
+        display: flex; 
+        gap: 80px; /* Reduced gap */
+    }
+    
+    .footer-column h3 { 
+        font-size: 0.9rem; /* Reduced font size */
+        font-weight: 600; 
+        color: #ffffff; 
+        margin-bottom: 18px; /* Reduced margin */
+        text-transform: uppercase; 
+        letter-spacing: 0.5px; 
+    }
+    
+    .footer-column ul { 
+        list-style: none; 
+    }
+    
+    .footer-column ul li { 
+        margin-bottom: 14px; /* Reduced margin */
+    }
+    
+    .footer-column ul li a { 
+        text-decoration: none; 
+        color: #d1d5db; 
+        font-size: 0.85rem; /* Reduced font size */
+        transition: color 0.2s ease-in-out; 
+    }
+    
+    .footer-column ul li a:hover { 
+        color: #ffffff; 
+    }
 
     .footer-copyright-bar {
         max-width: 1200px;
-        margin: 60px auto 0 auto;
-        padding-top: 30px;
+        margin: 40px auto 0 auto; /* Reduced margin */
+        padding-top: 20px; /* Reduced padding */
         border-top: 1px solid rgba(255, 255, 255, 0.2);
         display: flex;
         justify-content: space-between;
         align-items: center;
         color: #d1d5db;
-        font-size: 0.9rem;
+        font-size: 0.8rem; /* Reduced font size */
     }
 
-    .copyright-links { display: flex; gap: 24px; }
-    .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
-    .copyright-links a:hover { color: #ffffff; }
+    .copyright-links { 
+        display: flex; 
+        gap: 20px; /* Reduced gap */
+    }
+    
+    .copyright-links a { 
+        text-decoration: none; 
+        color: #d1d5db; 
+        transition: color 0.2s ease-in-out; 
+        font-size: 0.8rem; /* Reduced font size */
+    }
+    
+    .copyright-links a:hover { 
+        color: #ffffff; 
+    }
 
     /* Footer Responsive Design */
     @media (max-width: 1024px) {
         .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
         .subscribe-form-area { width: 100%; margin-top: 20px; }
-        .footer-bottom { flex-direction: column; gap: 50px; }
-        .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
+        .footer-bottom { flex-direction: column; gap: 40px; }
+        .footer-links-container { gap: 50px; width: 100%; justify-content: space-between; }
     }
 
     @media (max-width: 768px) {
         .subscribe-info h2 { font-size: 2.2rem; }
         .subscribe-form { flex-direction: column; }
-        .footer-links-container { flex-direction: column; gap: 40px; justify-content: flex-start; }
+        .footer-links-container { 
+            flex-direction: row; /* Changed to row for side-by-side layout */
+            gap: 30px; 
+            justify-content: space-between;
+            width: 100%;
+        }
         .upper-half { padding-top: 60px; padding-bottom: 280px; }
-        .lower-half { padding-top: 380px; padding-left: 20px; padding-right: 20px; padding-bottom: 40px; }
+        .lower-half { 
+            padding-top: 320px; /* Reduced padding */
+            padding-left: 20px; 
+            padding-right: 20px; 
+            padding-bottom: 30px; /* Reduced padding */
+        }
         .subscribe-form input[type="tel"]::placeholder { font-size: 0.9rem; }
-        .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
-        .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
-        .copyright-text, .copyright-links a { font-size: 0.8rem; }
+        .footer-copyright-bar { 
+            flex-direction: column; 
+            gap: 12px; 
+            text-align: center; 
+            margin-top: 30px; /* Reduced margin */
+        }
+        .copyright-links { 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            gap: 10px 15px; /* Reduced gap */
+        }
+        .copyright-text, .copyright-links a { font-size: 0.75rem; /* Further reduced font size */ }
+        
+        /* Mobile footer adjustments */
+        .footer-bottom {
+            gap: 30px;
+        }
+        
+        .footer-logo-area {
+            flex-basis: 100%;
+            text-align: center;
+        }
+        
+        .footer-logo-img {
+            max-width: 100px; /* Further reduced for mobile */
+            margin: 0 auto;
+        }
+        
+        .footer-links-container {
+            width: 100%;
+        }
+        
+        .footer-column {
+            flex: 1;
+        }
+        
+        .footer-column h3 {
+            font-size: 0.85rem; /* Further reduced */
+            margin-bottom: 15px;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column ul li a {
+            font-size: 0.8rem; /* Further reduced */
+        }
     }
 
     /* --- Responsive Adjustments --- */
@@ -1667,44 +1900,6 @@
         /* Show mobile content section */
         .mobile-content {
             display: flex;
-        }
-        
-        /* Mobile buttons side by side in smaller size */
-        .mobile-cta-container {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            max-width: 100%;
-            margin-top: 0;
-            gap: 10px;
-        }
-        
-        .mobile-cta-button {
-            background-color: var(--accent-color);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            text-align: center;
-        }
-        
-        .mobile-secondary-button {
-            background-color: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-        
-        .mobile-secondary-button:hover {
-            background-color: var(--accent-color);
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .carousel-container {
@@ -1865,8 +2060,8 @@
         }
         
         .mobile-cta-button {
-            padding: 10px 12px;
-            font-size: 13px;
+            padding: 12px 16px;
+            font-size: 14px;
         }
     }
 </style>
@@ -2145,10 +2340,24 @@
             <p>
                 Whether you're planning a wedding, a family portrait, or a commercial project, we're ready to bring your vision to life. Let's collaborate to create timeless images you'll cherish forever.
             </p>
-            <a href="#" class="book-us-cta-button">
+            
+            <!-- NEW: Mobile Number Input -->
+            <div class="mobile-input-container">
+                <label for="mobileNumber" class="mobile-input-label">Enter your mobile number</label>
+                <div class="mobile-input-wrapper">
+                    <span class="country-code">+91</span>
+                    <input type="tel" id="mobileNumber" class="mobile-input" placeholder="Enter your 10-digit mobile number" maxlength="10">
+                </div>
+            </div>
+            
+            <button id="bookUsButton" class="book-us-cta-button">
                 Book Us Now
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </a>
+            </button>
+            
+            <div id="successMessage" class="success-message">
+                Thank you! We'll contact you shortly to confirm your booking.
+            </div>
         </div>
     </section>
 
@@ -2417,22 +2626,43 @@
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             const menuOverlay = document.getElementById('menuOverlay');
+            const bookUsButton = document.getElementById('bookUsButton');
+            const mobileNumberInput = document.getElementById('mobileNumber');
+            const successMessage = document.getElementById('successMessage');
 
+            // Mobile menu functionality
             const openMenu = () => {
                 mobileMenu.classList.add('active');
                 menuOverlay.classList.add('active');
+                document.body.classList.add('menu-open');
                 document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
-                // FIXED: Apply dark overlay to entire page
-                document.body.style.backgroundColor = 'rgba(0,0,0,0.1)';
+                
+                // Calculate and adjust mobile menu height
+                adjustMobileMenuHeight();
             };
 
             const closeMenu = () => {
                 mobileMenu.classList.remove('active');
                 menuOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
                 document.body.style.overflow = ''; // Restore scrolling
-                // FIXED: Restore original background
-                document.body.style.backgroundColor = '';
             };
+
+            // Function to adjust mobile menu height based on screen size
+            function adjustMobileMenuHeight() {
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuContent = document.querySelector('.mobile-menu-content');
+                const mobileMenuAuth = document.querySelector('.mobile-menu-auth');
+                
+                if (mobileMenu && mobileMenuContent && mobileMenuAuth) {
+                    const windowHeight = window.innerHeight;
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const availableHeight = windowHeight - headerHeight - 40; // 40px for padding
+                    
+                    // Set max height for content area to ensure button is always visible
+                    mobileMenuContent.style.maxHeight = `calc(${availableHeight}px - ${mobileMenuAuth.offsetHeight}px)`;
+                }
+            }
 
             if (mobileMenuButton) {
                 mobileMenuButton.addEventListener('click', openMenu);
@@ -2458,6 +2688,48 @@
                     closeMenu();
                 }
             });
+
+            // Adjust menu height on window resize
+            window.addEventListener('resize', function() {
+                if (mobileMenu.classList.contains('active')) {
+                    adjustMobileMenuHeight();
+                }
+            });
+
+            // Book Us button functionality
+            if (bookUsButton && mobileNumberInput) {
+                bookUsButton.addEventListener('click', function() {
+                    const mobileNumber = mobileNumberInput.value.trim();
+                    
+                    // Simple validation for mobile number (10 digits)
+                    const mobileRegex = /^[6-9]\d{9}$/;
+                    
+                    if (mobileNumber === '' || !mobileRegex.test(mobileNumber)) {
+                        // If no number or invalid number, redirect to book us page
+                        window.location.href = '/book-us';
+                    } else {
+                        // If valid number, show success state
+                        bookUsButton.classList.add('success');
+                        bookUsButton.innerHTML = 'Submitted ✓';
+                        bookUsButton.disabled = true;
+                        
+                        // Show success message
+                        successMessage.classList.add('show');
+                        
+                        // Here you would typically send the data to your server
+                        console.log('Mobile number submitted:', mobileNumber);
+                        
+                        // Reset after 5 seconds (for demo purposes)
+                        setTimeout(() => {
+                            bookUsButton.classList.remove('success');
+                            bookUsButton.innerHTML = 'Book Us Now <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+                            bookUsButton.disabled = false;
+                            successMessage.classList.remove('show');
+                            mobileNumberInput.value = '';
+                        }, 5000);
+                    }
+                });
+            }
 
             // Scroll-based reveal animation for service cards
             const cards = document.querySelectorAll('.service-card');
