@@ -56,6 +56,67 @@
             padding: 0;
         }
 
+        /* --- Image Gallery Section --- */
+        .image-gallery-section {
+            width: 100%;
+            overflow: hidden;
+            padding: 40px 0;
+            background-color: var(--secondary-bg);
+        }
+
+        .gallery-row {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .gallery-row.first-row {
+            animation: scrollLeft 40s linear infinite;
+        }
+
+        .gallery-row.second-row {
+            animation: scrollRight 35s linear infinite;
+        }
+
+        .gallery-image {
+            flex-shrink: 0;
+            width: 300px;
+            height: 200px;
+            margin: 0 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-300px * 6));
+            }
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(calc(-300px * 6));
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
         /* --- Main Container --- */
         .book-us-container {
             max-width: 1200px;
@@ -370,7 +431,275 @@
             font-size: 0.9rem;
         }
 
-        /* --- Confirmation Modal --- */
+        /* --- Mobile Booking Options --- */
+        .mobile-booking-option {
+            display: flex;
+            align-items: center;
+            background-color: var(--secondary-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mobile-booking-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--color-dark-teal);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-booking-option:hover::before {
+            transform: scaleY(1);
+        }
+
+        .mobile-booking-option .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--color-dark-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: white;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .mobile-booking-option:hover .icon {
+            background-color: var(--color-teal-hover);
+        }
+
+        .mobile-booking-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .mobile-booking-content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .mobile-booking-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .mobile-booking-content .action-text {
+            font-weight: 600;
+            color: var(--color-dark-teal);
+            font-size: 0.85rem;
+        }
+
+        /* --- Confirmation Popup --- */
+        .confirmation-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .confirmation-content {
+            background-color: var(--primary-bg);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .confirmation-popup.active .confirmation-content {
+            transform: translateY(0);
+        }
+
+        .confirmation-header {
+            margin-bottom: 25px;
+        }
+
+        .confirmation-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .confirmation-header p {
+            color: var(--text-secondary);
+        }
+
+        .confirmation-details {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .detail-value {
+            color: var(--text-secondary);
+            word-break: break-word;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .confirmation-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .confirmation-btn.cancel {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .confirmation-btn.cancel:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .confirmation-btn.submit {
+            background-color: var(--color-dark-teal);
+            border: none;
+            color: white;
+        }
+
+        .confirmation-btn.submit:hover {
+            background-color: var(--color-teal-hover);
+        }
+
+        /* --- Success Message --- */
+        .success-message {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-message p {
+            color: #2e7d32;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkmark {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #4caf50;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px #4caf50;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #4caf50;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px #4caf50;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Message Options Modal --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -434,140 +763,6 @@
             color: var(--text-primary);
         }
 
-        .confirmation-details {
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .detail-item {
-            display: flex;
-            margin-bottom: 15px;
-        }
-
-        .detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-label {
-            font-weight: 600;
-            min-width: 120px;
-            color: var(--text-primary);
-        }
-
-        .detail-value {
-            color: var(--text-secondary);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 1rem;
-        }
-
-        .modal-btn.cancel {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        .modal-btn.cancel:hover {
-            background-color: var(--secondary-bg);
-        }
-
-        .modal-btn.confirm {
-            background-color: var(--color-dark-teal);
-            color: white;
-        }
-
-        .modal-btn.confirm:hover {
-            background-color: var(--color-teal-hover);
-            transform: translateY(-2px);
-        }
-
-        /* --- Success Message --- */
-        .success-message {
-            background-color: #e8f5e9;
-            border: 1px solid #c8e6c9;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .success-message.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .success-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #4caf50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            color: white;
-            animation: scaleIn 0.5s ease 0.2s both;
-        }
-
-        .success-message h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #2e7d32;
-        }
-
-        .success-message p {
-            color: #2e7d32;
-            margin-bottom: 15px;
-        }
-
-        .success-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: var(--color-dark-teal);
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes scaleIn {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- Message Options Modal --- */
         .message-options {
             display: flex;
             flex-direction: column;
@@ -743,7 +938,8 @@
                 font-size: 1.8rem;
             }
             
-            .modal {
+            .modal,
+            .confirmation-content {
                 padding: 30px 20px;
             }
             
@@ -757,8 +953,53 @@
                 align-self: flex-start;
             }
             
-            .modal-buttons {
+            .confirmation-buttons {
                 flex-direction: column;
+            }
+            
+            /* Hide desktop booking options, show mobile ones */
+            .booking-options {
+                display: none;
+            }
+            
+            .mobile-booking-options {
+                display: block;
+            }
+            
+            /* Remove action text on mobile */
+            .mobile-booking-content .action-text {
+                display: none;
+            }
+            
+            /* Adjust image gallery for mobile */
+            .gallery-image {
+                width: 200px;
+                height: 140px;
+                margin: 0 10px;
+            }
+            
+            @keyframes scrollLeft {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(calc(-200px * 6));
+                }
+            }
+
+            @keyframes scrollRight {
+                0% {
+                    transform: translateX(calc(-200px * 6));
+                }
+                100% {
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-booking-options {
+                display: none;
             }
         }
 
@@ -774,6 +1015,89 @@
     </style>
 </head>
 <body>
+    <!-- Image Gallery Section -->
+    <section class="image-gallery-section">
+        <div class="gallery-row first-row">
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Wedding Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Portrait Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Commercial Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Event Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Family Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Maternity Photography">
+            </div>
+            <!-- Duplicate images for seamless loop -->
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Wedding Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Portrait Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Commercial Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Event Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Family Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Maternity Photography">
+            </div>
+        </div>
+        
+        <div class="gallery-row second-row">
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Wedding Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Portrait Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Commercial Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Event Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Family Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Maternity Photography">
+            </div>
+            <!-- Duplicate images for seamless loop -->
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1554080353-a576cf803bda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Wedding Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Portrait Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Commercial Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Event Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Family Photography">
+            </div>
+            <div class="gallery-image">
+                <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Maternity Photography">
+            </div>
+        </div>
+    </section>
+
     <div class="book-us-container">
         <!-- Header and Form Layout -->
         <div class="booking-layout">
@@ -816,15 +1140,13 @@
                         </button>
                     </form>
                     <div class="success-message" id="successMessage">
-                        <div class="success-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        <p>
+                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                             </svg>
-                        </div>
-                        <h3>Booking Confirmed!</h3>
-                        <p>Thank you <span id="successName"></span>! We've received your booking request and will contact you shortly at <span id="successMobile"></span>.</p>
-                        <p>We're excited to create beautiful memories with you!</p>
+                            Thank you! We've received your booking request and will contact you shortly.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -839,6 +1161,8 @@
                     <span>All options are clickable</span>
                 </div>
             </div>
+            
+            <!-- Desktop Booking Options -->
             <div class="booking-options">
                 <div class="booking-option" id="callOption">
                     <div class="icon">
@@ -872,29 +1196,66 @@
                     <span class="action-text">Click to view location</span>
                 </div>
             </div>
+            
+            <!-- Mobile Booking Options -->
+            <div class="mobile-booking-options">
+                <div class="mobile-booking-option" id="mobileCallOption">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-booking-content">
+                        <h3>Call Us</h3>
+                        <p>Speak directly with our team</p>
+                    </div>
+                </div>
+                <div class="mobile-booking-option" id="mobileMessageOption">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-booking-content">
+                        <h3>Message Us</h3>
+                        <p>Connect via WhatsApp, Instagram, or text</p>
+                    </div>
+                </div>
+                <div class="mobile-booking-option" id="mobileVisitOption">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div class="mobile-booking-content">
+                        <h3>Visit Studio</h3>
+                        <p>Come see our studio space in person</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Confirmation Modal -->
-        <div class="modal-overlay" id="confirmationModal">
-            <div class="modal">
-                <div class="modal-header">
+        <!-- Confirmation Popup -->
+        <div class="confirmation-popup" id="confirmationPopup">
+            <div class="confirmation-content">
+                <div class="confirmation-header">
                     <h3>Confirm Your Booking</h3>
-                    <button class="close-modal" id="closeConfirmationModal">&times;</button>
+                    <p>Please review your details before submitting</p>
                 </div>
-                <p style="margin-bottom: 20px;">Please review your information before submitting:</p>
                 <div class="confirmation-details">
                     <div class="detail-item">
-                        <div class="detail-label">Full Name:</div>
-                        <div class="detail-value" id="confirmName"></div>
+                        <span class="detail-label">Full Name:</span>
+                        <div class="detail-value" id="popupName"></div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Mobile Number:</div>
-                        <div class="detail-value" id="confirmMobile"></div>
+                        <span class="detail-label">Mobile Number:</span>
+                        <div class="detail-value" id="popupMobile"></div>
                     </div>
                 </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn cancel" id="cancelBooking">Cancel</button>
-                    <button class="modal-btn confirm" id="confirmBooking">Confirm Booking</button>
+                <div class="confirmation-buttons">
+                    <button class="confirmation-btn cancel" id="cancelBooking">Cancel</button>
+                    <button class="confirmation-btn submit" id="confirmBooking">Submit Booking</button>
                 </div>
             </div>
         </div>
@@ -975,11 +1336,11 @@
             // Form submission
             const bookingForm = document.getElementById('bookingForm');
             const successMessage = document.getElementById('successMessage');
-            const confirmationModal = document.getElementById('confirmationModal');
-            const confirmName = document.getElementById('confirmName');
-            const confirmMobile = document.getElementById('confirmMobile');
-            const successName = document.getElementById('successName');
-            const successMobile = document.getElementById('successMobile');
+            const confirmationPopup = document.getElementById('confirmationPopup');
+            const popupName = document.getElementById('popupName');
+            const popupMobile = document.getElementById('popupMobile');
+            const cancelBooking = document.getElementById('cancelBooking');
+            const confirmBooking = document.getElementById('confirmBooking');
             
             bookingForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -995,83 +1356,43 @@
                     return;
                 }
                 
-                // Populate confirmation modal
-                confirmName.textContent = fullName;
-                confirmMobile.textContent = '+91 ' + mobile;
+                // Populate popup with user data
+                popupName.textContent = fullName;
+                popupMobile.textContent = '+91 ' + mobile;
                 
-                // Show confirmation modal
-                confirmationModal.classList.add('active');
+                // Show confirmation popup
+                confirmationPopup.classList.add('active');
             });
             
-            // Confirmation modal buttons
-            const closeConfirmationModal = document.getElementById('closeConfirmationModal');
-            const cancelBooking = document.getElementById('cancelBooking');
-            const confirmBooking = document.getElementById('confirmBooking');
-            
-            closeConfirmationModal.addEventListener('click', function() {
-                confirmationModal.classList.remove('active');
-            });
-            
+            // Cancel booking
             cancelBooking.addEventListener('click', function() {
-                confirmationModal.classList.remove('active');
+                confirmationPopup.classList.remove('active');
             });
             
+            // Confirm booking
             confirmBooking.addEventListener('click', function() {
-                // Get form values
-                const fullName = document.getElementById('fullName').value;
-                const mobile = document.getElementById('mobile').value;
+                // Hide confirmation popup
+                confirmationPopup.classList.remove('active');
                 
-                // Hide form and confirmation modal
+                // Hide form and show success message
                 bookingForm.style.display = 'none';
-                confirmationModal.classList.remove('active');
-                
-                // Populate success message
-                successName.textContent = fullName;
-                successMobile.textContent = '+91 ' + mobile;
-                
-                // Show success message with animation
                 successMessage.classList.add('active');
                 
-                // Create confetti effect
-                createConfetti();
-                
-                // Reset form after 8 seconds (for demo purposes)
+                // Reset form after 5 seconds (for demo purposes)
                 setTimeout(function() {
                     bookingForm.style.display = 'block';
                     successMessage.classList.remove('active');
                     bookingForm.reset();
-                }, 8000);
+                }, 5000);
             });
-            
-            // Confetti animation function
-            function createConfetti() {
-                const successMessageEl = document.getElementById('successMessage');
-                const colors = ['#012726', '#004D4B', '#005F5C', '#4caf50'];
-                
-                for (let i = 0; i < 50; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-                    successMessageEl.appendChild(confetti);
-                    
-                    // Add falling animation
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes fall {
-                            0% { top: -10px; opacity: 1; transform: rotate(0deg); }
-                            100% { top: 100%; opacity: 0; transform: rotate(${Math.random() * 360}deg); }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-            }
             
             // Direct booking options
             const callOption = document.getElementById('callOption');
             const messageOption = document.getElementById('messageOption');
             const visitOption = document.getElementById('visitOption');
+            const mobileCallOption = document.getElementById('mobileCallOption');
+            const mobileMessageOption = document.getElementById('mobileMessageOption');
+            const mobileVisitOption = document.getElementById('mobileVisitOption');
             const messageModal = document.getElementById('messageModal');
             const closeModal = document.getElementById('closeModal');
             
@@ -1080,13 +1401,25 @@
                 window.location.href = 'tel:+1234567890';
             });
             
+            mobileCallOption.addEventListener('click', function() {
+                window.location.href = 'tel:+1234567890';
+            });
+            
             // Message option - show modal
             messageOption.addEventListener('click', function() {
                 messageModal.classList.add('active');
             });
             
+            mobileMessageOption.addEventListener('click', function() {
+                messageModal.classList.add('active');
+            });
+            
             // Visit option - redirect to Google Maps
             visitOption.addEventListener('click', function() {
+                window.open('https://www.google.com/maps/search/?api=1&query=HV+Photography+Studio', '_blank');
+            });
+            
+            mobileVisitOption.addEventListener('click', function() {
                 window.open('https://www.google.com/maps/search/?api=1&query=HV+Photography+Studio', '_blank');
             });
             
