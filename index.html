@@ -256,7 +256,6 @@
         z-index: 1002; /* Increased z-index */
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
     }
 
     #mobileMenu.active {
@@ -297,13 +296,13 @@
         color: #4b5563;
     }
 
-    .mobile-menu-content {
-        flex-grow: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+.mobile-menu-content {
+    flex: 1; /* Change from flex-grow: 1 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto; /* Move overflow here */
+}
 
     .mobile-nav-links {
         display: flex;
