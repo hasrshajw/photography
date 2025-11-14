@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Manager - HV Photography</title>
+    <title>Project Manager - Gayathri Digitals</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -23,13 +23,23 @@
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --radius: 12px;
             
+            --spacing: 0.25rem;
+            --color-gray-200: oklch(92.8% 0.006 264.531);
             --color-white: #fff;
             --color-black: #000;
             --color-dark-teal: #012726;
             --color-teal-hover: #004D4B;
             --color-vibrant-teal: #005F5C;
-            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+            --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             --font-serif: 'Playfair Display', serif;
+            --font-weight-medium: 500;
+            --font-weight-normal: 400;
+            --font-weight-bold: 700;
+            --text-base: 1rem;
+            --text-base--line-height: 1.5;
+            --radius-md: 0.375rem;
+            --default-transition-duration: 0.15s;
+            --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* --- Universal Reset & Base Styles --- */
@@ -46,6 +56,12 @@
             background-color: var(--primary-bg);
             overflow-x: hidden;
             color: var(--text-primary);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Dark overlay when mobile menu is open */
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* --- Header Styles --- */
@@ -54,6 +70,9 @@
             top: 0;
             width: 100%;
             z-index: 50;
+            transition-property: all;
+            transition-duration: 0.3s;
+            transition-timing-function: var(--default-transition-timing-function);
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -61,12 +80,25 @@
 
         .header-container {
             width: 90%;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
             max-width: 1400px;
         }
 
+        @media (max-width: 768px) {
+            .header-container {
+                padding-left: 16px;
+                padding-right: 16px;
+                width: 100%;
+            }
+            body {
+                padding-top: 70px;
+            }
+        }
+
         .nav {
-            padding: 1rem 0;
+            padding-top: calc(var(--spacing) * 3);
+            padding-bottom: calc(var(--spacing) * 3);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -75,10 +107,11 @@
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: calc(var(--spacing) * 6);
         }
 
         .logo {
+            margin-right: calc(var(--spacing) * 6);
             height: 40px;
             width: auto;
             transition: transform 0.3s ease;
@@ -91,24 +124,30 @@
         .nav-links {
             display: none;
             align-items: center;
-            gap: 0.5rem;
+            gap: calc(var(--spacing) * 2);
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 48rem) {
             .nav-links {
                 display: flex;
             }
         }
 
         .nav-link {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: 500;
+            padding-left: calc(var(--spacing) * 4);
+            padding-right: calc(var(--spacing) * 4);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
             color: var(--text-primary);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             position: relative;
-            transition: var(--transition);
         }
 
         .nav-link:after {
@@ -123,25 +162,28 @@
             transform: translateX(-50%);
         }
 
-        .nav-link:hover {
-            color: var(--color-dark-teal);
-        }
-
-        .nav-link:hover:after {
-            width: 70%;
+        @media (hover: hover) {
+            .nav-link:hover {
+                color: var(--color-dark-teal);
+                background-color: transparent;
+            }
+            
+            .nav-link:hover:after {
+                width: 70%;
+            }
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: calc(var(--spacing) * 4);
         }
 
         .menu-button {
             display: flex;
-            padding: 0.5rem;
+            padding: calc(var(--spacing) * 1.5);
             border: 1px solid var(--color-dark-teal);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             color: var(--color-dark-teal);
             background-color: transparent;
             cursor: pointer;
@@ -153,52 +195,10 @@
             color: white;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 48rem) {
             .menu-button {
                 display: none;
             }
-        }
-
-        .auth-button {
-            padding: 0.5rem 1.25rem;
-            font-size: 1rem;
-            font-weight: 500;
-            border: 1px solid var(--color-dark-teal);
-            border-radius: 6px;
-            color: var(--color-dark-teal);
-            transition: var(--transition);
-            text-decoration: none;
-            background-color: transparent;
-        }
-
-        .auth-button.submit {
-            background-color: var(--color-dark-teal);
-            color: var(--color-white);
-            border: none;
-        }
-
-        .auth-button:hover {
-            color: var(--color-white);
-            background-color: var(--color-teal-hover);
-        }
-
-        .mobile-auth-button {
-            display: inline-block;
-        }
-        
-        @media (min-width: 768px) {
-            .mobile-auth-button {
-                display: none;
-            }
-            .auth-buttons {
-                display: flex;
-            }
-        }
-
-        .auth-buttons {
-            display: none;
-            align-items: center;
-            gap: 1rem;
         }
 
         /* Mobile Menu */
@@ -214,7 +214,7 @@
             transform: translateX(100%);
             transition: transform 0.3s ease;
             box-shadow: -2px 0 8px rgba(0,0,0,0.1);
-            z-index: 1000;
+            z-index: 1002;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -229,30 +229,48 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
+            height: 100vh;
+            background: rgba(0,0,0,0.7);
+            z-index: 1001;
             display: none;
+            backdrop-filter: blur(5px);
         }
 
         #menuOverlay.active {
             display: block;
         }
 
-        /* Increased mobile menu button sizes */
-        .menu-button, .mobile-menu-close {
-            font-size: 24px;
-            width: 48px;
-            height: 48px;
+        .mobile-menu-close {
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            transition: background 0.2s ease, transform 0.2s ease;
+            align-self: flex-end;
+            margin-bottom: 24px;
+            cursor: pointer;
+            z-index: 1003;
+        }
+
+        .mobile-menu-close svg {
+            width: 24px;
+            height: 24px;
+            color: #4b5563;
+        }
+
+        .mobile-menu-content {
+            flex-grow: 1;
+            overflow-y: auto;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 0;
         }
 
         .mobile-nav-links {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .mobile-nav-link {
@@ -269,11 +287,12 @@
         .mobile-nav-link:hover {
             background-color: #f8f9fa;
         }
-
+        
         .mobile-menu-auth {
             flex-shrink: 0;
             padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+            padding-bottom: 80px;
         }
 
         .mobile-menu-auth-buttons {
@@ -293,72 +312,87 @@
         }
 
         .mobile-menu-auth-button.submit {
-            background: var(--color-dark-teal);
+            background: linear-gradient(110deg, var(--color-dark-teal), var(--color-teal-hover) 45%, var(--color-dark-teal) 55%, var(--color-teal-hover));
+            background-size: 250% 100%;
             color: var(--color-white);
+            position: relative;
+            overflow: hidden;
+            animation: gradient-shimmer 4s linear infinite;
+        }
+        
+        .mobile-menu-auth-button.submit::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 75%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .mobile-menu-auth-button.submit:hover::before { 
+            left: 150%; 
         }
 
-        /* User Profile in Mobile Menu */
-        .mobile-user-profile {
-            padding: 20px 0;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
+        .auth-buttons {
+            display: none;
             align-items: center;
-            gap: 12px;
+            gap: calc(var(--spacing) * 4);
         }
 
-        .mobile-user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        @media (min-width: 48rem) {
+            .auth-buttons {
+                display: flex;
+            }
+        }
+
+        .auth-button {
+            padding-left: calc(var(--spacing) * 5);
+            padding-right: calc(var(--spacing) * 5);
+            padding-top: calc(var(--spacing) * 2);
+            padding-bottom: calc(var(--spacing) * 2);
+            font-size: var(--text-base);
+            line-height: var(--text-base--line-height);
+            font-weight: var(--font-weight-medium);
+            border: 1px solid var(--color-dark-teal);
+            border-radius: var(--radius-md);
+            color: var(--color-dark-teal);
+            transition-property: color, background-color;
+            transition-duration: var(--default-transition-duration);
+            transition-timing-function: var(--default-transition-timing-function);
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .auth-button.submit {
             background-color: var(--color-dark-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.2rem;
+            color: var(--color-white);
+            border: none;
         }
 
-        .mobile-user-info {
-            flex: 1;
+        @media (hover: hover) {
+            .auth-button:hover {
+                color: var(--color-white);
+                background-color: var(--color-teal-hover);
+            }
+            .auth-button.submit:hover {
+                background-color: var(--color-teal-hover);
+            }
         }
 
-        .mobile-user-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
+        .mobile-auth-button {
+            display: inline-block;
         }
-
-        .mobile-user-email {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        
+        @media (min-width: 48rem) {
+            .mobile-auth-button {
+                display: none;
+            }
         }
 
         .divider {
             height: 1px;
-            background-color: #e5e7eb;
-        }
-
-        /* Loading Spinner */
-        .loading-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--secondary-bg);
-            border-top: 4px solid var(--color-dark-teal);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            background-color: var(--color-gray-200);
         }
 
         /* Main Content */
@@ -390,6 +424,7 @@
             text-align: center;
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
         }
 
         .auth-content {
@@ -426,11 +461,14 @@
             transition: all 0.3s ease;
             width: 100%;
             max-width: 280px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .btn-google:hover {
             background: #f8f9fa;
             border-color: var(--color-dark-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         /* Form Styles */
@@ -440,7 +478,8 @@
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
-            overflow: hidden; /* Prevent content from overflowing */
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
 
         .form-title {
@@ -509,7 +548,7 @@
             color: var(--color-dark-teal);
         }
 
-        /* Image Preview - Fixed for mobile */
+        /* Image Preview */
         #image-preview-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -525,8 +564,13 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            min-width: 0; /* Important for text truncation */
-            overflow: hidden; /* Prevent content from overflowing */
+            min-width: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .image-preview-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .file-info {
@@ -534,7 +578,7 @@
             align-items: center;
             gap: 0.5rem;
             flex: 1;
-            min-width: 0; /* This is critical for text truncation */
+            min-width: 0;
         }
 
         .file-name {
@@ -545,14 +589,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            min-width: 0; /* This is critical for text truncation */
+            min-width: 0;
         }
 
         .status-and-actions {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex-shrink: 0; /* Prevent this from shrinking */
+            flex-shrink: 0;
         }
 
         .status-icon {
@@ -564,7 +608,7 @@
             justify-content: center;
             color: white;
             font-size: 0.8rem;
-            flex-shrink: 0; /* Prevent from shrinking */
+            flex-shrink: 0;
         }
 
         .status-icon.success {
@@ -583,7 +627,7 @@
             padding: 4px;
             border-radius: 4px;
             transition: var(--transition);
-            flex-shrink: 0; /* Prevent from shrinking */
+            flex-shrink: 0;
         }
 
         .delete-btn:hover {
@@ -643,6 +687,7 @@
 
         .btn-primary:hover {
             background-color: var(--color-teal-hover);
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
@@ -669,6 +714,11 @@
             animation: spin 1s linear infinite;
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Projects List */
         .list-header {
             display: flex;
@@ -693,14 +743,16 @@
             width: 100%;
             max-width: 300px;
             background-color: var(--primary-bg);
+            transition: var(--transition);
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--color-dark-teal);
+            box-shadow: 0 0 0 3px rgba(1, 39, 38, 0.1);
         }
 
-        /* Projects Container - Reduced height */
+        /* Projects Container */
         #projects-container {
             display: flex;
             flex-direction: column;
@@ -711,12 +763,12 @@
             background: var(--secondary-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 1rem;
+            padding: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: var(--transition);
-            min-height: 60px; /* Further reduced height */
+            min-height: 80px;
         }
 
         .project-card:hover {
@@ -726,7 +778,7 @@
 
         .project-info {
             flex: 1;
-            min-width: 0; /* Prevents flex item from overflowing */
+            min-width: 0;
         }
 
         .project-name {
@@ -738,7 +790,13 @@
             white-space: nowrap;
         }
 
-        /* Removed project-meta class entirely */
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
 
         .project-actions {
             display: flex;
@@ -806,100 +864,218 @@
             background-color: #EF4444;
         }
 
-        /* Footer */
-        .footer-section {
-            background-color: var(--color-dark-teal);
-            padding: 4rem 2rem 2rem;
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary-bg);
+            border-top: 4px solid var(--color-dark-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Footer Styles */
+        .upper-half {
+            background-color: #f8f9fa;
+            position: relative;
+            padding-top: 80px; 
+            padding-bottom: 150px; 
+        }
+
+        .lower-half {
+            background-color: #012726;
+            padding: 260px 20px 40px 20px;
+        }
+        
+        .subscribe-card {
+            background: linear-gradient(135deg, #003d3b, #012726);
             color: #ffffff;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
+            border-radius: 24px;
+            padding: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 10px 40px rgba(0, 39, 38, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: 90%;
             max-width: 1200px;
-            margin: 0 auto;
+            z-index: 10;
+        }
+
+        .subscribe-info { flex: 1; }
+        .subscribe-info h2 { 
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem; 
+            font-weight: 600; 
+            line-height: 1.2; 
+            margin-bottom: 1rem; 
+        }
+        .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
+        
+        .footer-book-button-container {
+            flex-basis: 45%;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 2rem;
+            justify-content: center;
         }
-
-        .footer-logo-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .footer-logo-img {
-            max-width: 140px;
-            filter: brightness(0) invert(1);
-            opacity: 0.9;
-        }
-
-        .logo-tagline {
-            font-size: 1rem;
-            color: #d1d5db;
-            max-width: 400px;
-        }
-
-        .footer-cta {
-            margin: 1rem 0;
-        }
-
-        .footer-cta-button {
+        
+        .footer-book-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             background: #ffffff;
-            color: var(--color-dark-teal);
+            color: #012726;
             border: none;
-            padding: 18px 40px;
+            padding: 16px 32px;
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.3s ease;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
         }
-
-        .footer-cta-button:hover {
-            background: #f0f0f0;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        
+        .footer-book-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
         }
+        
+        .footer-book-button:active {
+            transform: translateY(-2px) scale(1.0);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .footer-book-button svg {
+            width: 22px; height: 22px; stroke: #012726;
+            stroke-width: 2.5; transition: transform 0.3s ease;
+        }
+        
+        .footer-book-button:hover svg { transform: translateX(5px); }
 
-        .footer-bottom {
-            width: 100%;
-            padding-top: 2rem;
+        .footer-bottom { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        
+        .footer-logo-area { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            flex-basis: 30%; 
+        }
+        
+        .footer-logo-img {
+            max-width: 140px;
+            opacity: 0.9;
+        }
+        
+        .logo-tagline { font-size: 0.95rem; color: #d1d5db; }
+        
+        .footer-links-container { 
+            display: flex; 
+            gap: 120px; 
+        }
+        
+        .footer-column h3 { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: #ffffff; 
+            margin-bottom: 24px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 18px; }
+        .footer-column ul li a { 
+            text-decoration: none; 
+            color: #d1d5db; 
+            font-size: 1rem; 
+            transition: color 0.2s ease-in-out; 
+        }
+        
+        .footer-column ul li a:hover { color: #ffffff; }
+
+        .footer-copyright-bar {
+            max-width: 1200px;
+            margin: 60px auto 0 auto;
+            padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-        }
-
-        .copyright-text {
             color: #d1d5db;
             font-size: 0.9rem;
         }
 
-        .footer-links {
+        .copyright-links { display: flex; gap: 24px; }
+        .copyright-links a { text-decoration: none; color: #d1d5db; transition: color 0.2s ease-in-out; }
+        .copyright-links a:hover { color: #ffffff; }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background-color: #25D366;
+            border-radius: 50%;
             display: flex;
-            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: pulse 2s infinite;
         }
 
-        .footer-links a {
-            text-decoration: none;
-            color: #d1d5db;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .footer-links a:hover {
-            color: #ffffff;
+        .whatsapp-float:active {
+            transform: scale(0.95);
+        }
+
+        .whatsapp-float svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
         }
 
         /* Utility Classes */
@@ -908,7 +1084,33 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
+            .footer-book-button-container { width: 100%; margin-top: 20px; justify-content: center; }
+            .footer-bottom { flex-direction: column; gap: 50px; }
+            .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
+        }
+
         @media (max-width: 768px) {
+            .subscribe-info h2 { font-size: 2.2rem; }
+            .footer-links-container { 
+                flex-direction: row; 
+                gap: 40px; 
+                justify-content: space-between;
+                width: 100%;
+            }
+            .upper-half { padding-top: 60px; padding-bottom: 280px; }
+            .lower-half { 
+                padding-top: 340px; 
+                padding-left: 20px; 
+                padding-right: 20px; 
+                padding-bottom: 40px; 
+            }
+            .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
+            .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
+            .copyright-text, .copyright-links a { font-size: 0.8rem; }
+            
+            /* Mobile adjustments for the main content */
             body {
                 padding-top: 70px;
             }
@@ -923,7 +1125,7 @@
 
             .form-wrapper {
                 padding: 1.5rem;
-                overflow: visible; /* Allow content to be visible but contained */
+                overflow: visible;
             }
 
             .form-title {
@@ -935,7 +1137,7 @@
                 flex-direction: row;
                 align-items: center;
                 gap: 1rem;
-                min-height: 60px; /* Consistent height */
+                min-height: 80px;
             }
 
             .project-info {
@@ -982,7 +1184,7 @@
                 gap: 0.75rem;
             }
 
-            /* Mobile image preview improvements - Fixed layout */
+            /* Mobile image preview improvements */
             .image-preview-card {
                 flex-direction: row;
                 align-items: center;
@@ -1013,6 +1215,19 @@
                 align-items: center;
                 gap: 0.5rem;
             }
+
+            /* WhatsApp button mobile */
+            .whatsapp-float {
+                width: 60px;
+                height: 60px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .whatsapp-float svg {
+                width: 35px;
+                height: 35px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1027,13 +1242,6 @@
             .form-title, .list-title {
                 font-size: 1.3rem;
             }
-
-            /* Further increase mobile menu button sizes */
-            .menu-button, .mobile-menu-close {
-                font-size: 28px;
-                width: 52px;
-                height: 52px;
-            }
             
             /* Make image preview cards even more compact */
             .image-preview-card {
@@ -1045,6 +1253,12 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* Animation for gradient shimmer */
+        @keyframes gradient-shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
     </style>
 </head>
 <body>
@@ -1054,7 +1268,7 @@
             <nav class="nav">
                 <div class="nav-left">
                     <a href="/">
-                        <img class="logo" src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo">
+                        <img class="logo" src="https://photography-harsha.netlify.app/yellow.png" alt="Gayathri Digitals Logo">
                     </a>
                     <div class="nav-links">
                         <a class="nav-link" href="/home">Home</a>
@@ -1065,42 +1279,40 @@
                     </div>
                 </div>
                 <div class="nav-right">
+                    <!-- ADDED "BOOK US" BUTTON FOR MOBILE VIEW -->
                     <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
+                    
                     <button class="menu-button" id="mobileMenuButton">
-                        <i class='bx bx-menu'></i>
+                        <svg width="24" height="24" viewBox="0 0 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
                     </button>
+                    
+                    <!-- This container is for the desktop "Book Us" button -->
                     <div class="auth-buttons">
                         <a class="auth-button submit" href="/book-us">Book Us</a>
                     </div>
                 </div>
             </nav>
+            <!-- UPDATED MOBILE MENU WITH BOOK US BUTTON AT BOTTOM -->
             <div id="mobileMenu">
-                <button class="mobile-menu-close" id="mobileMenuClose">
-                    <i class='bx bx-x'></i>
-                </button>
-                
-                <!-- User Profile Section -->
-                <div class="mobile-user-profile hidden" id="mobileUserProfile">
-                    <div class="mobile-user-avatar" id="mobileUserAvatar">U</div>
-                    <div class="mobile-user-info">
-                        <div class="mobile-user-name" id="mobileUserName">User Name</div>
-                        <div class="mobile-user-email" id="mobileUserEmail">user@example.com</div>
+                <div class="mobile-menu-close" id="mobileMenuClose">
+                    <svg viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                <div class="mobile-menu-content">
+                    <div class="mobile-nav-links">
+                        <a href="/home" class="mobile-nav-link">Home</a>
+                        <a href="/about" class="mobile-nav-link">About</a>
+                        <a href="/services" class="mobile-nav-link">Services</a>
+                        <a href="/gallery" class="mobile-nav-link">Gallery</a>
+                        <a href="/contact" class="mobile-nav-link">Contact</a>
                     </div>
-                </div>
-                
-                <div class="mobile-nav-links">
-                    <a href="/home" class="mobile-nav-link">Home</a>
-                    <a href="/about" class="mobile-nav-link">About</a>
-                    <a href="/services" class="mobile-nav-link">Services</a>
-                    <a href="/gallery" class="mobile-nav-link">Gallery</a>
-                    <a href="/contact" class="mobile-nav-link">Contact</a>
-                </div>
-                <div class="mobile-menu-auth">
-                    <div class="mobile-menu-auth-buttons">
-                        <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
-                        <button class="mobile-menu-auth-button" id="mobileLogoutBtn" style="display: none;">
-                            <i class='bx bx-log-out'></i> Sign Out
-                        </button>
+                    <div class="mobile-menu-auth">
+                        <div class="mobile-menu-auth-buttons">
+                            <a href="/book-us" class="mobile-menu-auth-button submit">Book Us</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1182,33 +1394,67 @@
     </div>
 
     <!-- Footer Section -->
-    <footer class="footer-section">
-        <div class="footer-content">
-            <div class="footer-logo-area">
-                <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="HV Photography Logo" class="footer-logo-img">
-                <p class="logo-tagline">Capturing Life's Timeless Moments with Professional Photography Services</p>
+    <div class="upper-half">
+        <!-- This card sits on the boundary between the page and the footer -->
+        <div class="subscribe-card">
+            <div class="subscribe-info">
+                <h2>Ready to Capture Your Moment?</h2>
+                <p>From weddings and portraits to commercial projects, we're here to create stunning visual stories that last a lifetime. Let's discuss your vision.</p>
             </div>
-            
-            <div class="footer-cta">
-                <a href="/book-us" class="footer-cta-button">
-                    Book Your Session Now
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"></path>
-                        <path d="m12 5 7 7-7 7"></path>
-                    </svg>
+            <div class="footer-book-button-container">
+                <a href="/book-us" class="footer-book-button">
+                    Book Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
             </div>
-            
-            <div class="footer-bottom">
-                <p class="copyright-text">&copy; 2024 HV Photography. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Contact Us</a>
+        </div>
+    </div>
+
+    <!-- The lower-half is the main footer area -->
+    <div class="lower-half">
+        <div class="footer-bottom">
+            <div class="footer-logo-area">
+                <img src="https://ihtnas.com/assets/ihtnas-nav.png" alt="Gayathri Digitals Logo" class="footer-logo-img">
+                <p class="logo-tagline">Capturing Life's Timeless Moments.</p>
+            </div>
+            <div class="footer-links-container">
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Portrait Photography</a></li>
+                        <li><a href="#">Wedding Photography</a></li>
+                        <li><a href="#">Commercial Shoots</a></li>
+                        <li><a href="#">View Gallery</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </footer>
+
+        <div class="footer-copyright-bar">
+            <p class="copyright-text">&copy; Gayathri Digitals. All rights reserved.</p>
+            <div class="copyright-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Booking Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float" id="whatsappButton">
+        <svg viewBox="0 0 32 32">
+            <path d=" M19.11 17.205c-.372 0-1.088 1.39-1.518 1.39a.63.63 0 0 1-.315-.1c-.802-.402-1.504-.817-2.163-1.447-.545-.516-1.146-1.29-1.46-1.963a.426.426 0 0 1-.073-.215c0-.33.99-.945.99-1.49 0-.143-.73-2.09-.832-2.335-.143-.372-.214-.487-.6-.487-.187 0-.36-.043-.53-.043-.302 0-.53.115-.746.315-.688.645-1.032 1.318-1.06 2.264v.114c-.015.99.472 1.977 1.017 2.78 1.23 1.82 2.506 3.41 4.554 4.34.616.287 2.035.888 2.722.888.817 0 2.15-.515 2.478-1.318.13-.33.244-.73.244-1.088 0-.058 0-.144-.03-.215-.1-.172-2.434-1.39-2.678-1.39zm-2.908 7.593c-1.747 0-3.48-.53-4.942-1.49L7.793 24.41l1.132-3.337a8.955 8.955 0 0 1-1.72-5.272c0-4.955 4.04-8.995 8.997-8.995S25.2 10.845 25.2 15.8c0 4.958-4.04 8.998-8.998 8.998zm0-19.798c-5.96 0-10.8 4.842-10.8 10.8 0 1.964.53 3.898 1.546 5.574L5 27.176l5.974-1.92a10.807 10.807 0 0 0 16.03-9.455c0-5.958-4.842-10.8-10.802-10.8z" fill-rule="evenodd"></path>
+        </svg>
+    </div>
 
     <!-- Firebase and Application Script -->
     <script type="module">
@@ -1244,8 +1490,6 @@
         const mainContent = document.getElementById('main-content');
         const authContainer = document.getElementById('auth-container');
         const loginBtn = document.getElementById('login-btn');
-        const logoutBtn = document.getElementById('mobileLogoutBtn');
-        const userDisplay = document.getElementById('user-display');
         
         const projectForm = document.getElementById('project-form');
         const formTitle = document.getElementById('form-title');
@@ -1266,10 +1510,10 @@
         const searchInput = document.getElementById('search-input');
 
         // Mobile Menu Elements
-        const mobileUserProfile = document.getElementById('mobileUserProfile');
-        const mobileUserAvatar = document.getElementById('mobileUserAvatar');
-        const mobileUserName = document.getElementById('mobileUserName');
-        const mobileUserEmail = document.getElementById('mobileUserEmail');
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const menuOverlay = document.getElementById('menuOverlay');
 
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, user => {
@@ -1279,22 +1523,12 @@
                 currentUser = user;
                 authContainer.classList.add('hidden');
                 mainContent.classList.remove('hidden');
-                
-                // Update mobile menu user profile
-                mobileUserProfile.classList.remove('hidden');
-                mobileUserName.textContent = user.displayName || 'User';
-                mobileUserEmail.textContent = user.email || '';
-                mobileUserAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
-                logoutBtn.style.display = 'block';
-                
                 fetchUserProjects(user.uid);
             } else {
                 currentUser = null;
                 allUserProjects = [];
                 authContainer.classList.remove('hidden');
                 mainContent.classList.add('hidden');
-                mobileUserProfile.classList.add('hidden');
-                logoutBtn.style.display = 'none';
                 projectsContainer.innerHTML = '<p>Please sign in to see your projects.</p>';
                 if (firestoreUnsubscribe) firestoreUnsubscribe();
             }
@@ -1394,6 +1628,10 @@
                 projectCard.innerHTML = `
                     <div class="project-info">
                         <div class="project-name">${project.name}</div>
+                        <div class="project-meta">
+                            <span>${project.imageURLs ? project.imageURLs.length : 0} images</span>
+                            <span>${project.updatedAt ? new Date(project.updatedAt.seconds * 1000).toLocaleDateString() : 'Recently updated'}</span>
+                        </div>
                     </div>
                     <div class="project-actions">
                         <button class="action-btn share" data-id="${project.id}" data-action="share" title="Share">
@@ -1542,20 +1780,17 @@
         const doSignOut = () => signOut(auth).catch(err => console.error(err));
         
         // Mobile Menu Functionality
-        const mobileMenuButton = document.getElementById('mobileMenuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const menuOverlay = document.getElementById('menuOverlay');
-
         const openMenu = () => {
             mobileMenu.classList.add('active');
             menuOverlay.classList.add('active');
+            document.body.classList.add('menu-open');
             document.body.style.overflow = 'hidden';
         };
 
         const closeMenu = () => {
             mobileMenu.classList.remove('active');
             menuOverlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
             document.body.style.overflow = '';
         };
 
@@ -1563,9 +1798,20 @@
         mobileMenuClose.addEventListener('click', closeMenu);
         menuOverlay.addEventListener('click', closeMenu);
 
+        // WhatsApp Button Functionality
+        const whatsappButton = document.getElementById('whatsappButton');
+        if (whatsappButton) {
+            whatsappButton.addEventListener('click', function() {
+                const phoneNumber = '+917799181716';
+                const message = 'I want to book your service';
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                window.open(whatsappURL, '_blank');
+            });
+        }
+
         // Event Listeners
         loginBtn.addEventListener('click', signInWithGoogle);
-        logoutBtn.addEventListener('click', doSignOut);
         projectForm.addEventListener('submit', handleFormSubmit);
         cancelBtn.addEventListener('click', resetForm);
         projectsContainer.addEventListener('click', handleProjectAction);
