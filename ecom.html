@@ -28,7 +28,7 @@
             color: var(--text);
         }
 
-        /* Promotional Banner */
+        /* Promotional Banner - Fixed gap issue */
         .promo-banner {
             background: var(--red);
             color: var(--white);
@@ -86,6 +86,13 @@
             font-size: 1.5rem;
             color: var(--primary);
             margin-right: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            width: auto;
         }
 
         .nav-links {
@@ -114,6 +121,7 @@
             margin-right: 1rem;
             transition: all 0.3s ease;
             border: 1px solid transparent;
+            width: 300px;
         }
 
         .nav-search:focus-within {
@@ -126,7 +134,7 @@
             background: transparent;
             outline: none;
             padding: 0 0.5rem;
-            width: 200px;
+            width: 100%;
         }
 
         .nav-icons {
@@ -141,10 +149,26 @@
             padding: 0.5rem;
             border-radius: 8px;
             transition: background-color 0.3s ease;
+            position: relative;
         }
 
         .nav-icon:hover {
             background: var(--bg-light);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Mobile Nav */
@@ -169,6 +193,14 @@
             font-weight: bold;
             font-size: 1.5rem;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-logo img {
+            height: 35px;
+            width: auto;
         }
 
         .hamburger {
@@ -191,6 +223,234 @@
             background: var(--text);
             margin: 4px 0;
             transition: all 0.3s ease;
+        }
+
+        /* Search Overlay */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            display: none;
+            flex-direction: column;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .search-input {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin: 0 1rem;
+        }
+
+        .search-input input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .close-search {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .mobile-menu-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-menu:hover {
+            background: var(--bg-light);
+        }
+
+        .mobile-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--bg-light);
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80%;
+            max-width: 400px;
+            height: 100%;
+            background: var(--white);
+            z-index: 1200;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .cart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-cart:hover {
+            background: var(--bg-light);
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cart-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: var(--primary-dark);
         }
 
         /* Hero Section */
@@ -414,6 +674,7 @@
                 height: 40px;
             }
 
+            /* Fix gap between promo banner and hero */
             .hero {
                 margin-top: 110px;
             }
@@ -428,7 +689,7 @@
                 scroll-behavior: smooth;
                 gap: 1.5rem;
                 justify-content: flex-start;
-                padding: 0 1rem;
+                padding: 0 1.5rem;
             }
 
             .category-container::-webkit-scrollbar {
@@ -449,7 +710,7 @@
             }
         }
 
-        /* Arrow buttons */
+        /* Arrow buttons - Fixed positioning */
         .arrow {
             position: absolute;
             top: 50%;
@@ -474,11 +735,11 @@
         }
 
         .arrow.left {
-            left: 0;
+            left: 10px;
         }
 
         .arrow.right {
-            right: 0;
+            right: 10px;
         }
 
         /* Responsive */
@@ -486,6 +747,35 @@
             .arrow {
                 display: flex;
             }
+        }
+
+        /* Overlay for menus */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Make hero and category images clickable */
+        .slide-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .category-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
@@ -502,14 +792,16 @@
         <div class="nav-container">
             <!-- Desktop Nav -->
             <div class="desktop-nav">
-                <div class="nav-logo">SHOPLOGO</div>
+                <div class="nav-logo">
+                    <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                </div>
                 <div class="nav-links">
                     <a href="#">Home</a>
                     <a href="#">Shop</a>
                     <a href="#">Categories</a>
                     <a href="#">Deals</a>
                 </div>
-                <div class="nav-search">
+                <div class="nav-search" id="desktopSearch">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.3-4.3"></path>
@@ -517,13 +809,18 @@
                     <input type="text" placeholder="Search products...">
                 </div>
                 <div class="nav-icons">
-                    <button class="nav-icon" aria-label="User profile">
+                    <button class="nav-icon" id="desktopSearchBtn" aria-label="Search">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
                         </svg>
                     </button>
-                    <button class="nav-icon" aria-label="Shopping cart">
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="desktopCartBtn" aria-label="Shopping cart">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="9" cy="21" r="1"></circle>
                             <circle cx="20" cy="21" r="1"></circle>
@@ -537,18 +834,30 @@
             <!-- Mobile Nav -->
             <div class="mobile-nav">
                 <div class="mobile-nav-left">
-                    <button class="nav-icon" aria-label="Search">
+                    <button class="hamburger" id="mobileMenuBtn" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <div class="mobile-nav-center">
+                    <div class="mobile-logo">
+                        <img src="http://photography.wixo.in/yellow.png" alt="Shop Logo">
+                    </div>
+                </div>
+                <div class="mobile-nav-right">
+                    <button class="nav-icon" id="mobileSearchBtn" aria-label="Search">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.3-4.3"></path>
                         </svg>
                     </button>
-                </div>
-                <div class="mobile-nav-center">
-                    <div class="mobile-logo">SHOPLOGO</div>
-                </div>
-                <div class="mobile-nav-right">
-                    <button class="nav-icon" aria-label="Shopping cart">
+                    <button class="nav-icon" onclick="window.location.href='/wishlist'" aria-label="Wishlist">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="nav-icon" id="mobileCartBtn" aria-label="Shopping cart">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="9" cy="21" r="1"></circle>
                             <circle cx="20" cy="21" r="1"></circle>
@@ -556,81 +865,168 @@
                         </svg>
                         <span class="cart-count">3</span>
                     </button>
-                    <button class="hamburger" id="hamburger" aria-label="Menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-header">
+            <button class="close-search" id="closeSearch">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div class="search-input">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input type="text" placeholder="Search products..." autofocus>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">Menu</div>
+            <button class="close-menu" id="closeMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="mobile-menu-links">
+            <a href="#">Home</a>
+            <a href="#">Shop All</a>
+            <a href="#">Categories</a>
+            <a href="#">Deals</a>
+            <a href="#">New Arrivals</a>
+            <a href="#">Best Sellers</a>
+            <a href="#">My Account</a>
+            <a href="#">Order History</a>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-title">Your Cart</div>
+            <button class="close-cart" id="closeCart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="cart-items">
+            <div class="cart-item">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Product">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">Premium Kurta Set</div>
+                    <div class="cart-item-price">$89.99</div>
+                </div>
+            </div>
+            <div class="cart-item">
+                <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Product">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">Lehenga Set</div>
+                    <div class="cart-item-price">$129.99</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span>$219.98</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Overlay for menus -->
+    <div class="overlay" id="overlay"></div>
 
     <!-- Hero Section -->
     <section class="hero" aria-label="Featured Products">
         <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Product highlights">
             <!-- Slide 1 -->
             <div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="1 of 4">
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image desktop-image"
-                    loading="lazy"
-                >
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image mobile-image"
-                    loading="lazy"
-                >
+                <a href="/product1" class="slide-link">
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
+                        alt="Premium Wireless Headphones"
+                        class="slide-image desktop-image"
+                        loading="lazy"
+                    >
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
+                        alt="Premium Wireless Headphones"
+                        class="slide-image mobile-image"
+                        loading="lazy"
+                    >
+                </a>
             </div>
 
             <!-- Slide 2 -->
-            <div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="2 of 4">
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image desktop-image"
-                    loading="lazy"
-                >
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image mobile-image"
-                    loading="lazy"
-                >
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 4">
+                <a href="/product2" class="slide-link">
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
+                        alt="Smart Fitness Watch"
+                        class="slide-image desktop-image"
+                        loading="lazy"
+                    >
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
+                        alt="Smart Fitness Watch"
+                        class="slide-image mobile-image"
+                        loading="lazy"
+                    >
+                </a>
             </div>
 
             <!-- Slide 3 -->
-            <div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="3 of 4">
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image desktop-image"
-                    loading="lazy"
-                >
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image mobile-image"
-                    loading="lazy"
-                >
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 4">
+                <a href="/product3" class="slide-link">
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
+                        alt="Ultra-Thin Laptop"
+                        class="slide-image desktop-image"
+                        loading="lazy"
+                    >
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
+                        alt="Ultra-Thin Laptop"
+                        class="slide-image mobile-image"
+                        loading="lazy"
+                    >
+                </a>
             </div>
 
             <!-- Slide 4 -->
-            <div class="carousel-slide active" role="group" aria-roledescription="slide" aria-label="4 of 4">
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image desktop-image"
-                    loading="lazy"
-                >
-                <img 
-                    src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
-                    alt="Premium Wireless Headphones"
-                    class="slide-image mobile-image"
-                    loading="lazy"
-                >
+            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="4 of 4">
+                <a href="/product4" class="slide-link">
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/3rd_Banner_1.jpg?v=1757699591&width=1920" 
+                        alt="Wireless Earbuds"
+                        class="slide-image desktop-image"
+                        loading="lazy"
+                    >
+                    <img 
+                        src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_1.png?height=1164&v=1757699780" 
+                        alt="Wireless Earbuds"
+                        class="slide-image mobile-image"
+                        loading="lazy"
+                    >
+                </a>
             </div>
 
             <!-- Navigation Controls -->
@@ -666,48 +1062,66 @@
 
             <div class="category-container" id="scrollContainer">
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_8_95b3416a-8008-4e80-9576-2e7da8cad1c3_300x300.jpg?v=1757915706" alt="New Arrivals" loading="lazy">
-                    <span>New Arrivals</span>
+                    <a href="/category/new-arrivals" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_8_95b3416a-8008-4e80-9576-2e7da8cad1c3_300x300.jpg?v=1757915706" alt="New Arrivals" loading="lazy">
+                        <span>New Arrivals</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Kurta Sets" loading="lazy">
-                    <span>Kurta Sets</span>
+                    <a href="/category/kurta-sets" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_300x300.png?v=1757510383" alt="Kurta Sets" loading="lazy">
+                        <span>Kurta Sets</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_e9d7eed1-789b-4465-8a87-66a1b8038708_300x300.jpg?v=1757915661" alt="Indo Western" loading="lazy">
-                    <span>Indo Western</span>
+                    <a href="/category/indo-western" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_1_e9d7eed1-789b-4465-8a87-66a1b8038708_300x300.jpg?v=1757915661" alt="Indo Western" loading="lazy">
+                        <span>Indo Western</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_4_300x300.jpg?v=1757915661" alt="Saree" loading="lazy">
-                    <span>Saree</span>
+                    <a href="/category/saree" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_4_300x300.jpg?v=1757915661" alt="Saree" loading="lazy">
+                        <span>Saree</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Lehenga Sets" loading="lazy">
-                    <span>Lehenga Sets</span>
+                    <a href="/category/lehenga-sets" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_2_300x300.jpg?v=1757915662" alt="Lehenga Sets" loading="lazy">
+                        <span>Lehenga Sets</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_5_300x300.png?v=1757511181" alt="Shaurya's Favs" loading="lazy">
-                    <span>Shaurya's Favs</span>
+                    <a href="/category/shauryas-favs" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_5_300x300.png?v=1757511181" alt="Shaurya's Favs" loading="lazy">
+                        <span>Shaurya's Favs</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_6_300x300.png?v=1757511261" alt="Plus Size" loading="lazy">
-                    <span>Plus Size</span>
+                    <a href="/category/plus-size" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_6_300x300.png?v=1757511261" alt="Plus Size" loading="lazy">
+                        <span>Plus Size</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_300x300.jpg?v=1757658592" alt="Velvet" loading="lazy">
-                    <span>Velvet</span>
+                    <a href="/category/velvet" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_7_300x300.jpg?v=1757658592" alt="Velvet" loading="lazy">
+                        <span>Velvet</span>
+                    </a>
                 </div>
 
                 <div class="category">
-                    <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_3_300x300.png?v=1757510566" alt="Western Wear" loading="lazy">
-                    <span>Western Wear</span>
+                    <a href="/category/western-wear" class="category-link">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/Mask_group_3_300x300.png?v=1757510566" alt="Western Wear" loading="lazy">
+                        <span>Western Wear</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -715,6 +1129,75 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Navigation functionality
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+            const desktopSearchBtn = document.getElementById('desktopSearchBtn');
+            const closeSearch = document.getElementById('closeSearch');
+            const searchOverlay = document.getElementById('searchOverlay');
+            const mobileCartBtn = document.getElementById('mobileCartBtn');
+            const desktopCartBtn = document.getElementById('desktopCartBtn');
+            const closeCart = document.getElementById('closeCart');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('overlay');
+
+            // Mobile menu functionality
+            function openMobileMenu() {
+                mobileMenu.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+            closeMenu.addEventListener('click', closeMobileMenu);
+
+            // Search functionality
+            function openSearch() {
+                searchOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSearchOverlay() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            mobileSearchBtn.addEventListener('click', openSearch);
+            desktopSearchBtn.addEventListener('click', openSearch);
+            closeSearch.addEventListener('click', closeSearchOverlay);
+
+            // Cart functionality
+            function openCart() {
+                cartSidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCartSidebar() {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            mobileCartBtn.addEventListener('click', openCart);
+            desktopCartBtn.addEventListener('click', openCart);
+            closeCart.addEventListener('click', closeCartSidebar);
+
+            // Close overlays when clicking on overlay
+            overlay.addEventListener('click', function() {
+                closeMobileMenu();
+                closeCartSidebar();
+                closeSearchOverlay();
+            });
+
             // Carousel functionality
             const slides = Array.from(document.querySelectorAll('.carousel-slide'));
             const indicators = Array.from(document.querySelectorAll('.carousel-indicator'));
@@ -827,19 +1310,43 @@
             const leftArrow = document.getElementById('leftArrow');
             const rightArrow = document.getElementById('rightArrow');
 
+            function updateArrowVisibility() {
+                if (window.innerWidth <= 768) {
+                    // Show/hide arrows based on scroll position
+                    if (scrollContainer.scrollLeft <= 10) {
+                        leftArrow.style.display = 'none';
+                    } else {
+                        leftArrow.style.display = 'flex';
+                    }
+                    
+                    if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                        rightArrow.style.display = 'none';
+                    } else {
+                        rightArrow.style.display = 'flex';
+                    }
+                } else {
+                    leftArrow.style.display = 'none';
+                    rightArrow.style.display = 'none';
+                }
+            }
+
             rightArrow.addEventListener('click', () => {
                 scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+                setTimeout(updateArrowVisibility, 300);
             });
 
             leftArrow.addEventListener('click', () => {
                 scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+                setTimeout(updateArrowVisibility, 300);
             });
+
+            // Update arrows on scroll
+            scrollContainer.addEventListener('scroll', updateArrowVisibility);
 
             // Show/hide arrows only on mobile
             function toggleArrows() {
                 if (window.innerWidth <= 768) {
-                    leftArrow.style.display = 'flex';
-                    rightArrow.style.display = 'flex';
+                    updateArrowVisibility();
                 } else {
                     leftArrow.style.display = 'none';
                     rightArrow.style.display = 'none';
