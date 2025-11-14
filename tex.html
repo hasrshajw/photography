@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant Fabric Background</title>
+<style>
+  :root {
+    /* Change this single color to tint the whole fabric */
+    --base-fabric-color: #f9f7f2; 
+    --thread-highlight: rgba(255, 255, 255, 0.8);
+    --thread-shadow: rgba(0, 0, 0, 0.03);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* --- THE TEXTURE STACK --- */
+    background-color: var(--base-fabric-color);
+    
+    background-image: 
+      /* Layer 1: The "Micro-Noise" for organic feel (SVG Data URI) */
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E"),
+
+      /* Layer 2: Vertical Weave (The warp threads) */
+      linear-gradient(90deg, var(--thread-shadow) 1px, transparent 1px),
+      
+      /* Layer 3: Horizontal Weave (The weft threads) */
+      linear-gradient(0deg, var(--thread-shadow) 1px, transparent 1px),
+      
+      /* Layer 4: Soft Glow/Sheen (Simulates light hitting fabric) */
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 70%);
+
+    /* --- SIZING THE PATTERNS --- */
+    /* - First size is for the noise (covers everything)
+       - Second size is for vertical lines (4px makes it fine)
+       - Third size is for horizontal lines (4px makes it fine)
+       - Fourth size covers the whole viewport
+    */
+    background-size: 
+      auto, 
+      4px 4px, 
+      4px 4px, 
+      100% 100%;
+      
+    /* --- POSITIONING --- */
+    /* This offsets the horizontal/vertical lines slightly to look woven */
+    background-position: 
+      0 0, 
+      0 0, 
+      2px 2px, 
+      0 0;
+  }
+
+  /* --- DEMO CONTENT (UI Card) --- */
+  .product-card {
+    background: #fff;
+    padding: 2rem;
+    max-width: 350px;
+    margin: 10vh auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(100, 100, 90, 0.15);
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  h2 { color: #554d44; margin-top: 0; font-weight: 300; letter-spacing: 1px; }
+  button {
+    background: #d4a373;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+  <div class="product-card">
+    <h2>New Arrivals</h2>
+    <p style="color: #888; line-height: 1.6;">
+      Discover our summer collection featuring breathable linen and organic cotton blends.
+    </p>
+    <button>Shop Now</button>
+  </div>
+
+</body>
+</html>
