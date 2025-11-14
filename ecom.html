@@ -63,18 +63,20 @@
     /* Product Grid */
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
     }
     
     /* Product Card */
     .product-card {
         background: #fff;
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
     
     .product-card:hover {
@@ -161,46 +163,12 @@
         color: var(--accent-color);
     }
     
-    /* Quick Action Bar */
-    .quick-actions {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: all 0.3s ease;
-    }
-    
-    .product-card:hover .quick-actions {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .quick-action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background-color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    
-    .quick-action-btn:hover {
-        background-color: var(--primary-color);
-        color: white;
-    }
-    
     /* Product Info */
     .product-info {
         padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
     
     .product-title {
@@ -213,6 +181,7 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        flex-grow: 1;
     }
     
     .product-price {
@@ -281,59 +250,95 @@
         color: #f39c12;
     }
     
-    /* See More Card */
-    .see-more-card {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    /* Quick Actions */
+    .quick-actions {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .quick-action-btn {
+        display: flex;
         align-items: center;
         justify-content: center;
-        padding: 30px 20px;
-        text-align: center;
+        gap: 5px;
+        background: none;
+        border: none;
+        font-size: 12px;
+        color: var(--text-light);
         cursor: pointer;
-        transition: all 0.3s ease;
-        border: 2px dashed var(--border-color);
+        transition: color 0.2s;
+        padding: 5px;
+        border-radius: 4px;
     }
     
-    .see-more-card:hover {
-        border-color: var(--primary-color);
-        background-color: rgba(44, 90, 160, 0.03);
-    }
-    
-    .see-more-icon {
-        font-size: 24px;
+    .quick-action-btn:hover {
         color: var(--primary-color);
-        margin-bottom: 10px;
+        background-color: rgba(44, 90, 160, 0.05);
     }
     
-    .see-more-text {
+    .quick-action-btn i {
+        font-size: 12px;
+    }
+    
+    /* See More Button */
+    .see-more-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+    
+    .see-more-btn {
+        background-color: white;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 12px 30px;
+        border-radius: 8px;
         font-weight: 600;
-        color: var(--primary-color);
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .see-more-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
     }
     
     /* Mobile Styling */
     @media (max-width: 768px) {
+        body {
+            padding: 15px;
+        }
+        
+        .heading-row {
+            margin-bottom: 20px;
+        }
+        
+        .heading-row h2 {
+            font-size: 22px;
+        }
+        
+        .heading-row a {
+            font-size: 14px;
+        }
+        
         .product-grid {
-            display: flex;
-            overflow-x: auto;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            scroll-behavior: smooth;
-            padding-bottom: 10px;
         }
         
-        .product-grid::-webkit-scrollbar {
-            display: none;
+        .product-card {
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         
-        .product-card, .see-more-card {
-            min-width: 160px; /* Reduced from 200px */
-            flex-shrink: 0;
-        }
-        
-        .see-more-card {
-            min-width: 120px;
+        .image-container {
+            padding-top: 130%;
         }
         
         .product-info {
@@ -342,6 +347,7 @@
         
         .product-title {
             font-size: 13px;
+            margin-bottom: 6px;
         }
         
         .current-price {
@@ -352,9 +358,51 @@
             font-size: 12px;
         }
         
+        .discount {
+            font-size: 10px;
+        }
+        
+        .rating {
+            margin-bottom: 4px;
+        }
+        
+        .stars {
+            font-size: 11px;
+        }
+        
+        .rating-count {
+            font-size: 10px;
+        }
+        
+        .stock {
+            font-size: 10px;
+        }
+        
         .quick-actions {
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+        
+        .quick-action-btn {
+            font-size: 11px;
+        }
+        
+        .see-more-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 14px;
+        }
+    }
+    
+    /* Desktop Styling */
+    @media (min-width: 769px) {
+        .quick-actions {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .product-card:hover .quick-actions {
             opacity: 1;
-            transform: translateY(0);
         }
     }
 </style>
@@ -377,14 +425,6 @@
                     <button class="wishlist-btn">
                         <i class="far fa-heart"></i>
                     </button>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                        <button class="quick-action-btn">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </div>
                 </div>
                 <div class="product-info">
                     <div class="product-title">Master Piece Green Premium Cotton T-Shirt</div>
@@ -401,6 +441,16 @@
                         <i class="fas fa-check-circle"></i>
                         8 in stock
                     </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">
+                            <i class="fas fa-expand"></i>
+                            Quick View
+                        </button>
+                        <button class="quick-action-btn">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -412,14 +462,6 @@
                     <button class="wishlist-btn">
                         <i class="far fa-heart"></i>
                     </button>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                        <button class="quick-action-btn">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </div>
                 </div>
                 <div class="product-info">
                     <div class="product-title">Mustang Green Classic Fit Shirt</div>
@@ -436,6 +478,16 @@
                         <i class="fas fa-check-circle"></i>
                         14 in stock
                     </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">
+                            <i class="fas fa-expand"></i>
+                            Quick View
+                        </button>
+                        <button class="quick-action-btn">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -447,14 +499,6 @@
                     <button class="wishlist-btn">
                         <i class="far fa-heart"></i>
                     </button>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                        <button class="quick-action-btn">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </div>
                 </div>
                 <div class="product-info">
                     <div class="product-title">Mustang White Premium Cotton T-Shirt</div>
@@ -471,6 +515,16 @@
                         <i class="fas fa-exclamation-circle"></i>
                         2 in stock
                     </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">
+                            <i class="fas fa-expand"></i>
+                            Quick View
+                        </button>
+                        <button class="quick-action-btn">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -481,14 +535,6 @@
                     <button class="wishlist-btn active">
                         <i class="fas fa-heart"></i>
                     </button>
-                    <div class="quick-actions">
-                        <button class="quick-action-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                        <button class="quick-action-btn">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
-                    </div>
                 </div>
                 <div class="product-info">
                     <div class="product-title">Master Piece White Premium Cotton T-Shirt</div>
@@ -505,16 +551,26 @@
                         <i class="fas fa-check-circle"></i>
                         8 in stock
                     </div>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">
+                            <i class="fas fa-expand"></i>
+                            Quick View
+                        </button>
+                        <button class="quick-action-btn">
+                            <i class="fas fa-share-alt"></i>
+                            Share
+                        </button>
+                    </div>
                 </div>
             </div>
-            
-            <!-- See More Card -->
-            <div class="see-more-card">
-                <div class="see-more-icon">
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-                <div class="see-more-text">View All</div>
-            </div>
+        </div>
+        
+        <!-- See More Button -->
+        <div class="see-more-container">
+            <button class="see-more-btn">
+                View All Products
+                <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
     </div>
 
@@ -524,7 +580,8 @@
             // Wishlist toggle
             const wishlistButtons = document.querySelectorAll('.wishlist-btn');
             wishlistButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const icon = this.querySelector('i');
                     if (icon.classList.contains('far')) {
                         icon.classList.remove('far');
@@ -546,7 +603,9 @@
                     const action = this.querySelector('i').className;
                     
                     if (action.includes('fa-expand')) {
-                        alert('Quick view feature would open here');
+                        const card = this.closest('.product-card');
+                        const title = card.querySelector('.product-title').textContent;
+                        alert(`Quick view for: ${title}`);
                     } else if (action.includes('fa-share-alt')) {
                         alert('Share product feature would open here');
                     }
@@ -554,7 +613,7 @@
             });
             
             // Product card click (for navigation)
-            const productCards = document.querySelectorAll('.product-card:not(.see-more-card)');
+            const productCards = document.querySelectorAll('.product-card');
             productCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const title = this.querySelector('.product-title').textContent;
@@ -562,9 +621,9 @@
                 });
             });
             
-            // See more card
-            const seeMoreCard = document.querySelector('.see-more-card');
-            seeMoreCard.addEventListener('click', function() {
+            // See more button
+            const seeMoreBtn = document.querySelector('.see-more-btn');
+            seeMoreBtn.addEventListener('click', function() {
                 alert('Navigating to all products...');
             });
         });
