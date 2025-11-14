@@ -990,42 +990,12 @@
         max-width: 600px;
     }
 
-    /* Updated Book Us Form Styles */
-    .book-us-form {
+    /* Updated Book Us Button Styles */
+    .book-us-button-container {
         display: flex;
-        flex-direction: column;
-        gap: 20px;
+        justify-content: center;
         max-width: 500px;
         margin: 0 auto;
-    }
-    
-    .phone-input-container {
-        display: flex;
-        align-items: center;
-        background: white;
-        border-radius: 12px;
-        padding: 8px 16px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        border: 1px solid var(--border-color);
-    }
-    
-    .phone-prefix {
-        font-weight: 600;
-        color: var(--color-dark-teal);
-        margin-right: 8px;
-    }
-    
-    .phone-input {
-        flex: 1;
-        border: none;
-        padding: 12px 0;
-        font-size: 16px;
-        outline: none;
-        background: transparent;
-    }
-    
-    .phone-input::placeholder {
-        color: var(--text-light);
     }
     
     .book-us-cta-button {
@@ -1079,50 +1049,6 @@
     }
     
     .book-us-cta-button:hover svg { transform: translateX(5px); }
-    
-    /* Success Animation */
-    .success-animation {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-    
-    .success-checkmark {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background-color: var(--color-dark-teal);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: scaleIn 0.5s ease-out;
-    }
-    
-    .success-checkmark svg {
-        width: 40px;
-        height: 40px;
-        stroke: white;
-        stroke-width: 3;
-    }
-    
-    .success-message {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--color-dark-teal);
-        animation: fadeIn 0.5s ease-out 0.3s both;
-    }
-    
-    @keyframes scaleIn {
-        0% { transform: scale(0); }
-        70% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-    
-    @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(10px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
     
     @keyframes gradient-shimmer {
         0% { background-position: 0% 50%; }
@@ -1618,62 +1544,51 @@
         margin-bottom: 1rem; 
     }
     .subscribe-info p { font-size: 1rem; color: #d1d5db; line-height: 1.6; max-width: 90%; }
-    .subscribe-form-area { flex-basis: 45%; }
-    .subscribe-form-area label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
-    .subscribe-form { display: flex; gap: 12px; }
     
-    .input-with-prefix {
-        flex-grow: 1;
+    .footer-book-button-container {
+        flex-basis: 45%;
         display: flex;
+        justify-content: center;
+    }
+    
+    .footer-book-button {
+        display: inline-flex;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 2px solid transparent;
-        border-radius: 12px;
-        padding: 0 20px;
-        transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
-
-    .input-with-prefix .prefix {
-        color: #ffffff;
-        font-size: 1rem;
-        margin-right: 8px;
-        pointer-events: none;
-    }
-    
-    .subscribe-form input[type="tel"] {
-        width: 100%;
-        background-color: transparent;
+        justify-content: center;
+        gap: 12px;
+        background: #ffffff;
+        color: #012726;
         border: none;
-        color: #ffffff;
-        padding: 16px 0;
-        font-size: 1rem;
-        outline: none;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
         font-family: 'Inter', sans-serif;
     }
     
-    .subscribe-form input[type="tel"]::placeholder { color: #b3d1d0; }
+    .footer-book-button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
     
-    .input-with-prefix:focus-within {
-        border-color: #ffffff;
-        background-color: rgba(255, 255, 255, 0.15);
+    .footer-book-button:active {
+        transform: translateY(-2px) scale(1.0);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
-
-    .subscribe-form button { 
-        background-color: #ffffff; 
-        color: #012726; 
-        border: none; 
-        padding: 16px 32px; 
-        border-radius: 12px; 
-        font-weight: 700; 
-        font-size: 1rem; 
-        cursor: pointer; 
-        white-space: nowrap; 
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease; 
+    
+    .footer-book-button svg {
+        width: 22px; height: 22px; stroke: #012726;
+        stroke-width: 2.5; transition: transform 0.3s ease;
     }
-    .subscribe-form button:hover { background-color: #e2e6ea; }
-    .form-disclaimer { font-size: 0.8rem; color: #b3d1d0; margin-top: 16px; }
-    .form-disclaimer a { color: #b3d1d0; text-decoration: underline; }
+    
+    .footer-book-button:hover svg { transform: translateX(5px); }
 
     .footer-bottom { 
         display: flex; 
@@ -1826,14 +1741,13 @@
     /* Footer Responsive Design */
     @media (max-width: 1024px) {
         .subscribe-card { flex-direction: column; align-items: flex-start; padding: 40px; }
-        .subscribe-form-area { width: 100%; margin-top: 20px; }
+        .footer-book-button-container { width: 100%; margin-top: 20px; justify-content: center; }
         .footer-bottom { flex-direction: column; gap: 50px; }
         .footer-links-container { gap: 60px; width: 100%; justify-content: space-between; }
     }
 
     @media (max-width: 768px) {
         .subscribe-info h2 { font-size: 2.2rem; }
-        .subscribe-form { flex-direction: column; }
         .footer-links-container { 
             flex-direction: row; 
             gap: 40px; 
@@ -1847,7 +1761,6 @@
             padding-right: 20px; 
             padding-bottom: 40px; 
         }
-        .subscribe-form input[type="tel"]::placeholder { font-size: 0.9rem; }
         .footer-copyright-bar { flex-direction: column; gap: 16px; text-align: center; }
         .copyright-links { justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
         .copyright-text, .copyright-links a { font-size: 0.8rem; }
@@ -2039,7 +1952,7 @@
         .book-us-content h2 { font-size: 2.5rem; }
         .book-us-content p { font-size: 1rem; margin-bottom: 2.5rem; }
         
-        .book-us-form {
+        .book-us-button-container {
             max-width: 100%;
         }
         
@@ -2104,6 +2017,68 @@
             padding: 12px 16px;
             font-size: 13px;
             min-width: 120px; /* Adjusted for very small screens */
+        }
+    }
+
+    /* --- WhatsApp Floating Button Styles --- */
+    .whatsapp-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 70px;
+        height: 70px;
+        background-color: #25D366;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        animation: pulse 2s infinite;
+    }
+
+    .whatsapp-float:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .whatsapp-float:active {
+        transform: scale(0.95);
+    }
+
+    .whatsapp-float svg {
+        width: 40px;
+        height: 40px;
+        fill: white;
+    }
+
+    /* Animation for the button */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+        }
+    }
+
+    /* Responsive design for WhatsApp button */
+    @media (max-width: 768px) {
+        .whatsapp-float {
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .whatsapp-float svg {
+            width: 35px;
+            height: 35px;
         }
     }
 </style>
@@ -2192,8 +2167,8 @@
             <!-- REMOVED: Subheading paragraph -->
             <div class="cta-container">
                 <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" -->
-                <a href="#" class="cta-button">BOOK NOW</a>
-                <a href="#" class="cta-button secondary-button">VIEW GALLERY</a>
+                <a href="/book-us" class="cta-button">BOOK NOW</a>
+                <a href="/gallery" class="cta-button secondary-button">VIEW GALLERY</a>
             </div>
         </div>
 
@@ -2239,8 +2214,8 @@
             <!-- REMOVED: Subheading paragraph -->
             <div class="mobile-cta-container">
                 <!-- UPDATED: Changed button text to "BOOK NOW" and "VIEW GALLERY" with increased width -->
-                <a href="#" class="mobile-cta-button">BOOK NOW</a>
-                <a href="#" class="mobile-cta-button mobile-secondary-button">VIEW GALLERY</a>
+                <a href="/book-us" class="mobile-cta-button">BOOK NOW</a>
+                <a href="/gallery" class="mobile-cta-button mobile-secondary-button">VIEW GALLERY</a>
             </div>
         </div>
 
@@ -2385,7 +2360,7 @@
         </div>
     </div>
 
-    <!-- Updated Book Us Section with Mobile Number Input -->
+    <!-- Updated Book Us Section with Book Now Button -->
     <section class="book-us-section">
         <div class="book-us-content">
             <!-- Logo in Book Us Section -->
@@ -2399,26 +2374,12 @@
                 Whether you're planning a wedding, a family portrait, or a commercial project, we're ready to bring your vision to life. Let's collaborate to create timeless images you'll cherish forever.
             </p>
             
-            <!-- Book Us Form -->
-            <div class="book-us-form" id="bookUsForm">
-                <div class="phone-input-container">
-                    <span class="phone-prefix">+91</span>
-                    <input type="tel" class="phone-input" id="phoneInput" placeholder="Enter your mobile number" maxlength="10">
-                </div>
-                <button class="book-us-cta-button" id="bookUsButton">
+            <!-- Book Now Button -->
+            <div class="book-us-button-container">
+                <a href="/book-us" class="book-us-cta-button">
                     Book Now
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-            </div>
-            
-            <!-- Success Message (Hidden by Default) -->
-            <div class="success-animation" id="successAnimation" style="display: none;">
-                <div class="success-checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                </div>
-                <div class="success-message">Submitted Successfully!</div>
+                </a>
             </div>
         </div>
     </section>
@@ -2622,17 +2583,12 @@
                 <h2>Ready to Capture Your Moment?</h2>
                 <p>From weddings and portraits to commercial projects, we're here to create stunning visual stories that last a lifetime. Let's discuss your vision.</p>
             </div>
-            <div class="subscribe-form-area">
-                <!-- UPDATED CONTENT -->
-                <label for="mobile">Book a Free Consultation</label>
-                <form action="#" method="POST" class="subscribe-form" id="footerBookingForm">
-                    <div class="input-with-prefix">
-                        <span class="prefix">+91</span>
-                        <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required maxlength="10" pattern="\d{10}" autocomplete="off">
-                    </div>
-                    <button type="submit">Request Booking</button>
-                </form>
-                <p class="form-disclaimer">By requesting a booking, you agree to our <a href="#">Privacy Policy</a>.</p>
+            <div class="footer-book-button-container">
+                <!-- UPDATED: Book Now Button -->
+                <a href="/book-us" class="footer-book-button">
+                    Book Now
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
             </div>
         </div>
     </div>
@@ -2681,22 +2637,24 @@
         </div>
     </div>
 
-    <!-- In-built JavaScript for Mobile Menu Functionality -->
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float" id="whatsappButton">
+        <svg viewBox="0 0 32 32">
+            <path d=" M19.11 17.205c-.372 0-1.088 1.39-1.518 1.39a.63.63 0 0 1-.315-.1c-.802-.402-1.504-.817-2.163-1.447-.545-.516-1.146-1.29-1.46-1.963a.426.426 0 0 1-.073-.215c0-.33.99-.945.99-1.49 0-.143-.73-2.09-.832-2.335-.143-.372-.214-.487-.6-.487-.187 0-.36-.043-.53-.043-.302 0-.53.115-.746.315-.688.645-1.032 1.318-1.06 2.264v.114c-.015.99.472 1.977 1.017 2.78 1.23 1.82 2.506 3.41 4.554 4.34.616.287 2.035.888 2.722.888.817 0 2.15-.515 2.478-1.318.13-.33.244-.73.244-1.088 0-.058 0-.144-.03-.215-.1-.172-2.434-1.39-2.678-1.39zm-2.908 7.593c-1.747 0-3.48-.53-4.942-1.49L7.793 24.41l1.132-3.337a8.955 8.955 0 0 1-1.72-5.272c0-4.955 4.04-8.995 8.997-8.995S25.2 10.845 25.2 15.8c0 4.958-4.04 8.998-8.998 8.998zm0-19.798c-5.96 0-10.8 4.842-10.8 10.8 0 1.964.53 3.898 1.546 5.574L5 27.176l5.974-1.92a10.807 10.807 0 0 0 16.03-9.455c0-5.958-4.842-10.8-10.802-10.8z" fill-rule="evenodd"></path>
+        </svg>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const mobileMenuButton = document.getElementById('mobileMenuButton');
             const mobileMenu = document.getElementById('mobileMenu');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             const menuOverlay = document.getElementById('menuOverlay');
-
-            // Book Us Form Elements
-            const bookUsForm = document.getElementById('bookUsForm');
-            const phoneInput = document.getElementById('phoneInput');
-            const bookUsButton = document.getElementById('bookUsButton');
-            const successAnimation = document.getElementById('successAnimation');
-
-            // Footer Booking Form Elements
-            const footerBookingForm = document.getElementById('footerBookingForm');
+            
+            // WhatsApp Button
+            const whatsappButton = document.getElementById('whatsappButton');
+            
+            // Footer Success Popup
             const footerSuccessPopup = document.getElementById('footerSuccessPopup');
             const closeFooterPopup = document.getElementById('closeFooterPopup');
 
@@ -2739,68 +2697,21 @@
                 }
             });
 
-            // Book Us Form Logic
-            if (bookUsButton && phoneInput) {
-                bookUsButton.addEventListener('click', function(e) {
-                    e.preventDefault();
+            // WhatsApp Button Functionality
+            if (whatsappButton) {
+                whatsappButton.addEventListener('click', function() {
+                    // Phone number and message
+                    const phoneNumber = '+917799181716';
+                    const message = 'I want to book your service';
                     
-                    const phoneNumber = phoneInput.value.trim();
+                    // Encode the message for URL
+                    const encodedMessage = encodeURIComponent(message);
                     
-                    // If no number is entered, redirect to book us page
-                    if (!phoneNumber) {
-                        window.location.href = '/book-us';
-                        return;
-                    }
+                    // Create the WhatsApp URL
+                    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
                     
-                    // Validate phone number (Indian format)
-                    const phoneRegex = /^[6-9]\d{9}$/;
-                    if (!phoneRegex.test(phoneNumber)) {
-                        alert('Please enter a valid 10-digit Indian mobile number');
-                        return;
-                    }
-                    
-                    // Change button to Submit and show success
-                    bookUsButton.textContent = 'Submit';
-                    bookUsButton.disabled = true;
-                    
-                    // Simulate form submission
-                    setTimeout(() => {
-                        bookUsForm.style.display = 'none';
-                        successAnimation.style.display = 'flex';
-                        
-                        // Reset after 3 seconds
-                        setTimeout(() => {
-                            bookUsForm.style.display = 'flex';
-                            successAnimation.style.display = 'none';
-                            bookUsButton.textContent = 'Book Now';
-                            bookUsButton.disabled = false;
-                            phoneInput.value = '';
-                        }, 3000);
-                    }, 1000);
-                });
-            }
-
-            // Footer Booking Form Logic
-            if (footerBookingForm) {
-                footerBookingForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const mobileInput = this.querySelector('input[type="tel"]');
-                    const phoneNumber = mobileInput.value.trim();
-                    
-                    // Validate phone number (Indian format)
-                    const phoneRegex = /^[6-9]\d{9}$/;
-                    if (!phoneRegex.test(phoneNumber)) {
-                        alert('Please enter a valid 10-digit Indian mobile number');
-                        return;
-                    }
-                    
-                    // Show success popup
-                    footerSuccessPopup.classList.add('active');
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling
-                    
-                    // Reset form
-                    mobileInput.value = '';
+                    // Redirect to WhatsApp
+                    window.open(whatsappURL, '_blank');
                 });
             }
             
