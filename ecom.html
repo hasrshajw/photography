@@ -29,7 +29,7 @@
             color: var(--text);
         }
 
-        /* Promotional Banner - Fixed gap issue */
+        /* Promotional Banner */
         .promo-banner {
             background: var(--red);
             color: var(--white);
@@ -50,10 +50,10 @@
             font-weight: 500;
         }
 
-@keyframes scroll-text {
-    0% { transform: translateX(100vw); }
-    100% { transform: translateX(-100%); }
-}
+        @keyframes scroll-text {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
 
         /* Navbar Styles */
         .navbar {
@@ -675,7 +675,6 @@
                 height: 40px;
             }
 
-            /* Fix gap between promo banner and hero */
             .hero {
                 margin-top: 110px;
             }
@@ -1064,6 +1063,141 @@
             
             .stock {
                 font-size: 10px;
+            }
+        }
+
+        /* Sarees & Lehengas Sections */
+        .scroll-section {
+            padding: 3rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--white);
+        }
+
+        .scroll-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-products {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+
+        .scroll-products::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scroll-product {
+            flex: 0 0 280px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-product:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+        }
+
+        .scroll-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 125%;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .scroll-product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .scroll-product:hover .scroll-product-image {
+            transform: scale(1.05);
+        }
+
+        .scroll-product-info {
+            padding: 15px;
+        }
+
+        .scroll-product-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .scroll-product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .scroll-current-price {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .scroll-original-price {
+            font-size: 13px;
+            color: var(--text-light);
+            text-decoration: line-through;
+            margin-left: 6px;
+        }
+
+        .scroll-discount {
+            font-size: 11px;
+            color: var(--red);
+            font-weight: 700;
+            margin-left: 6px;
+            background-color: rgba(220, 38, 38, 0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .scroll-section .arrow {
+            display: flex;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .scroll-product {
+                flex: 0 0 220px;
+            }
+            
+            .scroll-product-info {
+                padding: 12px;
+            }
+            
+            .scroll-product-title {
+                font-size: 13px;
+            }
+            
+            .scroll-current-price {
+                font-size: 15px;
+            }
+            
+            .scroll-original-price {
+                font-size: 12px;
             }
         }
     </style>
@@ -1514,6 +1648,326 @@
         </div>
     </section>
 
+    <!-- Sarees Section -->
+    <section class="scroll-section">
+        <div class="heading-row">
+            <h2>Beautiful Sarees</h2>
+            <a href="#">View All</a>
+        </div>
+        <div class="scroll-container">
+            <div class="arrow left" id="sareesLeftArrow">&#10094;</div>
+            <div class="arrow right" id="sareesRightArrow">&#10095;</div>
+            <div class="scroll-products" id="sareesScroll">
+                <!-- Saree 1 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0063.jpg" alt="Silk Saree" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Pure Silk Banarasi Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹2,499</span>
+                            <span class="scroll-original-price">₹3,999</span>
+                            <span class="scroll-discount">38% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 2 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0064.jpg" alt="Cotton Saree" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Handwoven Cotton Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹1,799</span>
+                            <span class="scroll-original-price">₹2,499</span>
+                            <span class="scroll-discount">28% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 3 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0065.jpg" alt="Designer Saree" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Designer Net Saree with Blouse</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹3,299</span>
+                            <span class="scroll-original-price">₹4,599</span>
+                            <span class="scroll-discount">28% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 4 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0066.jpg" alt="Printed Saree" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Printed Georgette Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹1,999</span>
+                            <span class="scroll-original-price">₹2,999</span>
+                            <span class="scroll-discount">33% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 5 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0067.jpg" alt="Bridal Saree" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Bridal Wedding Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹5,999</span>
+                            <span class="scroll-original-price">₹8,499</span>
+                            <span class="scroll-discount">29% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 6 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0068.jpg" alt="Party Wear Saree" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Party Wear Sequined Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹2,799</span>
+                            <span class="scroll-original-price">₹3,999</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 7 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0069.jpg" alt="Traditional Saree" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Traditional Kanjivaram Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹4,499</span>
+                            <span class="scroll-original-price">₹6,499</span>
+                            <span class="scroll-discount">31% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 8 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0070.jpg" alt="Simple Saree" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Simple Daily Wear Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹899</span>
+                            <span class="scroll-original-price">₹1,499</span>
+                            <span class="scroll-discount">40% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 9 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0071.jpg" alt="Embroidered Saree" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Embroidered Chiffon Saree</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹2,199</span>
+                            <span class="scroll-original-price">₹3,299</span>
+                            <span class="scroll-discount">33% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Saree 10 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0072.jpg" alt="Designer Saree" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Designer Saree with Stone Work</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹3,599</span>
+                            <span class="scroll-original-price">₹5,199</span>
+                            <span class="scroll-discount">31% OFF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lehengas Section -->
+    <section class="scroll-section">
+        <div class="heading-row">
+            <h2>Stunning Lehengas</h2>
+            <a href="#">View All</a>
+        </div>
+        <div class="scroll-container">
+            <div class="arrow left" id="lehengasLeftArrow">&#10094;</div>
+            <div class="arrow right" id="lehengasRightArrow">&#10095;</div>
+            <div class="scroll-products" id="lehengasScroll">
+                <!-- Lehenga 1 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0073.jpg" alt="Bridal Lehenga" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Bridal Red Lehenga Set</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹8,999</span>
+                            <span class="scroll-original-price">₹12,999</span>
+                            <span class="scroll-discount">31% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 2 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0074.jpg" alt="Designer Lehenga" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Designer Lehenga Choli</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹6,499</span>
+                            <span class="scroll-original-price">₹9,299</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 3 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0075.jpg" alt="Party Lehenga" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Party Wear Lehenga</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹4,999</span>
+                            <span class="scroll-original-price">₹7,199</span>
+                            <span class="scroll-discount">31% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 4 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0076.jpg" alt="Traditional Lehenga" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Traditional Silk Lehenga</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹7,299</span>
+                            <span class="scroll-original-price">₹10,499</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 5 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0077.jpg" alt="Wedding Lehenga" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Wedding Lehenga with Dupatta</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹9,999</span>
+                            <span class="scroll-original-price">₹14,999</span>
+                            <span class="scroll-discount">33% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 6 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0078.jpg" alt="Designer Lehenga" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Designer Lehenga with Embroidery</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹5,799</span>
+                            <span class="scroll-original-price">₹8,299</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 7 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0079.jpg" alt="Casual Lehenga" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Casual Wear Lehenga</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹3,499</span>
+                            <span class="scroll-original-price">₹4,999</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 8 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0080.jpg" alt="Festive Lehenga" class="scroll-product-image">
+                        <div class="badge sale">SALE</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Festive Lehenga Set</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹4,299</span>
+                            <span class="scroll-original-price">₹6,199</span>
+                            <span class="scroll-discount">31% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 9 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0081.jpg" alt="Bridal Lehenga" class="scroll-product-image">
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Bridal Lehenga with Heavy Work</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹12,999</span>
+                            <span class="scroll-original-price">₹18,999</span>
+                            <span class="scroll-discount">32% OFF</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lehenga 10 -->
+                <div class="scroll-product">
+                    <div class="scroll-image-container">
+                        <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0082.jpg" alt="Designer Lehenga" class="scroll-product-image">
+                        <div class="badge new">NEW</div>
+                    </div>
+                    <div class="scroll-product-info">
+                        <div class="scroll-product-title">Designer Lehenga with Stone Detail</div>
+                        <div class="scroll-product-price">
+                            <span class="scroll-current-price">₹6,999</span>
+                            <span class="scroll-original-price">₹9,999</span>
+                            <span class="scroll-discount">30% OFF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation functionality
@@ -1776,6 +2230,63 @@
                 e.preventDefault();
                 alert('Navigating to all products...');
             });
+
+            // Sarees and Lehengas scroll functionality
+            const sareesScroll = document.getElementById('sareesScroll');
+            const sareesLeftArrow = document.getElementById('sareesLeftArrow');
+            const sareesRightArrow = document.getElementById('sareesRightArrow');
+
+            const lehengasScroll = document.getElementById('lehengasScroll');
+            const lehengasLeftArrow = document.getElementById('lehengasLeftArrow');
+            const lehengasRightArrow = document.getElementById('lehengasRightArrow');
+
+            function updateScrollArrows(scrollContainer, leftArrow, rightArrow) {
+                if (scrollContainer.scrollLeft <= 10) {
+                    leftArrow.style.display = 'none';
+                } else {
+                    leftArrow.style.display = 'flex';
+                }
+                
+                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                    rightArrow.style.display = 'none';
+                } else {
+                    rightArrow.style.display = 'flex';
+                }
+            }
+
+            // Sarees arrows
+            sareesRightArrow.addEventListener('click', () => {
+                sareesScroll.scrollBy({ left: 300, behavior: 'smooth' });
+                setTimeout(() => updateScrollArrows(sareesScroll, sareesLeftArrow, sareesRightArrow), 300);
+            });
+
+            sareesLeftArrow.addEventListener('click', () => {
+                sareesScroll.scrollBy({ left: -300, behavior: 'smooth' });
+                setTimeout(() => updateScrollArrows(sareesScroll, sareesLeftArrow, sareesRightArrow), 300);
+            });
+
+            sareesScroll.addEventListener('scroll', () => {
+                updateScrollArrows(sareesScroll, sareesLeftArrow, sareesRightArrow);
+            });
+
+            // Lehengas arrows
+            lehengasRightArrow.addEventListener('click', () => {
+                lehengasScroll.scrollBy({ left: 300, behavior: 'smooth' });
+                setTimeout(() => updateScrollArrows(lehengasScroll, lehengasLeftArrow, lehengasRightArrow), 300);
+            });
+
+            lehengasLeftArrow.addEventListener('click', () => {
+                lehengasScroll.scrollBy({ left: -300, behavior: 'smooth' });
+                setTimeout(() => updateScrollArrows(lehengasScroll, lehengasLeftArrow, lehengasRightArrow), 300);
+            });
+
+            lehengasScroll.addEventListener('scroll', () => {
+                updateScrollArrows(lehengasScroll, lehengasLeftArrow, lehengasRightArrow);
+            });
+
+            // Initialize arrows
+            updateScrollArrows(sareesScroll, sareesLeftArrow, sareesRightArrow);
+            updateScrollArrows(lehengasScroll, lehengasLeftArrow, lehengasRightArrow);
         });
     </script>
 </body>
