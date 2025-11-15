@@ -1200,6 +1200,153 @@
                 font-size: 12px;
             }
         }
+
+        /* Handpicked Styles Section */
+        .handpicked-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            padding: 60px 20px;
+            background-color: var(--white);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* DESKTOP IMAGE ROWS */
+        .row-images {
+            display: flex;
+            gap: 25px;
+        }
+
+        .row-images img {
+            width: 240px;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .left-up { transform: translateY(-35px); }
+        .right-up { transform: translateY(-35px); }
+
+        /* CENTER TEXT DESKTOP */
+        .center-box {
+            text-align: center;
+            max-width: 360px;
+        }
+
+        .center-box h2 {
+            font-size: 40px;
+            font-family: "Playfair Display", serif;
+            color: #0a9b9b;
+        }
+
+        .center-box h3 {
+            font-size: 40px;
+            color: #ff4b91;
+            font-family: "Playfair Display", serif;
+            margin-top: -10px;
+        }
+
+        .center-box p {
+            margin-top: 15px;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff4b91, #ff6fb0);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            margin-top: 25px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(255, 75, 145, 0.4);
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(255, 75, 145, 0.45);
+        }
+
+        /* MOBILE HIDDEN BY DEFAULT */
+        .mobile-row { display: none; }
+
+        /* -----------------------------------
+           📱 MOBILE VIEW — UI/UX IMPROVED
+           ----------------------------------- */
+        @media(max-width: 900px) {
+
+            .handpicked-section {
+                flex-direction: column;
+                gap: 20px;
+                padding: 30px 12px;
+            }
+
+            /* Hide desktop images on mobile */
+            .row-images {
+                display: none;
+            }
+
+            /* Mobile row of 4 small images */
+            .mobile-row {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                padding: 0 4px;
+                gap: 6px;
+            }
+
+            .mobile-row img {
+                width: 24%;
+                height: 110px;
+                object-fit: cover;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            }
+
+            /* IMPROVED TEXT CARD LOOK */
+            .center-box {
+                background: #ffffff;
+                padding: 20px 16px;
+                border-radius: 16px;
+                width: 100%;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                border: 1px solid #f3f3f3;
+            }
+
+            .center-box h2 {
+                font-size: 24px;
+                color: #0a9b9b;
+                margin-bottom: 4px;
+            }
+
+            .center-box h3 {
+                font-size: 26px;
+                margin-top: 0;
+                color: #ff4b91;
+            }
+
+            .center-box p {
+                font-size: 13px;
+                color: #555;
+                margin: 8px 0 15px;
+            }
+
+            /* MODERN BUTTON */
+            .btn {
+                width: 100%;
+                padding: 13px 0;
+                font-size: 15px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #ff4b91, #ff78b2);
+                box-shadow: 0 4px 14px rgba(255, 75, 145, 0.35);
+            }
+        }
     </style>
 </head>
 <body>
@@ -1968,6 +2115,37 @@
         </div>
     </section>
 
+    <!-- Handpicked Styles Section -->
+    <section class="handpicked-section">
+        <!-- Desktop Left -->
+        <div class="row-images">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg" class="left-up">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg">
+        </div>
+
+        <!-- Mobile 4 Images -->
+        <div class="mobile-row">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0083.jpg">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0084.jpg">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg">
+        </div>
+
+        <!-- Text & Button -->
+        <div class="center-box">
+            <h2>Handpicked</h2>
+            <h3>Styles, just for You!</h3>
+            <p>BECAUSE YOU DESERVE THE BEST LOOKS!</p>
+            <button class="btn">SHOP NOW</button>
+        </div>
+
+        <!-- Desktop Right -->
+        <div class="row-images">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0085.jpg">
+            <img src="https://www.shauryasanadhya.com/cdn/shop/files/IMG_0086.jpg" class="right-up">
+        </div>
+    </section>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation functionality
@@ -2287,6 +2465,12 @@
             // Initialize arrows
             updateScrollArrows(sareesScroll, sareesLeftArrow, sareesRightArrow);
             updateScrollArrows(lehengasScroll, lehengasLeftArrow, lehengasRightArrow);
+
+            // Handpicked Styles Button
+            const handpickedBtn = document.querySelector('.handpicked-section .btn');
+            handpickedBtn.addEventListener('click', function() {
+                alert('Navigating to handpicked styles collection...');
+            });
         });
     </script>
 </body>
