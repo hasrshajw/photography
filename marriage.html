@@ -216,7 +216,7 @@
             gap: calc(var(--spacing) * 4);
         }
 
-        /* Mobile menu button */
+        /* Mobile menu button - FIXED TO MATCH REFERENCE */
         .menu-button {
             display: flex;
             padding: calc(var(--spacing) * 1.5);
@@ -290,8 +290,9 @@
             z-index: 1003; /* Ensure close button is above everything */
         }
 
-        .mobile-menu-close i {
-            font-size: 24px;
+        .mobile-menu-close svg {
+            width: 24px;
+            height: 24px;
             color: #4b5563;
         }
 
@@ -700,38 +701,103 @@
         }
 
         /* --- Service Page Styles --- */
+        /* UPDATED HERO SECTION */
         .service-hero {
             width: 100%;
             padding: 120px 0 80px;
             background: linear-gradient(135deg, rgba(1, 39, 38, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://assets.zyrosite.com/mxBXOoMKQ4fBPrn2/_dsc4924-copy-m2WEnewlLOfookxZ.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.1;
+            z-index: -1;
         }
 
         .service-hero-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 30px;
+            position: relative;
+            z-index: 1;
         }
 
         .service-hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
             color: var(--text-primary);
+            line-height: 1.1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .service-hero h1 .serif {
             font-style: italic;
             color: var(--color-dark-teal);
+            position: relative;
+            display: inline-block;
+        }
+
+        .service-hero h1 .serif::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-dark-teal), var(--color-teal-hover));
+            border-radius: 2px;
         }
 
         .service-hero p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-secondary);
             max-width: 700px;
-            margin: 0 auto 2rem;
+            margin: 0 auto 2.5rem;
             line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--color-dark-teal);
+            display: block;
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
         }
 
         .service-content {
@@ -1093,7 +1159,19 @@
             }
 
             .service-hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+
+            .service-hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero-stats {
+                gap: 40px;
+            }
+
+            .hero-stat-number {
+                font-size: 2rem;
             }
 
             .service-content {
@@ -1127,7 +1205,7 @@
 
         @media (max-width: 480px) {
             .service-hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .service-text h2 {
@@ -1136,6 +1214,11 @@
 
             .package-card {
                 padding: 30px 20px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
             }
         }
     </style>
@@ -1162,7 +1245,9 @@
                     <a class="auth-button submit mobile-auth-button" href="/book-us">Book Us</a>
                     
                     <button class="menu-button" id="mobileMenuButton">
-                        <i class='bx bx-menu'></i>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
                     </button>
                     
                     <!-- This container is for the desktop "Book Us" button -->
@@ -1174,7 +1259,9 @@
             <!-- UPDATED MOBILE MENU WITH BOOK US BUTTON AT BOTTOM -->
             <div id="mobileMenu">
                 <div class="mobile-menu-close" id="mobileMenuClose">
-                    <i class='bx bx-x'></i>
+                    <svg viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
                 </div>
                 <div class="mobile-menu-content">
                     <div class="mobile-nav-links">
@@ -1201,6 +1288,21 @@
         <div class="service-hero-content">
             <h1>Wedding <span class="serif">Photography</span></h1>
             <p>Capturing the magic, emotion, and beauty of your special day with artistic vision and technical excellence. Every moment tells a story, and we're here to preserve it forever.</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">500+</span>
+                    <span class="hero-stat-label">Weddings Captured</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">98%</span>
+                    <span class="hero-stat-label">Client Satisfaction</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">10+</span>
+                    <span class="hero-stat-label">Years Experience</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1215,7 +1317,11 @@
                 <div class="service-features">
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <i class='bx bx-camera'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
                         </div>
                         <div class="feature-text">
                             <h4>Full Day Coverage</h4>
@@ -1224,7 +1330,9 @@
                     </div>
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <i class='bx bx-images'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
                         </div>
                         <div class="feature-text">
                             <h4>500+ Edited Photos</h4>
@@ -1233,7 +1341,10 @@
                     </div>
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <i class='bx bx-time'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
                         </div>
                         <div class="feature-text">
                             <h4>Quick Turnaround</h4>
@@ -1242,7 +1353,13 @@
                     </div>
                     <div class="feature-item">
                         <div class="feature-icon">
-                            <i class='bx bx-cloud-download'></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                                <line x1="16" y1="5" x2="22" y2="5"></line>
+                                <line x1="19" y1="2" x2="19" y2="8"></line>
+                                <circle cx="9" cy="9" r="2"></circle>
+                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                            </svg>
                         </div>
                         <div class="feature-text">
                             <h4>Online Gallery</h4>
